@@ -32,8 +32,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="KAPITypes">
+      <HintPath>..\..\..\Program Files\ASCON\KOMPAS-3D v20\SDK\Samples\CSharp\Common\KAPITypes.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Kompas6API5">
       <HintPath>..\..\..\Program Files\ASCON\KOMPAS-3D v20\SDK\Samples\CSharp\Common\Kompas6API5.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Kompas6Constants">
+      <HintPath>..\..\..\Program Files\ASCON\KOMPAS-3D v20\SDK\Samples\CSharp\Common\Kompas6Constants.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />

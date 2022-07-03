@@ -1,6 +1,9 @@
-﻿using Kompas6API5;
+﻿using KAPITypes;
+using Kompas6API5;
+using Kompas6Constants;
 using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -47,43 +50,112 @@ namespace RelaxingKompas
         #endregion
 
         #region Команды
+
+        #region Копиравание геометрии со стилем линии "основная" в новый документ типа "фрагмент" и сохранение его в формате "dxf"
+
         private void SaveContour()
         {
-			ksDocument2D activedocument2D = (ksDocument2D)kompas.ActiveDocument2D();
-			ksDocumentParam activedocumentParam = (ksDocumentParam)kompas.GetParamStruct(35);
-			activedocument2D.ksGetObjParam(activedocument2D.reference, activedocumentParam, -1); //Получаем параметры активного окна
-			string namefile = activedocumentParam.fileName;
-			string namedxf = namefile.Substring(0, namefile.Length - 3);
-
-			ksIterator iterator = kompas.GetIterator();
-			iterator.ksCreateIterator(2, 0);
-			int temp = iterator.ksMoveIterator("N");
-
-			int newgroup = activedocument2D.ksNewGroup(1);
-			activedocument2D.ksEndGroup();
-			activedocument2D.ksAddObjGroup(newgroup, temp);
-			activedocument2D.ksWriteGroupToClip(newgroup, true); //Копируем группу в буфер обмена
-																 //MessageBox.Show(activedocument2D.ksStoreTmpGroup(newgroup).ToString());
+            ksDocument2D activedocument2D = (ksDocument2D)kompas.ActiveDocument2D();
+            ksDocumentParam activedocumentParam = (ksDocumentParam)kompas.GetParamStruct(35);
+            activedocument2D.ksGetObjParam(activedocument2D.reference, activedocumentParam, -1); //Получаем параметры активного окна
+            string namefile = activedocumentParam.fileName;
+            if (namefile == "") 
+            {
+                kompas.ksMessage("Изначальный чертеж не сохранен. Нет возможности получить имя.");
+                return;
+            }
+            string namedxf = namefile.Substring(0, namefile.Length - 3);
 
 
-
-			//activedocument2D.ksCloseDocument();
-			//Создаем новый документ типа "фрагмент"
-			ksDocument2D document2D = (ksDocument2D)kompas.Document2D();
-			ksDocumentParam documentParam = (ksDocumentParam)kompas.GetParamStruct(35);
-			documentParam.type = 3;
-			document2D.ksCreateDocument(documentParam);
-			ksDocument2D newactivedocument2D = (ksDocument2D)kompas.ActiveDocument2D();
-			int newgroup1 = newactivedocument2D.ksReadGroupFromClip(); //Считываем буфер обмена во временную группу
-			newactivedocument2D.ksStoreTmpGroup(newgroup1); //Вставляем временную группу в новый чертеж
-															//newactivedocument2D.ksSaveToDXF($"{namedxf}dxf"); //Сохраняем в dxf
-															//newactivedocument2D.ksCloseDocument();
-		}
-		#endregion
+            //Создаем временную группу
+            int copygroup = activedocument2D.ksNewGroup(1);
+            activedocument2D.ksEndGroup();
 
 
-		// Головная функция библиотеки
-		public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
+            ksIterator iterator = kompas.GetIterator();
+            int itemobject;
+            int[] itemobjects = new int[] //Перечисляем элементы которые нужно перенести в новый документ
+			{
+                ldefin2d.LINESEG_OBJ,
+                ldefin2d.CIRCLE_OBJ,
+                ldefin2d.ARC_OBJ,
+                ldefin2d.BEZIER_OBJ,
+                ldefin2d.CONTOUR_OBJ,
+                ldefin2d.POLYLINE_OBJ,
+                ldefin2d.ELLIPSE_OBJ,
+                ldefin2d.NURBS_OBJ,
+                ldefin2d.ELLIPSE_ARC_OBJ,
+                ldefin2d.RECTANGLE_OBJ,
+                ldefin2d.REGULARPOLYGON_OBJ,
+                ldefin2d.EQUID_OBJ,
+                ldefin2d.WAVELINE_OBJ,
+                ldefin2d.MULTILINE_OBJ,
+            };
+            foreach (var item in itemobjects)
+            {
+                iterator.ksCreateIterator(item, 0);
+                while ((itemobject = iterator.ksMoveIterator("N")) != 0)
+                {
+                    if (activedocument2D.ksGetObjectStyle(itemobject) == 1) //Проверяем стиль линии. Если основная то добавляем в группу
+                    {
+                        activedocument2D.ksAddObjGroup(copygroup, itemobject);
+                    }
+
+                }
+            }
+            activedocument2D.ksWriteGroupToClip(copygroup, true); //Копируем группу в буфер обмена
+            activedocument2D.ksCloseDocument();
+
+            #region Создаем новый документ типа "фрагмент"
+            ksDocument2D document2D = (ksDocument2D)kompas.Document2D();
+            ksDocumentParam documentParam = (ksDocumentParam)kompas.GetParamStruct(35);
+            documentParam.type = 3;
+            document2D.ksCreateDocument(documentParam);
+            #endregion
+
+            ksDocument2D newactivedocument2D = (ksDocument2D)kompas.ActiveDocument2D();
+            int pastegroup = newactivedocument2D.ksReadGroupFromClip(); //Считываем буфер обмена во временную группу
+            if (pastegroup == 0)
+            {
+                kompas.ksMessage("Не получилось вставить элементы");
+                return;
+            }
+
+            #region Получаем координаты нижней левой точки "габаритного прямоугольника" группы элементов
+            ksRectParam rectParam = kompas.GetParamStruct((short)StructType2DEnum.ko_RectParam);
+            document2D.ksGetObjGabaritRect(pastegroup, rectParam);
+            ksMathPointParam mathPointParam = rectParam.GetpBot();
+            #endregion
+
+            newactivedocument2D.ksMoveObj(pastegroup, -mathPointParam.x, -mathPointParam.y); //Перемещаем группу в начало координат
+            newactivedocument2D.ksStoreTmpGroup(pastegroup); //Вставляем временную группу в новый чертеж
+            //Сохраняем в dxf
+            if (File.Exists($"{namedxf}dxf"))
+            {
+                try
+                {
+                    using (FileStream stream = File.Open($"{namedxf}dxf", FileMode.Open, FileAccess.Read, FileShare.None))
+                    {
+                        stream.Close();
+                    }
+                }
+                catch (IOException)
+                {
+
+                    kompas.ksMessage("Не получается сохранить dxf. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
+                    return;
+                }
+            }
+            newactivedocument2D.ksSaveToDXF($"{namedxf}dxf");
+            newactivedocument2D.ksCloseDocument();
+        } 
+        #endregion
+
+        #endregion
+
+
+        // Головная функция библиотеки
+        public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
 		{
 			kompas = (KompasObject)kompas_;
 
@@ -92,8 +164,6 @@ namespace RelaxingKompas
 			{
 				case 1: SaveContour(); break;
 			}
-
-			kompas.ksMessageBoxResult();
 		}
 
 		public object ExternalGetResourceModule()

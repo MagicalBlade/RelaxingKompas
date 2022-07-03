@@ -1,5 +1,4 @@
-﻿using KAPITypes;
-using Kompas6API5;
+﻿using Kompas6API5;
 using Kompas6Constants;
 using Microsoft.Win32;
 using System;
@@ -76,20 +75,20 @@ namespace RelaxingKompas
             int itemobject;
             int[] itemobjects = new int[] //Перечисляем элементы которые нужно перенести в новый документ
 			{
-                ldefin2d.LINESEG_OBJ,
-                ldefin2d.CIRCLE_OBJ,
-                ldefin2d.ARC_OBJ,
-                ldefin2d.BEZIER_OBJ,
-                ldefin2d.CONTOUR_OBJ,
-                ldefin2d.POLYLINE_OBJ,
-                ldefin2d.ELLIPSE_OBJ,
-                ldefin2d.NURBS_OBJ,
-                ldefin2d.ELLIPSE_ARC_OBJ,
-                ldefin2d.RECTANGLE_OBJ,
-                ldefin2d.REGULARPOLYGON_OBJ,
-                ldefin2d.EQUID_OBJ,
-                ldefin2d.WAVELINE_OBJ,
-                ldefin2d.MULTILINE_OBJ,
+                1, //Линия
+                2, //Окружность
+                3, //дуга окруж­ности
+                8, //кривая Безье
+                26, //контур
+                31, //лома­ная ли­ния
+                32, //эллипс
+                33, //кривая NURBS
+                34, //дуга эл­липса
+                35, //прямо­уголь­ник
+                36, //пра­виль­ный многоу­гольник
+                37, //эквиди­станта
+                55, //Объект волни­стая ли­ния
+                72, //Муль­тили­ния
             };
             foreach (var item in itemobjects)
             {

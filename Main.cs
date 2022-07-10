@@ -179,25 +179,24 @@ namespace RelaxingKompas
             #region Оформляем таблицу для буфера обмена
             string plainText = ""; //Таблица для текстового формата
             string copytable = "<table>"; //Таблица для html формата
-            string[,] tablestring = new string[table.RowsCount, table.ColumnsCount];
             for (int rows = 0; rows < table.RowsCount; rows++)
             {
-                copytable += "<tr>";
+                copytable += "<tr>\n";
                 for (int colum = 0; colum < table.ColumnsCount; colum++)
                 {
                     ITableCell tableCell = table.Cell[rows, colum];
                     IText text = (IText)tableCell.Text;
-                    tablestring[rows, colum] = text.Str;
                     copytable += $"<td>{text.Str}</td>";
                     plainText += text.Str + "\t";
                 }
-                copytable += "</tr>";
+                copytable += "</tr>\n";
                 plainText += "\n";
             }
             copytable += "</table>"; 
             #endregion
-
-
+            
+            
+            
             var dataObject = new DataObject();
 
             #region Заготовка текста для оформления html формата буфера обмена
@@ -240,6 +239,8 @@ namespace RelaxingKompas
             dataObject.SetData(DataFormats.Text, true, plainText); //Подготавливаем текстовый формат
             dataObject.SetData(DataFormats.UnicodeText, true, plainText); //Подготавливаем Unicode формат
             Clipboard.SetDataObject(dataObject); //Копируем в буфер обмена
+
+
         }
 
         #endregion

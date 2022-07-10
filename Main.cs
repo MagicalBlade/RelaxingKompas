@@ -49,8 +49,11 @@ namespace RelaxingKompas
                     result = "Скопировать таблицу";
                     command = 2;
                     break;
-
                 case 3:
+                    result = "Вставить таблицу";
+                    command = 2;
+                    break;
+                case 4:
                     command = -1;
                     itemType = 3; // "ENDMENU"
                     break;
@@ -163,19 +166,24 @@ namespace RelaxingKompas
         }
         #endregion
 
-        private void Table()
+        private void CopyTable()
         {
             IApplication application = kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             IKompasAPIObject selecobjects =  selectionManager.SelectedObjects;
-            
+            if (selecobjects == null)
+            {
+                application.MessageBoxEx("Не выбрана таблица", "Ошибка", 0);
+                return;
+            }
             if (selecobjects.Type != KompasAPIObjectTypeEnum.ksObjectDrawingTable)
             {
+                application.MessageBoxEx("Выбрана не таблица, либо несколько таблиц", "Ошибка", 0);
                 return;
             }
             ITable table = (ITable)selecobjects;
-
+            
             #region Оформляем таблицу для буфера обмена
             string plainText = ""; //Таблица для текстового формата
             string copytable = "<table>"; //Таблица для html формата
@@ -239,8 +247,51 @@ namespace RelaxingKompas
             dataObject.SetData(DataFormats.Text, true, plainText); //Подготавливаем текстовый формат
             dataObject.SetData(DataFormats.UnicodeText, true, plainText); //Подготавливаем Unicode формат
             Clipboard.SetDataObject(dataObject); //Копируем в буфер обмена
+        }
 
+        private void InsertTable()
+        {
+            IApplication application = kompas.ksGetApplication7();
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            IKompasAPIObject selecobjects = selectionManager.SelectedObjects;
 
+            if (selecobjects == null)
+            {
+                application.MessageBoxEx("Не выбрана таблица", "Ошибка", 0);
+                return;
+            }
+            if (selecobjects.Type != KompasAPIObjectTypeEnum.ksObjectDrawingTable)
+            {
+                application.MessageBoxEx("Выбрана не таблица, либо несколько таблиц", "Ошибка", 0);
+                return;
+            }
+            ITable table = (ITable)selecobjects;
+            IDrawingTable drawingTable = (IDrawingTable)table;
+
+            string clipboardString = Clipboard.GetText().Trim();
+            int rowsnumber = table.RowsCount - 1;
+            foreach (string rows in clipboardString.Split('\n'))
+            {
+                int columnumber = 0;
+                if (rowsnumber == table.RowsCount)
+                {
+                    table.AddRow(table.RowsCount - 1, true);
+                }
+                foreach (string colum in rows.Split('\t'))
+                {
+                    if (columnumber == table.ColumnsCount) //Проверка на количество колонок, если не хватает - добавляем
+                    {
+                        table.AddColumn(columnumber - 1, true);
+                    }
+                    ITableCell tableCell = table.Cell[table.RowsCount - 1, columnumber];
+                    IText text = (IText)tableCell.Text;
+                    text.Str = colum.Trim();
+                    columnumber++;
+                }
+                rowsnumber++;
+            }
+            drawingTable.Update(); //Применяем изменения
         }
 
         #endregion
@@ -255,7 +306,8 @@ namespace RelaxingKompas
             switch (command)
             {
                 case 1: SaveContour(); break;
-                case 2: Table(); break;
+                case 2: CopyTable(); break;
+                case 3: InsertTable(); break;
             }
         }
 

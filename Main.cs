@@ -22,8 +22,15 @@ namespace RelaxingKompas
         
         private ksDocument2D _activedocument2D;
         public ksDocument2D activedocument2D { get => _activedocument2D; set => _activedocument2D = value; }
-
-
+        
+        private Window _window;
+        public Window Window { get => _window; set => _window = value; }
+        
+        private string _thickness = "10";
+        public string Thickness { get => _thickness; set => _thickness = value; }
+        
+        private string _density = "7850";
+        public string Density { get => _density; set => _density = value; }
 
         // Имя библиотеки
         [return: MarshalAs(UnmanagedType.BStr)]
@@ -54,6 +61,10 @@ namespace RelaxingKompas
                     command = 2;
                     break;
                 case 4:
+                    result = "Посчитать массу";
+                    command = 2;
+                    break;
+                case 5:
                     command = -1;
                     itemType = 3; // "ENDMENU"
                     break;
@@ -294,6 +305,52 @@ namespace RelaxingKompas
             drawingTable.Update(); //Применяем изменения
         }
 
+        private void WeightAndSize()
+        {
+            Window = new Window();
+            Window.tb_thickness.Text = Thickness;
+            Window.tb_density.Text = Density;
+
+            IApplication application = kompas.ksGetApplication7();
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
+            IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            IKompasAPIObject selecobjects = selectionManager.SelectedObjects;
+            ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
+            ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83);
+            int group = ksdocument2D.ksViewGetObjectArea();
+            if (group == 0)
+            {
+                return;
+            }
+            ksMathematic2D mathematic2D = kompas.GetMathematic2D();
+            mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
+
+            
+            Window.tb_yardage.Text = $"{ksinertiaParam.F}";
+            Window.Weight();
+            Window.ShowDialog();
+
+            Thickness = Window.tb_thickness.Text;
+            Density = Window.tb_density.Text;
+
+            if (Window.cb_clipboard.Checked)
+            {
+                Clipboard.SetText(Window.tb_weight.Text);
+            }
+            if (Window.cb_weight.Checked)
+            {
+                ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+                ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+                IStamp stamp = layoutSheet.Stamp;
+                IText text = stamp.Text[5];
+                text.Str = $"{Window.tb_weight.Text}";
+                stamp.Update();
+                layoutSheet.Update();
+            }
+
+        }
+
         #endregion
 
 
@@ -301,13 +358,13 @@ namespace RelaxingKompas
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
             kompas = (KompasObject)kompas_;
-
             //Вызываем команды
             switch (command)
             {
                 case 1: SaveContour(); break;
                 case 2: CopyTable(); break;
                 case 3: InsertTable(); break;
+                case 4: WeightAndSize(); break;
             }
         }
 

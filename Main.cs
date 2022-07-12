@@ -22,15 +22,33 @@ namespace RelaxingKompas
         
         private ksDocument2D _activedocument2D;
         public ksDocument2D activedocument2D { get => _activedocument2D; set => _activedocument2D = value; }
-        
+
+        #region Данные формы
         private Window _window;
         public Window Window { get => _window; set => _window = value; }
-        
-        private string _thickness = "10";
+
+        /// <summary>
+        /// Толщина детали
+        /// </summary>
         public string Thickness { get => _thickness; set => _thickness = value; }
-        
+
+        private string _thickness = "10";
+
         private string _density = "7850";
         public string Density { get => _density; set => _density = value; }
+        
+        private bool _isClipboard = true;
+        public bool IsClipboard { get => _isClipboard; set => _isClipboard = value; }
+        
+        private bool _isweight = false;
+        public bool Isweight { get => _isweight; set => _isweight = value; }
+        
+        private int _round = 0;
+        public int Round { get => _round; set => _round = value; }
+
+
+
+        #endregion
 
         // Имя библиотеки
         [return: MarshalAs(UnmanagedType.BStr)]
@@ -308,8 +326,14 @@ namespace RelaxingKompas
         private void WeightAndSize()
         {
             Window = new Window();
+
+            #region Передаем данные в форму
             Window.tb_thickness.Text = Thickness;
             Window.tb_density.Text = Density;
+            Window.cb_clipboard.Checked = IsClipboard;
+            Window.cb_weight.Checked = Isweight;
+            Window.comb_round.SelectedIndex = Round;
+            #endregion
 
             IApplication application = kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
@@ -317,8 +341,8 @@ namespace RelaxingKompas
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             IKompasAPIObject selecobjects = selectionManager.SelectedObjects;
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
-            ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83);
-            int group = ksdocument2D.ksViewGetObjectArea();
+            ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83); //Параметры МЦХ
+            int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади
             if (group == 0)
             {
                 return;
@@ -326,13 +350,47 @@ namespace RelaxingKompas
             ksMathematic2D mathematic2D = kompas.GetMathematic2D();
             mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
 
-            
-            Window.tb_yardage.Text = $"{ksinertiaParam.F}";
+            #region Получение габаритного прямоугольника
+            ksRectParam rectParam = kompas.GetParamStruct(15); //Параметры прямоугольника
+            ksdocument2D.ksGetObjGabaritRect(group, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
+
+            ksMathPointParam LeftMathPointParam = rectParam.GetpBot(); //Левая нижняя точка прямоугольника
+            ksMathPointParam RightMathPointParam = rectParam.GetpTop(); //Правая верхняя точка прямоугольника
+            double LeftX; double LeftY;
+            double RightX; double RightY;
+            //Пересчет координат точек из системы координат(СК) листа в СК вида.
+            ksdocument2D.ksSheetToView(LeftMathPointParam.x, LeftMathPointParam.y, out LeftX, out LeftY);
+            ksdocument2D.ksSheetToView(RightMathPointParam.x, RightMathPointParam.y, out RightX, out RightY);
+            double width = Math.Round(RightY - LeftY, MidpointRounding.AwayFromZero);
+            double length = Math.Round(RightX - LeftX, MidpointRounding.AwayFromZero);
+            #endregion
+
+            if (width < length)
+            {
+                Window.tb_width.Text = $"{width}"; //Передаем ширину  в форму
+                Window.tb_length.Text = $"{length}"; //Передаем длину в форму
+            }
+            else
+            {
+                Window.tb_width.Text = $"{length}"; //Передаем ширину  в форму
+                Window.tb_length.Text = $"{width}"; //Передаем длину в форму
+            }
+            Window.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
             Window.Weight();
             Window.ShowDialog();
 
+            if (!Window.Interrupt)
+            {
+                return;
+            }
+
+            #region Получаем данные из формы
             Thickness = Window.tb_thickness.Text;
             Density = Window.tb_density.Text;
+            IsClipboard = Window.cb_clipboard.Checked;
+            Isweight = Window.cb_weight.Checked;
+            Round = Window.comb_round.SelectedIndex;
+            #endregion
 
             if (Window.cb_clipboard.Checked)
             {

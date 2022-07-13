@@ -8,16 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RelaxingKompas.Data;
 
 namespace RelaxingKompas
 {
-    public partial class Window : Form
+    public partial class FormWeightAndSize : Form
     {
-        public bool Interrupt { get => _interrupt; set => _interrupt = value; }
-
-        private bool _interrupt = false;
-
-        public Window()
+        public FormWeightAndSize()
         {
             InitializeComponent();
         }
@@ -49,7 +46,23 @@ namespace RelaxingKompas
 
         private void b_ok_Click(object sender, EventArgs e)
         {
-            Interrupt = true;
+            DataWeightAndSize.Thickness = tb_thickness.Text;
+            DataWeightAndSize.Density = tb_density.Text;
+            DataWeightAndSize.IsClipboard = cb_clipboard.Checked;
+            DataWeightAndSize.Isweight = cb_weight.Checked;
+            DataWeightAndSize.Round = comb_round.SelectedIndex;
+            DataWeightAndSize.Weight = tb_weight.Text;
+
+            if (cb_clipboard.Checked)
+            {
+                DataWeightAndSize.ClipboardText();
+            }
+
+            if (cb_weight.Checked)
+            {
+                DataWeightAndSize.WriteWeightStamp();
+            }
+            Hide();
         }
     }
 }

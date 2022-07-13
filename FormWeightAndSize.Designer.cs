@@ -1,6 +1,6 @@
 ﻿namespace RelaxingKompas
 {
-    partial class Window
+    partial class FormWeightAndSize
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.b_ok = new System.Windows.Forms.Button();
             this.tb_thickness = new System.Windows.Forms.TextBox();
             this.tb_density = new System.Windows.Forms.TextBox();
@@ -46,15 +45,10 @@
             this.tb_length = new System.Windows.Forms.TextBox();
             this.l_width = new System.Windows.Forms.Label();
             this.l_length = new System.Windows.Forms.Label();
-            this.windowBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.windowBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.windowBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.windowBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // b_ok
             // 
-            this.b_ok.DialogResult = System.Windows.Forms.DialogResult.No;
             this.b_ok.Location = new System.Drawing.Point(45, 216);
             this.b_ok.Name = "b_ok";
             this.b_ok.Size = new System.Drawing.Size(75, 23);
@@ -225,16 +219,9 @@
             this.l_length.TabIndex = 16;
             this.l_length.Text = "Длина";
             // 
-            // windowBindingSource
+            // FormWeightAndSize
             // 
-            this.windowBindingSource.DataSource = typeof(RelaxingKompas.Window);
-            // 
-            // windowBindingSource1
-            // 
-            this.windowBindingSource1.DataSource = typeof(RelaxingKompas.Window);
-            // 
-            // Window
-            // 
+            this.AcceptButton = this.b_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(462, 261);
@@ -256,11 +243,13 @@
             this.Controls.Add(this.tb_thickness);
             this.Controls.Add(this.b_ok);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "Window";
+            this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FormWeightAndSize";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Подсчет массы";
-            ((System.ComponentModel.ISupportInitialize)(this.windowBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.windowBindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,8 +268,6 @@
         internal System.Windows.Forms.CheckBox cb_clipboard;
         internal System.Windows.Forms.CheckBox cb_weight;
         internal System.Windows.Forms.ComboBox comb_round;
-        private System.Windows.Forms.BindingSource windowBindingSource;
-        private System.Windows.Forms.BindingSource windowBindingSource1;
         private System.Windows.Forms.Label l_round;
         internal System.Windows.Forms.TextBox tb_width;
         internal System.Windows.Forms.TextBox tb_length;

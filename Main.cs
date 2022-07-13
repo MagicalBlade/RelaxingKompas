@@ -9,43 +9,28 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
+using System.Windows.Interop;
+using RelaxingKompas.Data;
 
 namespace RelaxingKompas
 {
     [ClassInterface(ClassInterfaceType.AutoDual)]
     public class Main
-
     {
         private KompasObject _kompas;
-
         public KompasObject kompas { get => _kompas; set => _kompas = value; }
         
         private ksDocument2D _activedocument2D;
         public ksDocument2D activedocument2D { get => _activedocument2D; set => _activedocument2D = value; }
 
         #region Данные формы
-        private Window _window;
-        public Window Window { get => _window; set => _window = value; }
+        private FormWeightAndSize _windowWeightAndSize = new FormWeightAndSize();
+        public FormWeightAndSize WindowWeightAndSize { get => _windowWeightAndSize; set => _windowWeightAndSize = value; }
 
-        /// <summary>
-        /// Толщина детали
-        /// </summary>
-        public string Thickness { get => _thickness; set => _thickness = value; }
+        public System.Windows.Forms.IWin32Window Win32 { get => _win32; set => _win32 = value; }
 
-        private string _thickness = "10";
-
-        private string _density = "7850";
-        public string Density { get => _density; set => _density = value; }
-        
-        private bool _isClipboard = true;
-        public bool IsClipboard { get => _isClipboard; set => _isClipboard = value; }
-        
-        private bool _isweight = false;
-        public bool Isweight { get => _isweight; set => _isweight = value; }
-        
-        private int _round = 0;
-        public int Round { get => _round; set => _round = value; }
-
+        private System.Windows.Forms.IWin32Window _win32;
 
 
         #endregion
@@ -325,19 +310,19 @@ namespace RelaxingKompas
 
         private void WeightAndSize()
         {
-            Window = new Window();
-
-            #region Передаем данные в форму
-            Window.tb_thickness.Text = Thickness;
-            Window.tb_density.Text = Density;
-            Window.cb_clipboard.Checked = IsClipboard;
-            Window.cb_weight.Checked = Isweight;
-            Window.comb_round.SelectedIndex = Round;
-            #endregion
-
+            
+            WindowWeightAndSize.tb_thickness.Text = DataWeightAndSize.Thickness;
+            WindowWeightAndSize.tb_density.Text = DataWeightAndSize.Density;
+            WindowWeightAndSize.cb_clipboard.Checked = DataWeightAndSize.IsClipboard;
+            WindowWeightAndSize.cb_weight.Checked = DataWeightAndSize.Isweight;
+            WindowWeightAndSize.comb_round.SelectedIndex = DataWeightAndSize.Round;
+            
             IApplication application = kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
+
+            DataWeightAndSize.KompasDocument = kompasDocument;
+
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             IKompasAPIObject selecobjects = selectionManager.SelectedObjects;
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
@@ -367,46 +352,19 @@ namespace RelaxingKompas
 
             if (width < length)
             {
-                Window.tb_width.Text = $"{width}"; //Передаем ширину  в форму
-                Window.tb_length.Text = $"{length}"; //Передаем длину в форму
+                WindowWeightAndSize.tb_width.Text = $"{width}"; //Передаем ширину  в форму
+                WindowWeightAndSize.tb_length.Text = $"{length}"; //Передаем длину в форму
             }
             else
             {
-                Window.tb_width.Text = $"{length}"; //Передаем ширину  в форму
-                Window.tb_length.Text = $"{width}"; //Передаем длину в форму
+                WindowWeightAndSize.tb_width.Text = $"{length}"; //Передаем ширину  в форму
+                WindowWeightAndSize.tb_length.Text = $"{width}"; //Передаем длину в форму
             }
-            Window.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
-            Window.Weight();
-            Window.ShowDialog();
+            WindowWeightAndSize.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
+            WindowWeightAndSize.Weight();
 
-            if (!Window.Interrupt)
-            {
-                return;
-            }
-
-            #region Получаем данные из формы
-            Thickness = Window.tb_thickness.Text;
-            Density = Window.tb_density.Text;
-            IsClipboard = Window.cb_clipboard.Checked;
-            Isweight = Window.cb_weight.Checked;
-            Round = Window.comb_round.SelectedIndex;
-            #endregion
-
-            if (Window.cb_clipboard.Checked)
-            {
-                Clipboard.SetText(Window.tb_weight.Text);
-            }
-            if (Window.cb_weight.Checked)
-            {
-                ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
-                ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
-                IStamp stamp = layoutSheet.Stamp;
-                IText text = stamp.Text[5];
-                text.Str = $"{Window.tb_weight.Text}";
-                stamp.Update();
-                layoutSheet.Update();
-            }
-
+            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow());
+            WindowWeightAndSize.Show(Win32);
         }
 
         #endregion

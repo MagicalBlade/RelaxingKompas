@@ -49,37 +49,37 @@
             // 
             // b_ok
             // 
-            this.b_ok.Location = new System.Drawing.Point(45, 216);
+            this.b_ok.Location = new System.Drawing.Point(158, 183);
             this.b_ok.Name = "b_ok";
             this.b_ok.Size = new System.Drawing.Size(75, 23);
-            this.b_ok.TabIndex = 0;
+            this.b_ok.TabIndex = 1;
             this.b_ok.Text = "Выполнить";
             this.b_ok.UseVisualStyleBackColor = true;
             this.b_ok.Click += new System.EventHandler(this.b_ok_Click);
             // 
             // tb_thickness
             // 
-            this.tb_thickness.Location = new System.Drawing.Point(35, 123);
+            this.tb_thickness.Location = new System.Drawing.Point(14, 155);
             this.tb_thickness.Margin = new System.Windows.Forms.Padding(5);
             this.tb_thickness.Name = "tb_thickness";
-            this.tb_thickness.Size = new System.Drawing.Size(100, 20);
-            this.tb_thickness.TabIndex = 1;
+            this.tb_thickness.Size = new System.Drawing.Size(56, 20);
+            this.tb_thickness.TabIndex = 0;
             this.tb_thickness.Text = "10";
             this.tb_thickness.TextChanged += new System.EventHandler(this.tb_thickness_TextChanged);
             // 
             // tb_density
             // 
-            this.tb_density.Location = new System.Drawing.Point(162, 123);
+            this.tb_density.Location = new System.Drawing.Point(24, 97);
             this.tb_density.Margin = new System.Windows.Forms.Padding(5);
             this.tb_density.Name = "tb_density";
-            this.tb_density.Size = new System.Drawing.Size(100, 20);
+            this.tb_density.Size = new System.Drawing.Size(77, 20);
             this.tb_density.TabIndex = 2;
             this.tb_density.Text = "7850";
             this.tb_density.TextChanged += new System.EventHandler(this.tb_density_TextChanged);
             // 
             // tb_weight
             // 
-            this.tb_weight.Location = new System.Drawing.Point(35, 179);
+            this.tb_weight.Location = new System.Drawing.Point(279, 155);
             this.tb_weight.Margin = new System.Windows.Forms.Padding(5);
             this.tb_weight.Name = "tb_weight";
             this.tb_weight.Size = new System.Drawing.Size(100, 20);
@@ -88,17 +88,18 @@
             // l_thickness
             // 
             this.l_thickness.AutoSize = true;
-            this.l_thickness.Location = new System.Drawing.Point(48, 99);
+            this.l_thickness.Location = new System.Drawing.Point(11, 131);
             this.l_thickness.Name = "l_thickness";
             this.l_thickness.Padding = new System.Windows.Forms.Padding(3);
             this.l_thickness.Size = new System.Drawing.Size(59, 19);
             this.l_thickness.TabIndex = 4;
             this.l_thickness.Text = "Толщина";
+            this.l_thickness.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // l_density
             // 
             this.l_density.AutoSize = true;
-            this.l_density.Location = new System.Drawing.Point(178, 99);
+            this.l_density.Location = new System.Drawing.Point(34, 73);
             this.l_density.Name = "l_density";
             this.l_density.Padding = new System.Windows.Forms.Padding(3);
             this.l_density.Size = new System.Drawing.Size(67, 19);
@@ -108,7 +109,7 @@
             // l_weight
             // 
             this.l_weight.AutoSize = true;
-            this.l_weight.Location = new System.Drawing.Point(61, 155);
+            this.l_weight.Location = new System.Drawing.Point(305, 131);
             this.l_weight.Name = "l_weight";
             this.l_weight.Padding = new System.Windows.Forms.Padding(3);
             this.l_weight.Size = new System.Drawing.Size(46, 19);
@@ -118,7 +119,7 @@
             // l_yardage
             // 
             this.l_yardage.AutoSize = true;
-            this.l_yardage.Location = new System.Drawing.Point(348, 99);
+            this.l_yardage.Location = new System.Drawing.Point(258, 72);
             this.l_yardage.Name = "l_yardage";
             this.l_yardage.Padding = new System.Windows.Forms.Padding(3);
             this.l_yardage.Size = new System.Drawing.Size(60, 19);
@@ -127,7 +128,7 @@
             // 
             // tb_yardage
             // 
-            this.tb_yardage.Location = new System.Drawing.Point(330, 123);
+            this.tb_yardage.Location = new System.Drawing.Point(240, 96);
             this.tb_yardage.Margin = new System.Windows.Forms.Padding(5);
             this.tb_yardage.Name = "tb_yardage";
             this.tb_yardage.ReadOnly = true;
@@ -139,7 +140,7 @@
             this.cb_clipboard.AutoSize = true;
             this.cb_clipboard.Checked = true;
             this.cb_clipboard.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_clipboard.Location = new System.Drawing.Point(162, 179);
+            this.cb_clipboard.Location = new System.Drawing.Point(240, 18);
             this.cb_clipboard.Name = "cb_clipboard";
             this.cb_clipboard.Size = new System.Drawing.Size(176, 17);
             this.cb_clipboard.TabIndex = 9;
@@ -149,7 +150,7 @@
             // cb_weight
             // 
             this.cb_weight.AutoSize = true;
-            this.cb_weight.Location = new System.Drawing.Point(162, 215);
+            this.cb_weight.Location = new System.Drawing.Point(240, 41);
             this.cb_weight.Name = "cb_weight";
             this.cb_weight.Size = new System.Drawing.Size(153, 17);
             this.cb_weight.TabIndex = 10;
@@ -169,7 +170,7 @@
             "0,0001",
             "0,00001",
             "0,000001"});
-            this.comb_round.Location = new System.Drawing.Point(16, 33);
+            this.comb_round.Location = new System.Drawing.Point(111, 96);
             this.comb_round.Margin = new System.Windows.Forms.Padding(5);
             this.comb_round.Name = "comb_round";
             this.comb_round.Size = new System.Drawing.Size(119, 21);
@@ -179,7 +180,7 @@
             // l_round
             // 
             this.l_round.AutoSize = true;
-            this.l_round.Location = new System.Drawing.Point(21, 9);
+            this.l_round.Location = new System.Drawing.Point(116, 72);
             this.l_round.Name = "l_round";
             this.l_round.Padding = new System.Windows.Forms.Padding(3);
             this.l_round.Size = new System.Drawing.Size(110, 19);
@@ -188,15 +189,15 @@
             // 
             // tb_width
             // 
-            this.tb_width.Location = new System.Drawing.Point(206, 60);
+            this.tb_width.Location = new System.Drawing.Point(80, 155);
             this.tb_width.Margin = new System.Windows.Forms.Padding(5);
             this.tb_width.Name = "tb_width";
-            this.tb_width.Size = new System.Drawing.Size(100, 20);
+            this.tb_width.Size = new System.Drawing.Size(79, 20);
             this.tb_width.TabIndex = 13;
             // 
             // tb_length
             // 
-            this.tb_length.Location = new System.Drawing.Point(312, 60);
+            this.tb_length.Location = new System.Drawing.Point(169, 155);
             this.tb_length.Margin = new System.Windows.Forms.Padding(5);
             this.tb_length.Name = "tb_length";
             this.tb_length.Size = new System.Drawing.Size(100, 20);
@@ -205,7 +206,7 @@
             // l_width
             // 
             this.l_width.AutoSize = true;
-            this.l_width.Location = new System.Drawing.Point(234, 36);
+            this.l_width.Location = new System.Drawing.Point(95, 131);
             this.l_width.Name = "l_width";
             this.l_width.Padding = new System.Windows.Forms.Padding(3);
             this.l_width.Size = new System.Drawing.Size(52, 19);
@@ -215,7 +216,7 @@
             // l_length
             // 
             this.l_length.AutoSize = true;
-            this.l_length.Location = new System.Drawing.Point(338, 36);
+            this.l_length.Location = new System.Drawing.Point(195, 131);
             this.l_length.Name = "l_length";
             this.l_length.Padding = new System.Windows.Forms.Padding(3);
             this.l_length.Size = new System.Drawing.Size(46, 19);
@@ -224,10 +225,9 @@
             // 
             // FormWeightAndSize
             // 
-            this.AcceptButton = this.b_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(462, 261);
+            this.ClientSize = new System.Drawing.Size(420, 213);
             this.Controls.Add(this.l_length);
             this.Controls.Add(this.l_width);
             this.Controls.Add(this.tb_length);
@@ -246,12 +246,13 @@
             this.Controls.Add(this.tb_thickness);
             this.Controls.Add(this.b_ok);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormWeightAndSize";
             this.ShowIcon = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Подсчет массы";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormWeightAndSize_FormClosing);
             this.ResumeLayout(false);

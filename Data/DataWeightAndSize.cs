@@ -12,11 +12,6 @@ namespace RelaxingKompas.Data
 
         static private IKompasDocument _kompasDocument;
 
-        static public void ClipboardText()
-        {
-            Clipboard.SetText(DataWeightAndSize.Weight);
-        }
-
         static public void WriteWeightStamp()
         {
             ILayoutSheets layoutSheets = KompasDocument.LayoutSheets;

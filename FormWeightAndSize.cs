@@ -18,10 +18,13 @@ namespace RelaxingKompas
         {
             InitializeComponent();
 
+            #region Загрузка настроек
             tb_density.Text = Properties.Settings.Default.Density;
             cb_clipboard.Checked = Properties.Settings.Default.IsClipboard;
             cb_weight.Checked = Properties.Settings.Default.Isweight;
             comb_round.SelectedIndex = Properties.Settings.Default.Round;
+            this.Location = Properties.Settings.Default.Point;
+            #endregion
 
         }
 
@@ -49,8 +52,12 @@ namespace RelaxingKompas
         {
             Weight();
         }
-        
-        
+
+        private void FormWeightAndSize_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            Hide();
+        }
 
         private void b_ok_Click(object sender, EventArgs e)
         {
@@ -58,7 +65,7 @@ namespace RelaxingKompas
 
             if (cb_clipboard.Checked)
             {
-                DataWeightAndSize.ClipboardText();
+                FormattingText();
             }
 
             if (cb_weight.Checked)
@@ -71,16 +78,18 @@ namespace RelaxingKompas
             Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
             Properties.Settings.Default.Isweight = cb_weight.Checked;
             Properties.Settings.Default.Round = comb_round.SelectedIndex;
-            Properties.Settings.Default.Save(); 
+            Properties.Settings.Default.Point = this.Location;
+            Properties.Settings.Default.Save();
             #endregion
 
             Hide();
         }
 
-        private void FormWeightAndSize_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormattingText()
         {
-            e.Cancel = true;
-            Hide();
+            string plainText = $"{tb_thickness.Text}\t{tb_width.Text}\t{tb_length.Text}\t{tb_weight.Text}";
+            string htmlText = $"<table><tr><td>{tb_thickness.Text}</td><td>{tb_width.Text}</td><td>{tb_length.Text}</td><td>{tb_weight.Text}</tr></table>";
+            Excel.CopyToExcel(plainText, htmlText);
         }
     }
 }

@@ -18,9 +18,17 @@ namespace RelaxingKompas.Data
             ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
             IStamp stamp = layoutSheet.Stamp;
             IText text = stamp.Text[5];
-            text.Str = $"{DataWeightAndSize.Weight}";
+            text.Str = $"{Weight}";
             stamp.Update();
             layoutSheet.Update();
+        }
+        static public string GetPos()
+        {
+            ILayoutSheets layoutSheets = KompasDocument.LayoutSheets;
+            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            IStamp stamp = layoutSheet.Stamp;
+            IText text = stamp.Text[2];
+            return text.Str;
         }
     }
 }

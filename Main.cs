@@ -272,6 +272,7 @@ namespace RelaxingKompas
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
 
             DataWeightAndSize.KompasDocument = kompasDocument;
+            WindowWeightAndSize.tb_pos.Text = DataWeightAndSize.GetPos();
 
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
             ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83); //Параметры МЦХ

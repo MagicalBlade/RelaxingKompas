@@ -76,5 +76,11 @@ namespace RelaxingKompas
 
             Hide();
         }
+
+        private void FormWeightAndSize_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            Hide();
+        }
     }
 }

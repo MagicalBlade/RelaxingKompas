@@ -253,6 +253,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Подсчет массы";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormWeightAndSize_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

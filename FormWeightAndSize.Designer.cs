@@ -64,6 +64,7 @@
             this.tb_thickness.Name = "tb_thickness";
             this.tb_thickness.Size = new System.Drawing.Size(100, 20);
             this.tb_thickness.TabIndex = 1;
+            this.tb_thickness.Text = "10";
             this.tb_thickness.TextChanged += new System.EventHandler(this.tb_thickness_TextChanged);
             // 
             // tb_density
@@ -136,6 +137,8 @@
             // cb_clipboard
             // 
             this.cb_clipboard.AutoSize = true;
+            this.cb_clipboard.Checked = true;
+            this.cb_clipboard.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cb_clipboard.Location = new System.Drawing.Point(162, 179);
             this.cb_clipboard.Name = "cb_clipboard";
             this.cb_clipboard.Size = new System.Drawing.Size(176, 17);

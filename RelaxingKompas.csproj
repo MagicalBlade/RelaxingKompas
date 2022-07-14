@@ -68,6 +68,11 @@
     <Compile Include="FormWeightAndSize.Designer.cs">
       <DependentUpon>FormWeightAndSize.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FormWeightAndSize.resx">
@@ -80,6 +85,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="AsconIconsSDK-Accent.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -94,6 +100,10 @@
     </None>
     <None Include="AsconIconsSDK-Color3.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

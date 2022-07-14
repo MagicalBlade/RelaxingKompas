@@ -17,6 +17,12 @@ namespace RelaxingKompas
         public FormWeightAndSize()
         {
             InitializeComponent();
+
+            tb_density.Text = Properties.Settings.Default.Density;
+            cb_clipboard.Checked = Properties.Settings.Default.IsClipboard;
+            cb_weight.Checked = Properties.Settings.Default.Isweight;
+            comb_round.SelectedIndex = Properties.Settings.Default.Round;
+
         }
 
         internal void Weight()
@@ -43,14 +49,11 @@ namespace RelaxingKompas
         {
             Weight();
         }
+        
+        
 
         private void b_ok_Click(object sender, EventArgs e)
         {
-            DataWeightAndSize.Thickness = tb_thickness.Text;
-            DataWeightAndSize.Density = tb_density.Text;
-            DataWeightAndSize.IsClipboard = cb_clipboard.Checked;
-            DataWeightAndSize.Isweight = cb_weight.Checked;
-            DataWeightAndSize.Round = comb_round.SelectedIndex;
             DataWeightAndSize.Weight = tb_weight.Text;
 
             if (cb_clipboard.Checked)
@@ -62,6 +65,15 @@ namespace RelaxingKompas
             {
                 DataWeightAndSize.WriteWeightStamp();
             }
+
+            #region Сохранение настроек
+            Properties.Settings.Default.Density = tb_density.Text;
+            Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
+            Properties.Settings.Default.Isweight = cb_weight.Checked;
+            Properties.Settings.Default.Round = comb_round.SelectedIndex;
+            Properties.Settings.Default.Save(); 
+            #endregion
+
             Hide();
         }
     }

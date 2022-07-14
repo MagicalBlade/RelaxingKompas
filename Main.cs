@@ -310,21 +310,12 @@ namespace RelaxingKompas
 
         private void WeightAndSize()
         {
-            
-            WindowWeightAndSize.tb_thickness.Text = DataWeightAndSize.Thickness;
-            WindowWeightAndSize.tb_density.Text = DataWeightAndSize.Density;
-            WindowWeightAndSize.cb_clipboard.Checked = DataWeightAndSize.IsClipboard;
-            WindowWeightAndSize.cb_weight.Checked = DataWeightAndSize.Isweight;
-            WindowWeightAndSize.comb_round.SelectedIndex = DataWeightAndSize.Round;
-            
             IApplication application = kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
 
             DataWeightAndSize.KompasDocument = kompasDocument;
 
-            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            IKompasAPIObject selecobjects = selectionManager.SelectedObjects;
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
             ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83); //Параметры МЦХ
             int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади
@@ -352,19 +343,19 @@ namespace RelaxingKompas
 
             if (width < length)
             {
-                WindowWeightAndSize.tb_width.Text = $"{width}"; //Передаем ширину  в форму
+                WindowWeightAndSize.tb_width.Text = $"{width}"; //Передаем ширину в форму
                 WindowWeightAndSize.tb_length.Text = $"{length}"; //Передаем длину в форму
             }
             else
             {
-                WindowWeightAndSize.tb_width.Text = $"{length}"; //Передаем ширину  в форму
+                WindowWeightAndSize.tb_width.Text = $"{length}"; //Передаем ширину в форму
                 WindowWeightAndSize.tb_length.Text = $"{width}"; //Передаем длину в форму
             }
             WindowWeightAndSize.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
-            WindowWeightAndSize.Weight();
+            WindowWeightAndSize.Weight(); //Вызываю вычисление массы
 
-            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow());
-            WindowWeightAndSize.Show(Win32);
+            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
+            WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
         }
 
         #endregion

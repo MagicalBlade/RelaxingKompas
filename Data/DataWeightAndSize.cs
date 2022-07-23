@@ -22,12 +22,15 @@ namespace RelaxingKompas.Data
             stamp.Update();
             layoutSheet.Update();
         }
-        static public string GetPos()
+        static public string GetCellStamp(int NumberCell)
         {
             ILayoutSheets layoutSheets = KompasDocument.LayoutSheets;
+            if (layoutSheets == null) return "";
             ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            if (layoutSheet == null) return "";
             IStamp stamp = layoutSheet.Stamp;
-            IText text = stamp.Text[2];
+            if (stamp == null) return "";
+            IText text = stamp.Text[NumberCell];
             return text.Str;
         }
     }

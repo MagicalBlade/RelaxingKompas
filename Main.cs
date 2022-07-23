@@ -32,7 +32,6 @@ namespace RelaxingKompas
 
         private System.Windows.Forms.IWin32Window _win32;
 
-
         #endregion
 
         // Имя библиотеки
@@ -180,6 +179,10 @@ namespace RelaxingKompas
         }
         #endregion
 
+
+        /// <summary>
+        /// Копирование данных из таблицы в буфер обмена, в формате эксель.
+        /// </summary>
         private void CopyTable()
         {
             IApplication application = kompas.ksGetApplication7();
@@ -220,6 +223,9 @@ namespace RelaxingKompas
             Excel.CopyToExcel(plainText, copytable);
         }
 
+        /// <summary>
+        /// Вставка в таблицу данных из эксель.
+        /// </summary>
         private void InsertTable()
         {
             IApplication application = kompas.ksGetApplication7();
@@ -265,6 +271,9 @@ namespace RelaxingKompas
             drawingTable.Update(); //Применяем изменения
         }
 
+        /// <summary>
+        /// Получение габаритов детали. Расчет массы детали и запись ее в штамп. Копирование данных в эксель.
+        /// </summary>
         private void WeightAndSize()
         {
             IApplication application = kompas.ksGetApplication7();
@@ -272,7 +281,8 @@ namespace RelaxingKompas
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
 
             DataWeightAndSize.KompasDocument = kompasDocument;
-            WindowWeightAndSize.tb_pos.Text = DataWeightAndSize.GetPos();
+            WindowWeightAndSize.tb_pos.Text = DataWeightAndSize.GetCellStamp(2);
+            WindowWeightAndSize.tb_sheet.Text = DataWeightAndSize.GetCellStamp(16001);
 
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
             ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83); //Параметры МЦХ
@@ -315,7 +325,6 @@ namespace RelaxingKompas
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
         }
-
         #endregion
 
 
@@ -323,6 +332,7 @@ namespace RelaxingKompas
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
             kompas = (KompasObject)kompas_;
+
             //Вызываем команды
             switch (command)
             {
@@ -360,6 +370,12 @@ namespace RelaxingKompas
             }
 
             return result;
+        }
+
+        private static bool Test(int obj)
+        {
+            MessageBox.Show("Test");
+            return true;
         }
 
         #region COM Registration

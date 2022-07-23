@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Kompas6API5">
       <HintPath>..\..\..\Program Files\ASCON\KOMPAS-3D v20\SDK\Samples\CSharp\Common\Kompas6API5.dll</HintPath>

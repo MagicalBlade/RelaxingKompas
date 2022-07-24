@@ -212,7 +212,7 @@ namespace RelaxingKompas
                     catch (IOException)
                     {
 
-                        kompas.ksMessage("Не получается сохранить dxf. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
+                        kompas.ksMessage($"Не получается сохранить {TypeFile}. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
                         return;
                     }
                 }
@@ -323,6 +323,7 @@ namespace RelaxingKompas
             DataWeightAndSize.Application = application;
             DataWeightAndSize.KompasDocument = kompasDocument;
             DataWeightAndSize.FormWeightAndSize = WindowWeightAndSize;
+            DataWeightAndSize.WindowLibrarySettings = WindowLibrarySettings;
             WindowWeightAndSize.tb_thickness.Text = "";
             WindowWeightAndSize.tb_steel.Text = "";
             WindowWeightAndSize.tb_weight.Text = "";
@@ -382,6 +383,9 @@ namespace RelaxingKompas
             WindowWeightAndSize.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
             WindowWeightAndSize.Weight(); //Вызываю вычисление массы
 
+            ksdocument2D.ksWriteGroupToClip(group, true); //Копируем группу в буфер обмена
+
+
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
         }
@@ -399,6 +403,7 @@ namespace RelaxingKompas
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
             kompas = (KompasObject)kompas_;
+            Data.DataWeightAndSize.Kompas = kompas;
             Application = (IApplication)kompas.ksGetApplication7();
 
             //Вызываем команды

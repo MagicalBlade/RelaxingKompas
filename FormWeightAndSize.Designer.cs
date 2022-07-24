@@ -51,6 +51,7 @@
             this.l_sheet = new System.Windows.Forms.Label();
             this.tb_steel = new System.Windows.Forms.TextBox();
             this.l_steel = new System.Windows.Forms.Label();
+            this.b_settings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // b_ok
@@ -283,11 +284,22 @@
             this.l_steel.TabIndex = 15;
             this.l_steel.Text = "Сталь";
             // 
+            // b_settings
+            // 
+            this.b_settings.Location = new System.Drawing.Point(44, 30);
+            this.b_settings.Name = "b_settings";
+            this.b_settings.Size = new System.Drawing.Size(75, 23);
+            this.b_settings.TabIndex = 18;
+            this.b_settings.Text = "Настройки";
+            this.b_settings.UseVisualStyleBackColor = true;
+            this.b_settings.Click += new System.EventHandler(this.b_settings_Click);
+            // 
             // FormWeightAndSize
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(496, 213);
+            this.Controls.Add(this.b_settings);
             this.Controls.Add(this.tb_pos);
             this.Controls.Add(this.l_length);
             this.Controls.Add(this.l_steel);
@@ -349,5 +361,6 @@
         private System.Windows.Forms.Label l_sheet;
         internal System.Windows.Forms.TextBox tb_steel;
         private System.Windows.Forms.Label l_steel;
+        private System.Windows.Forms.Button b_settings;
     }
 }

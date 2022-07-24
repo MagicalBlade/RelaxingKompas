@@ -48,7 +48,7 @@
             this.groupBox1.Size = new System.Drawing.Size(163, 122);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Сохранить контур";
+            this.groupBox1.Text = "Общие";
             // 
             // cb_SaveFragment
             // 
@@ -93,7 +93,7 @@
             // b_save
             // 
             this.b_save.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.b_save.Location = new System.Drawing.Point(160, 199);
+            this.b_save.Location = new System.Drawing.Point(67, 164);
             this.b_save.Name = "b_save";
             this.b_save.Size = new System.Drawing.Size(75, 23);
             this.b_save.TabIndex = 0;
@@ -106,7 +106,7 @@
             this.AcceptButton = this.b_save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 252);
+            this.ClientSize = new System.Drawing.Size(212, 199);
             this.ControlBox = false;
             this.Controls.Add(this.b_save);
             this.Controls.Add(this.groupBox1);

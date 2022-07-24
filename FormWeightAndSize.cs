@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RelaxingKompas.Data;
+using KompasAPI7;
 
 namespace RelaxingKompas
 {
@@ -91,6 +92,26 @@ namespace RelaxingKompas
             #endregion
 
             Hide();
+
+            IKompasDocument kompasDocument = DataWeightAndSize.CreatFragment();
+            DataWeightAndSize.PastGroup(kompasDocument);
+            if (DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked)
+            {
+                DataWeightAndSize.SaveDocument(kompasDocument, "frw");
+            }
+            if (DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked)
+            {
+                DataWeightAndSize.SaveDocument(kompasDocument, "dxf");
+            }
+            if (DataWeightAndSize.WindowLibrarySettings.cb_CloseFragment.Checked)
+            {
+                DataWeightAndSize.CloseDocument(kompasDocument);
+            }
+            if (DataWeightAndSize.WindowLibrarySettings.cb_CloseDrawing.Checked)
+            {
+                DataWeightAndSize.CloseDocument(DataWeightAndSize.KompasDocument);
+            }
+
         }
 
         private void FormattingText()
@@ -98,6 +119,11 @@ namespace RelaxingKompas
             string plainText = $"{tb_pos.Text}\t{tb_thickness.Text}\t{tb_width.Text}\t{tb_length.Text}\t{tb_weight.Text}";
             string htmlText = $"<table><tr><td>{tb_pos.Text}</td><td>{tb_thickness.Text}</td><td>{tb_width.Text}</td><td>{tb_length.Text}</td><td>{tb_weight.Text}</tr></table>";
             Excel.CopyToExcel(plainText, htmlText);
+        }
+
+        private void b_settings_Click(object sender, EventArgs e)
+        {
+            Data.DataWeightAndSize.WindowLibrarySettings.ShowDialog();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Kompas6Constants;
 using KompasAPI7;
 using System;
+using System.IO;
 using System.Windows;
 
 namespace RelaxingKompas.Data
@@ -81,18 +82,48 @@ namespace RelaxingKompas.Data
             kompasDocument.Close(DocumentCloseOptions.kdDoNotSaveChanges);
         }
 
-        static public void SaveDocument(IKompasDocument kompasDocument, string TypeFile)
+        static public bool SaveDocument(IKompasDocument kompasDocument, string TypeFile)
         {
             string nameDocument = KompasDocument.PathName;
             nameDocument = nameDocument.Substring(0, nameDocument.Length - 3);
             if (TypeFile == "frw")
             {
+                if (!CheckFile())
+                {
+                    return false;
+                }
                 kompasDocument.SaveAs($"{nameDocument}frw");
             }
             if (TypeFile == "dxf")
             {
+                if (!CheckFile())
+                {
+                    return false;
+                }
                 ksDocument2D ksdocument2D = (ksDocument2D)Kompas.ActiveDocument2D();
                 ksdocument2D.ksSaveToDXF($"{nameDocument}dxf");
+            }
+            return true;
+            ///<summary> Проверка на возможность пересохранения файла ///</summary>
+            bool CheckFile()
+            {
+                if (File.Exists($"{nameDocument}{TypeFile}"))
+                {
+                    try
+                    {
+                        using (FileStream stream = File.Open($"{nameDocument}{TypeFile}", FileMode.Open, FileAccess.Read, FileShare.None))
+                        {
+                            stream.Close();
+                        }
+                    }
+                    catch (IOException)
+                    {
+
+                        Kompas.ksMessage($"Не получается сохранить {TypeFile}. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
+                        return false;
+                    }
+                }
+                return true;
             }
         }
 

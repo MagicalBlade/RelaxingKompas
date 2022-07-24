@@ -97,11 +97,17 @@ namespace RelaxingKompas
             DataWeightAndSize.PastGroup(kompasDocument);
             if (DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked)
             {
-                DataWeightAndSize.SaveDocument(kompasDocument, "frw");
+                if (!DataWeightAndSize.SaveDocument(kompasDocument, "frw"))
+                {
+                    return;
+                }
             }
             if (DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked)
             {
-                DataWeightAndSize.SaveDocument(kompasDocument, "dxf");
+                if (!DataWeightAndSize.SaveDocument(kompasDocument, "dxf"))
+                {
+                    return;
+                }
             }
             if (DataWeightAndSize.WindowLibrarySettings.cb_CloseFragment.Checked)
             {

@@ -20,13 +20,22 @@ namespace RelaxingKompas
     {
         private KompasObject _kompas;
         public KompasObject kompas { get => _kompas; set => _kompas = value; }
-        
+
+        public IApplication Application { get => _application; set => _application = value; }
+
+        private IApplication _application;
+
+
         private ksDocument2D _activedocument2D;
         public ksDocument2D activedocument2D { get => _activedocument2D; set => _activedocument2D = value; }
 
         #region Данные формы
         private FormWeightAndSize _windowWeightAndSize = new FormWeightAndSize();
         public FormWeightAndSize WindowWeightAndSize { get => _windowWeightAndSize; set => _windowWeightAndSize = value; }
+
+        public FormLibrarySettings WindowLibrarySettings { get => _windowLibrarySettings; set => _windowLibrarySettings = value; }
+
+        private FormLibrarySettings _windowLibrarySettings = new FormLibrarySettings();
 
         public System.Windows.Forms.IWin32Window Win32 { get => _win32; set => _win32 = value; }
 
@@ -67,6 +76,10 @@ namespace RelaxingKompas
                     command = 2;
                     break;
                 case 5:
+                    result = "Настройки";
+                    command = 2;
+                    break;
+                case 6:
                     command = -1;
                     itemType = 3; // "ENDMENU"
                     break;
@@ -83,6 +96,7 @@ namespace RelaxingKompas
         private void SaveContour()
         {
             activedocument2D = (ksDocument2D)kompas.ActiveDocument2D();
+            IKompasDocument2D1 activekompasDocument2D1 = (IKompasDocument2D1)Application.ActiveDocument;
             ksDocumentParam activedocumentParam = (ksDocumentParam)kompas.GetParamStruct(35);
             activedocument2D.ksGetObjParam(activedocument2D.reference, activedocumentParam, -1); //Получаем параметры активного окна
             string namefile = activedocumentParam.fileName;
@@ -156,26 +170,53 @@ namespace RelaxingKompas
 
             newactivedocument2D.ksMoveObj(pastegroup, -mathPointParam.x, -mathPointParam.y); //Перемещаем группу в начало координат
             newactivedocument2D.ksStoreTmpGroup(pastegroup); //Вставляем временную группу в новый чертеж
-            //Сохраняем в dxf
-            if (File.Exists($"{namedxf}dxf"))
+            
+            //Сохраняем файл в форматах
+            if (WindowLibrarySettings.cb_SaveDxf.Checked)
             {
-                try
+                CheckFile("dxf");
+                newactivedocument2D.ksSaveToDXF($"{namedxf}dxf");
+            }
+            if (WindowLibrarySettings.cb_SaveFragment.Checked)
+            {
+                CheckFile("frw");
+                #region Переносим переменную толщина во фрагмент
+                IVariable7 variable = activekompasDocument2D1.Variable[false, "t"];
+                IKompasDocument2D1 newactivedocument2D1 = (IKompasDocument2D1)Application.ActiveDocument;
+                if (variable != null)
                 {
-                    using (FileStream stream = File.Open($"{namedxf}dxf", FileMode.Open, FileAccess.Read, FileShare.None))
+                    IVariable7 variable7 = newactivedocument2D1.AddVariable("t", Convert.ToDouble(variable.Expression), "Толщина");
+                    variable7.External = true;
+                }
+                newactivedocument2D.ksSaveDocument($"{namedxf}frw"); 
+                #endregion
+            }
+
+
+            if (WindowLibrarySettings.cb_CloseFragment.Checked) newactivedocument2D.ksCloseDocument();
+            if (WindowLibrarySettings.cb_CloseDrawing.Checked) activedocument2D.ksCloseDocument();
+            
+            
+            ///<summary> Проверка на возможность пересохранения файла ///</summary>
+            void CheckFile(string TypeFile)
+            {
+                if (File.Exists($"{namedxf}{TypeFile}"))
+                {
+                    try
                     {
-                        stream.Close();
+                        using (FileStream stream = File.Open($"{namedxf}{TypeFile}", FileMode.Open, FileAccess.Read, FileShare.None))
+                        {
+                            stream.Close();
+                        }
+                    }
+                    catch (IOException)
+                    {
+
+                        kompas.ksMessage("Не получается сохранить dxf. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
+                        return;
                     }
                 }
-                catch (IOException)
-                {
-
-                    kompas.ksMessage("Не получается сохранить dxf. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
-                    return;
-                }
             }
-            newactivedocument2D.ksSaveToDXF($"{namedxf}dxf");
-            activedocument2D.ksCloseDocument();
-            newactivedocument2D.ksCloseDocument();
         }
         #endregion
 
@@ -281,6 +322,7 @@ namespace RelaxingKompas
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
 
             DataWeightAndSize.KompasDocument = kompasDocument;
+            DataWeightAndSize.FormWeightAndSize = WindowWeightAndSize;
             WindowWeightAndSize.tb_pos.Text = DataWeightAndSize.GetCellStamp(2);
             WindowWeightAndSize.tb_sheet.Text = DataWeightAndSize.GetCellStamp(16001);
 
@@ -293,7 +335,6 @@ namespace RelaxingKompas
             }
             ksMathematic2D mathematic2D = kompas.GetMathematic2D();
             mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
-
             #region Получение габаритного прямоугольника
             ksRectParam rectParam = kompas.GetParamStruct(15); //Параметры прямоугольника
             ksdocument2D.ksGetObjGabaritRect(group, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
@@ -325,6 +366,13 @@ namespace RelaxingKompas
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
         }
+
+        private void LibrarySettings()
+        {
+            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
+            WindowLibrarySettings.ShowDialog(Win32);
+        }
+
         #endregion
 
 
@@ -332,6 +380,7 @@ namespace RelaxingKompas
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
             kompas = (KompasObject)kompas_;
+            Application = (IApplication)kompas.ksGetApplication7();
 
             //Вызываем команды
             switch (command)
@@ -340,6 +389,7 @@ namespace RelaxingKompas
                 case 2: CopyTable(); break;
                 case 3: InsertTable(); break;
                 case 4: WeightAndSize(); break;
+                case 5: LibrarySettings(); break;
             }
         }
 

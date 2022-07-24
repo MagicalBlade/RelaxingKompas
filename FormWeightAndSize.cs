@@ -73,12 +73,15 @@ namespace RelaxingKompas
                 DataWeightAndSize.WriteWeightStamp();
             }
 
+            DataWeightAndSize.WriteVariable("t", tb_thickness.Text, "Толщина");
+
             #region Сохранение настроек
             Properties.Settings.Default.Density = tb_density.Text;
             Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
             Properties.Settings.Default.Isweight = cb_weight.Checked;
             Properties.Settings.Default.Round = comb_round.SelectedIndex;
             Properties.Settings.Default.Point = this.Location;
+
             Properties.Settings.Default.Save();
             #endregion
 

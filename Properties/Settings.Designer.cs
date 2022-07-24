@@ -82,5 +82,53 @@ namespace RelaxingKompas.Properties {
                 this["Point"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CloseDrawing {
+            get {
+                return ((bool)(this["CloseDrawing"]));
+            }
+            set {
+                this["CloseDrawing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CloseFragment {
+            get {
+                return ((bool)(this["CloseFragment"]));
+            }
+            set {
+                this["CloseFragment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SaveDxf {
+            get {
+                return ((bool)(this["SaveDxf"]));
+            }
+            set {
+                this["SaveDxf"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveFragment {
+            get {
+                return ((bool)(this["SaveFragment"]));
+            }
+            set {
+                this["SaveFragment"] = value;
+            }
+        }
     }
 }

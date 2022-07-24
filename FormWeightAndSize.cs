@@ -61,6 +61,11 @@ namespace RelaxingKompas
 
         private void b_ok_Click(object sender, EventArgs e)
         {
+            if (tb_thickness.Text == "")
+            {
+                Data.DataWeightAndSize.Application.MessageBoxEx("Введите толщину", "Ошибка", 0);
+                return;
+            }
             DataWeightAndSize.Weight = tb_weight.Text;
 
             if (cb_clipboard.Checked)

@@ -12,7 +12,11 @@ namespace RelaxingKompas.Data
 
         static private string _weight;
         public static string Weight { get => _weight; set => _weight = value; }
-       
+
+        public static IApplication Application { get => _application; set => _application = value; }
+
+        private static IApplication _application;
+
         public static IKompasDocument KompasDocument { get => _kompasDocument; set => _kompasDocument = value; }
 
         static private IKompasDocument _kompasDocument;

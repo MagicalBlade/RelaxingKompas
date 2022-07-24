@@ -320,11 +320,30 @@ namespace RelaxingKompas
             IApplication application = kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
-
+            DataWeightAndSize.Application = application;
             DataWeightAndSize.KompasDocument = kompasDocument;
             DataWeightAndSize.FormWeightAndSize = WindowWeightAndSize;
-            WindowWeightAndSize.tb_pos.Text = DataWeightAndSize.GetCellStamp(2);
-            WindowWeightAndSize.tb_sheet.Text = DataWeightAndSize.GetCellStamp(16001);
+            WindowWeightAndSize.tb_thickness.Text = "";
+            WindowWeightAndSize.tb_steel.Text = "";
+            WindowWeightAndSize.tb_weight.Text = "";
+
+
+            #region Получаем данные из штампа
+            WindowWeightAndSize.tb_pos.Text = DataWeightAndSize.GetCellStamp(2); //Ячейка позиции
+            WindowWeightAndSize.tb_sheet.Text = DataWeightAndSize.GetCellStamp(16001); //Ячейки номера листа
+
+            string stampid3 = DataWeightAndSize.GetCellStamp(3);//Ячейка с толщиной, материалом и т.д.
+            if (stampid3 != "")
+            {
+                string[] profile = stampid3.Split("$d; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (profile.Length > 4)
+                {
+                    WindowWeightAndSize.tb_thickness.Text = profile[1];
+                    WindowWeightAndSize.tb_steel.Text = profile[4];
+                }
+            }
+
+            #endregion
 
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
             ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83); //Параметры МЦХ

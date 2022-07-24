@@ -49,6 +49,8 @@
             this.l_pos = new System.Windows.Forms.Label();
             this.tb_sheet = new System.Windows.Forms.TextBox();
             this.l_sheet = new System.Windows.Forms.Label();
+            this.tb_steel = new System.Windows.Forms.TextBox();
+            this.l_steel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // b_ok
@@ -83,7 +85,7 @@
             // 
             // tb_weight
             // 
-            this.tb_weight.Location = new System.Drawing.Point(297, 153);
+            this.tb_weight.Location = new System.Drawing.Point(378, 153);
             this.tb_weight.Margin = new System.Windows.Forms.Padding(5);
             this.tb_weight.Name = "tb_weight";
             this.tb_weight.Size = new System.Drawing.Size(46, 20);
@@ -113,7 +115,7 @@
             // l_weight
             // 
             this.l_weight.AutoSize = true;
-            this.l_weight.Location = new System.Drawing.Point(297, 129);
+            this.l_weight.Location = new System.Drawing.Point(378, 129);
             this.l_weight.Name = "l_weight";
             this.l_weight.Padding = new System.Windows.Forms.Padding(3);
             this.l_weight.Size = new System.Drawing.Size(46, 19);
@@ -201,10 +203,10 @@
             // 
             // tb_length
             // 
-            this.tb_length.Location = new System.Drawing.Point(228, 153);
+            this.tb_length.Location = new System.Drawing.Point(287, 153);
             this.tb_length.Margin = new System.Windows.Forms.Padding(5);
             this.tb_length.Name = "tb_length";
-            this.tb_length.Size = new System.Drawing.Size(59, 20);
+            this.tb_length.Size = new System.Drawing.Size(81, 20);
             this.tb_length.TabIndex = 14;
             // 
             // l_width
@@ -220,7 +222,7 @@
             // l_length
             // 
             this.l_length.AutoSize = true;
-            this.l_length.Location = new System.Drawing.Point(237, 129);
+            this.l_length.Location = new System.Drawing.Point(307, 129);
             this.l_length.Name = "l_length";
             this.l_length.Padding = new System.Windows.Forms.Padding(3);
             this.l_length.Size = new System.Drawing.Size(46, 19);
@@ -247,7 +249,7 @@
             // 
             // tb_sheet
             // 
-            this.tb_sheet.Location = new System.Drawing.Point(353, 153);
+            this.tb_sheet.Location = new System.Drawing.Point(434, 153);
             this.tb_sheet.Margin = new System.Windows.Forms.Padding(5);
             this.tb_sheet.Name = "tb_sheet";
             this.tb_sheet.Size = new System.Drawing.Size(53, 20);
@@ -256,22 +258,42 @@
             // l_sheet
             // 
             this.l_sheet.AutoSize = true;
-            this.l_sheet.Location = new System.Drawing.Point(353, 129);
+            this.l_sheet.Location = new System.Drawing.Point(434, 129);
             this.l_sheet.Name = "l_sheet";
             this.l_sheet.Padding = new System.Windows.Forms.Padding(3);
             this.l_sheet.Size = new System.Drawing.Size(56, 19);
             this.l_sheet.TabIndex = 6;
             this.l_sheet.Text = "№ листа";
             // 
+            // tb_steel
+            // 
+            this.tb_steel.Location = new System.Drawing.Point(228, 153);
+            this.tb_steel.Margin = new System.Windows.Forms.Padding(5);
+            this.tb_steel.Name = "tb_steel";
+            this.tb_steel.Size = new System.Drawing.Size(49, 20);
+            this.tb_steel.TabIndex = 13;
+            // 
+            // l_steel
+            // 
+            this.l_steel.AutoSize = true;
+            this.l_steel.Location = new System.Drawing.Point(234, 129);
+            this.l_steel.Name = "l_steel";
+            this.l_steel.Padding = new System.Windows.Forms.Padding(3);
+            this.l_steel.Size = new System.Drawing.Size(43, 19);
+            this.l_steel.TabIndex = 15;
+            this.l_steel.Text = "Сталь";
+            // 
             // FormWeightAndSize
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(420, 213);
+            this.ClientSize = new System.Drawing.Size(496, 213);
             this.Controls.Add(this.tb_pos);
             this.Controls.Add(this.l_length);
+            this.Controls.Add(this.l_steel);
             this.Controls.Add(this.l_width);
             this.Controls.Add(this.tb_length);
+            this.Controls.Add(this.tb_steel);
             this.Controls.Add(this.tb_width);
             this.Controls.Add(this.l_round);
             this.Controls.Add(this.comb_round);
@@ -289,12 +311,12 @@
             this.Controls.Add(this.tb_density);
             this.Controls.Add(this.tb_thickness);
             this.Controls.Add(this.b_ok);
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormWeightAndSize";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Подсчет массы по площади";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormWeightAndSize_FormClosing);
@@ -325,5 +347,7 @@
         private System.Windows.Forms.Label l_pos;
         internal System.Windows.Forms.TextBox tb_sheet;
         private System.Windows.Forms.Label l_sheet;
+        internal System.Windows.Forms.TextBox tb_steel;
+        private System.Windows.Forms.Label l_steel;
     }
 }

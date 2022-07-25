@@ -31,7 +31,9 @@ namespace RelaxingKompas.Data
         public static IKompasDocument KompasDocument { get => _kompasDocument; set => _kompasDocument = value; }
 
         static private IKompasDocument _kompasDocument;
-
+        /// <summary>
+        /// Запись массы в штамп
+        /// </summary>
         static public void WriteWeightStamp()
         {
             ILayoutSheets layoutSheets = KompasDocument.LayoutSheets;
@@ -42,6 +44,11 @@ namespace RelaxingKompas.Data
             stamp.Update();
             layoutSheet.Update();
         }
+        /// <summary>
+        /// Получение данных из ячейки штампа
+        /// </summary>
+        /// <param name="NumberCell"></param>
+        /// <returns></returns>
         static public string GetCellStamp(int NumberCell)
         {
             ILayoutSheets layoutSheets = KompasDocument.LayoutSheets;
@@ -53,12 +60,20 @@ namespace RelaxingKompas.Data
             IText text = stamp.Text[NumberCell];
             return text.Str;
         }
+        /// <summary>
+        /// Создать новый документ-фрагмент
+        /// </summary>
+        /// <returns></returns>
         static public IKompasDocument CreatFragment()
         {
             IDocuments documents = Application.Documents;
             IKompasDocument kompasDocument = documents.Add(Kompas6Constants.DocumentTypeEnum.ksDocumentFragment, true);
             return kompasDocument;
         }
+        /// <summary>
+        /// Вставить группу в документ
+        /// </summary>
+        /// <param name="kompasDocument"></param>
         static public void PastGroup(IKompasDocument kompasDocument)
         {
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
@@ -74,14 +89,36 @@ namespace RelaxingKompas.Data
             ksMathPointParam mathPointParam = rectParam.GetpBot(); 
             #endregion
             document2D.ksMoveObj(drawingGroup.Reference, -mathPointParam.x, -mathPointParam.y);//Перемещаем группу в начало координат
+            document2D.ksDestroyObjects(drawingGroup.Reference);
             drawingGroup.Store(); //Вставляем группу
-        }
 
+            #region Разрушить контуры
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            IDrawingContainer drawingContainer = (IDrawingContainer)view;
+            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+            foreach (IDrawingContour item in drawingContours)
+            {
+                document2D.ksDestroyObjects(item.Reference); //Разрушение контура
+            } 
+            #endregion
+        }
+        /// <summary>
+        /// Закрыть документ
+        /// </summary>
+        /// <param name="kompasDocument"></param>
         static public void CloseDocument(IKompasDocument kompasDocument)
         {
             kompasDocument.Close(DocumentCloseOptions.kdDoNotSaveChanges);
         }
-
+        /// <summary>
+        /// Сохранить документ
+        /// </summary>
+        /// <param name="kompasDocument"></param>
+        /// <param name="TypeFile"></param>
+        /// <returns></returns>
         static public bool SaveDocument(IKompasDocument kompasDocument, string TypeFile)
         {
             string nameDocument = KompasDocument.PathName;
@@ -126,20 +163,28 @@ namespace RelaxingKompas.Data
                 return true;
             }
         }
-
-        static public void WriteVariable(string NameVariable, string Value, string Note)
+        /// <summary>
+        /// Запись переменных в документ
+        /// </summary>
+        /// <param name="kompasDocument"></param>
+        /// <param name="NameVariable"></param>
+        /// <param name="Value"></param>
+        /// <param name="Note"></param>
+        static public void WriteVariable(IKompasDocument kompasDocument, string NameVariable, string Value, string Note)
         {
-            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)KompasDocument;
-            
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
             IVariable7 variable = kompasDocument2D1.Variable[false, NameVariable];
             if (variable == null)
             {
-                kompasDocument2D1.AddVariable(NameVariable, Convert.ToDouble(Value), Note);
+                IVariable7 newvariable = kompasDocument2D1.AddVariable(NameVariable, Convert.ToDouble(Value), Note);
+                newvariable.Note = Note;
             }
             else
             {
                 variable.Expression = Value;
+                variable.External= true; //Внешняя переменная
             }
+            kompasDocument2D1.RebuildDocument();
         }
     }
 }

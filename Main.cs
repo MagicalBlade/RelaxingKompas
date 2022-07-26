@@ -336,7 +336,7 @@ namespace RelaxingKompas
             string stampid3 = DataWeightAndSize.GetCellStamp(3);//Ячейка с толщиной, материалом и т.д.
             if (stampid3 != "")
             {
-                string[] profile = stampid3.Split("$d; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] profile = stampid3.Split("$dsm; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (profile.Length > 4)
                 {
                     WindowWeightAndSize.tb_thickness.Text = profile[1];

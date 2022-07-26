@@ -204,10 +204,10 @@
             // 
             // tb_length
             // 
-            this.tb_length.Location = new System.Drawing.Point(287, 153);
+            this.tb_length.Location = new System.Drawing.Point(228, 153);
             this.tb_length.Margin = new System.Windows.Forms.Padding(5);
             this.tb_length.Name = "tb_length";
-            this.tb_length.Size = new System.Drawing.Size(81, 20);
+            this.tb_length.Size = new System.Drawing.Size(58, 20);
             this.tb_length.TabIndex = 14;
             // 
             // l_width
@@ -223,7 +223,7 @@
             // l_length
             // 
             this.l_length.AutoSize = true;
-            this.l_length.Location = new System.Drawing.Point(307, 129);
+            this.l_length.Location = new System.Drawing.Point(240, 129);
             this.l_length.Name = "l_length";
             this.l_length.Padding = new System.Windows.Forms.Padding(3);
             this.l_length.Size = new System.Drawing.Size(46, 19);
@@ -268,16 +268,16 @@
             // 
             // tb_steel
             // 
-            this.tb_steel.Location = new System.Drawing.Point(228, 153);
+            this.tb_steel.Location = new System.Drawing.Point(296, 153);
             this.tb_steel.Margin = new System.Windows.Forms.Padding(5);
             this.tb_steel.Name = "tb_steel";
-            this.tb_steel.Size = new System.Drawing.Size(49, 20);
+            this.tb_steel.Size = new System.Drawing.Size(72, 20);
             this.tb_steel.TabIndex = 13;
             // 
             // l_steel
             // 
             this.l_steel.AutoSize = true;
-            this.l_steel.Location = new System.Drawing.Point(234, 129);
+            this.l_steel.Location = new System.Drawing.Point(310, 129);
             this.l_steel.Name = "l_steel";
             this.l_steel.Padding = new System.Windows.Forms.Padding(3);
             this.l_steel.Size = new System.Drawing.Size(43, 19);

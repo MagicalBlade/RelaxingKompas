@@ -154,5 +154,29 @@ namespace RelaxingKompas.Properties {
                 this["IsClose3Ddetail"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsCreat3Ddetail {
+            get {
+                return ((bool)(this["IsCreat3Ddetail"]));
+            }
+            set {
+                this["IsCreat3Ddetail"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsCreatFragment {
+            get {
+                return ((bool)(this["IsCreatFragment"]));
+            }
+            set {
+                this["IsCreatFragment"] = value;
+            }
+        }
     }
 }

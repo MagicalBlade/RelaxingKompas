@@ -96,41 +96,45 @@ namespace RelaxingKompas
             #endregion
 
             Hide();
-
-            IKompasDocument kompasDocument = DataWeightAndSize.CreatFragment(); //Создает новый документ-фрагмент
-
-            DataWeightAndSize.WriteVariable(kompasDocument, "t", tb_thickness.Text, "Толщина");
-            DataWeightAndSize.WriteVariable(kompasDocument, "H", tb_width.Text, "Ширина");
-            DataWeightAndSize.WriteVariable(kompasDocument, "L", tb_length.Text, "Длинна");
-            DataWeightAndSize.WriteVariable(kompasDocument, "steel", "1", tb_steel.Text); //Сталь
-            DataWeightAndSize.WriteVariable(kompasDocument, "weight", tb_weight.Text, "Вес");
-
-            DataWeightAndSize.PastGroup(kompasDocument); //Вставляем в него контур
-            if (DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked) //Сохраняем фрагмент
+            //Создает новый документ-фрагмент
+            if (DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked)
             {
-                if (!DataWeightAndSize.SaveDocument(kompasDocument, "frw"))
+                IKompasDocument kompasDocument = DataWeightAndSize.CreatFragment();
+                DataWeightAndSize.WriteVariable(kompasDocument, "t", tb_thickness.Text, "Толщина");
+                DataWeightAndSize.WriteVariable(kompasDocument, "H", tb_width.Text, "Ширина");
+                DataWeightAndSize.WriteVariable(kompasDocument, "L", tb_length.Text, "Длинна");
+                DataWeightAndSize.WriteVariable(kompasDocument, "steel", "1", tb_steel.Text); //Сталь
+                DataWeightAndSize.WriteVariable(kompasDocument, "weight", tb_weight.Text, "Вес");
+
+                DataWeightAndSize.PastGroup(kompasDocument); //Вставляем в него контур
+                if (DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked) //Сохраняем фрагмент
                 {
-                    return;
+                    if (!DataWeightAndSize.SaveDocument(kompasDocument, "frw"))
+                    {
+                        return;
+                    }
+                }
+                if (DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked) //Сохраняем dxf
+                {
+                    if (!DataWeightAndSize.SaveDocument(kompasDocument, "dxf"))
+                    {
+                        return;
+                    }
+                }
+                if (DataWeightAndSize.WindowLibrarySettings.cb_CloseFragment.Checked) //Закрываем фрагмент
+                {
+                    DataWeightAndSize.CloseDocument(kompasDocument);
                 }
             }
-            if (DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked) //Сохраняем dxf
-            {
-                if (!DataWeightAndSize.SaveDocument(kompasDocument, "dxf"))
-                {
-                    return;
-                }
-            }
-            if (DataWeightAndSize.WindowLibrarySettings.cb_CloseFragment.Checked) //Закрываем фрагмент
-            {
-                DataWeightAndSize.CloseDocument(kompasDocument);
-            }
-            if (DataWeightAndSize.WindowLibrarySettings.cb_CloseDrawing.Checked) //Закрываем изначальный чертеж
-            {
-                DataWeightAndSize.CloseDocument(DataWeightAndSize.KompasDocument); 
-            }
-            if (DataWeightAndSize.WindowLibrarySettings.cb_Creat3Ddetail.Checked) //Создаем 3D деталь
+            //Создаем 3D деталь
+            if (DataWeightAndSize.WindowLibrarySettings.cb_Creat3Ddetail.Checked) 
             {
                 DataWeightAndSize.ExtrusionSketch();
+            }
+            //Закрываем изначальный чертеж
+            if (DataWeightAndSize.WindowLibrarySettings.cb_CloseDrawing.Checked) 
+            {
+                DataWeightAndSize.CloseDocument(DataWeightAndSize.KompasDocument); 
             }
         }
 

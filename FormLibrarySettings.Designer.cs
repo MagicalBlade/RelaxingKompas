@@ -37,6 +37,7 @@
             this.cb_CloseFragment = new System.Windows.Forms.CheckBox();
             this.b_save = new System.Windows.Forms.Button();
             this.cb_Creat3Ddetail = new System.Windows.Forms.CheckBox();
+            this.cb_CreatFragment = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,13 +45,15 @@
             // 
             this.groupBox1.Controls.Add(this.cb_3Ddetail);
             this.groupBox1.Controls.Add(this.cb_SaveFragment);
-            this.groupBox1.Controls.Add(this.cb_SaveDxf);
-            this.groupBox1.Controls.Add(this.cb_Close3Ddetail);
             this.groupBox1.Controls.Add(this.cb_CloseDrawing);
+            this.groupBox1.Controls.Add(this.cb_Creat3Ddetail);
+            this.groupBox1.Controls.Add(this.cb_CreatFragment);
+            this.groupBox1.Controls.Add(this.cb_Close3Ddetail);
+            this.groupBox1.Controls.Add(this.cb_SaveDxf);
             this.groupBox1.Controls.Add(this.cb_CloseFragment);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(163, 171);
+            this.groupBox1.Size = new System.Drawing.Size(287, 152);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Общие";
@@ -58,7 +61,7 @@
             // cb_3Ddetail
             // 
             this.cb_3Ddetail.AutoSize = true;
-            this.cb_3Ddetail.Location = new System.Drawing.Point(5, 135);
+            this.cb_3Ddetail.Location = new System.Drawing.Point(145, 42);
             this.cb_3Ddetail.Name = "cb_3Ddetail";
             this.cb_3Ddetail.Size = new System.Drawing.Size(134, 17);
             this.cb_3Ddetail.TabIndex = 1;
@@ -68,7 +71,7 @@
             // cb_SaveFragment
             // 
             this.cb_SaveFragment.AutoSize = true;
-            this.cb_SaveFragment.Location = new System.Drawing.Point(5, 112);
+            this.cb_SaveFragment.Location = new System.Drawing.Point(6, 42);
             this.cb_SaveFragment.Name = "cb_SaveFragment";
             this.cb_SaveFragment.Size = new System.Drawing.Size(132, 17);
             this.cb_SaveFragment.TabIndex = 1;
@@ -78,7 +81,7 @@
             // cb_SaveDxf
             // 
             this.cb_SaveDxf.AutoSize = true;
-            this.cb_SaveDxf.Location = new System.Drawing.Point(6, 89);
+            this.cb_SaveDxf.Location = new System.Drawing.Point(6, 65);
             this.cb_SaveDxf.Name = "cb_SaveDxf";
             this.cb_SaveDxf.Size = new System.Drawing.Size(96, 17);
             this.cb_SaveDxf.TabIndex = 0;
@@ -88,7 +91,7 @@
             // cb_Close3Ddetail
             // 
             this.cb_Close3Ddetail.AutoSize = true;
-            this.cb_Close3Ddetail.Location = new System.Drawing.Point(6, 66);
+            this.cb_Close3Ddetail.Location = new System.Drawing.Point(145, 65);
             this.cb_Close3Ddetail.Name = "cb_Close3Ddetail";
             this.cb_Close3Ddetail.Size = new System.Drawing.Size(125, 17);
             this.cb_Close3Ddetail.TabIndex = 0;
@@ -98,7 +101,7 @@
             // cb_CloseDrawing
             // 
             this.cb_CloseDrawing.AutoSize = true;
-            this.cb_CloseDrawing.Location = new System.Drawing.Point(6, 19);
+            this.cb_CloseDrawing.Location = new System.Drawing.Point(6, 111);
             this.cb_CloseDrawing.Name = "cb_CloseDrawing";
             this.cb_CloseDrawing.Size = new System.Drawing.Size(109, 17);
             this.cb_CloseDrawing.TabIndex = 0;
@@ -108,7 +111,7 @@
             // cb_CloseFragment
             // 
             this.cb_CloseFragment.AutoSize = true;
-            this.cb_CloseFragment.Location = new System.Drawing.Point(6, 42);
+            this.cb_CloseFragment.Location = new System.Drawing.Point(6, 88);
             this.cb_CloseFragment.Name = "cb_CloseFragment";
             this.cb_CloseFragment.Size = new System.Drawing.Size(123, 17);
             this.cb_CloseFragment.TabIndex = 0;
@@ -118,7 +121,7 @@
             // b_save
             // 
             this.b_save.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.b_save.Location = new System.Drawing.Point(53, 189);
+            this.b_save.Location = new System.Drawing.Point(102, 170);
             this.b_save.Name = "b_save";
             this.b_save.Size = new System.Drawing.Size(75, 23);
             this.b_save.TabIndex = 0;
@@ -129,7 +132,7 @@
             // cb_Creat3Ddetail
             // 
             this.cb_Creat3Ddetail.AutoSize = true;
-            this.cb_Creat3Ddetail.Location = new System.Drawing.Point(181, 124);
+            this.cb_Creat3Ddetail.Location = new System.Drawing.Point(145, 19);
             this.cb_Creat3Ddetail.Name = "cb_Creat3Ddetail";
             this.cb_Creat3Ddetail.Size = new System.Drawing.Size(123, 17);
             this.cb_Creat3Ddetail.TabIndex = 1;
@@ -137,14 +140,24 @@
             this.cb_Creat3Ddetail.UseVisualStyleBackColor = true;
             this.cb_Creat3Ddetail.CheckedChanged += new System.EventHandler(this.cb_Creat3Ddetail_CheckedChanged);
             // 
+            // cb_CreatFragment
+            // 
+            this.cb_CreatFragment.AutoSize = true;
+            this.cb_CreatFragment.Location = new System.Drawing.Point(6, 19);
+            this.cb_CreatFragment.Name = "cb_CreatFragment";
+            this.cb_CreatFragment.Size = new System.Drawing.Size(121, 17);
+            this.cb_CreatFragment.TabIndex = 0;
+            this.cb_CreatFragment.Text = "Создать фрагмент";
+            this.cb_CreatFragment.UseVisualStyleBackColor = true;
+            this.cb_CreatFragment.CheckedChanged += new System.EventHandler(this.cb_CreatFragment_CheckedChanged);
+            // 
             // FormLibrarySettings
             // 
             this.AcceptButton = this.b_save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(336, 236);
+            this.ClientSize = new System.Drawing.Size(315, 207);
             this.ControlBox = false;
-            this.Controls.Add(this.cb_Creat3Ddetail);
             this.Controls.Add(this.b_save);
             this.Controls.Add(this.groupBox1);
             this.KeyPreview = true;
@@ -154,7 +167,6 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -169,5 +181,6 @@
         internal System.Windows.Forms.CheckBox cb_3Ddetail;
         internal System.Windows.Forms.CheckBox cb_Close3Ddetail;
         internal System.Windows.Forms.CheckBox cb_Creat3Ddetail;
+        internal System.Windows.Forms.CheckBox cb_CreatFragment;
     }
 }

@@ -112,7 +112,6 @@ namespace RelaxingKompas.Data
         static public void CloseDocument(IKompasDocument kompasDocument)
         {
             kompasDocument.Close(DocumentCloseOptions.kdDoNotSaveChanges);
-            KompasDocument.Active = true;
         }
         /// <summary>
         /// Сохранить документ
@@ -164,6 +163,10 @@ namespace RelaxingKompas.Data
                 return true;
             }
         }
+        /// <summary>
+        /// Создаем 3D деталь
+        /// </summary>
+        /// <returns></returns>
         static public bool ExtrusionSketch()
         {
             IDocuments documents = Application.Documents;
@@ -182,11 +185,23 @@ namespace RelaxingKompas.Data
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "");
             drawingGroup.ReadFromClip(false, false); //Считываем буфер в группу
-            drawingGroup.Store(); //Вставляем группу
 
-            sketch.EndEdit(); //Закончили формировать эскиз
+            #region Габаритный прямоугольник
+            ksRectParam rectParam = Kompas.GetParamStruct((short)StructType2DEnum.ko_RectParam);
+            ksDocument2D document2D = (ksDocument2D)Kompas.ksGetDocumentByReference(kompasDocument.Reference);
+            document2D.ksGetObjGabaritRect(drawingGroup.Reference, rectParam);
+            ksMathPointParam mathPointParam = rectParam.GetpBot();
+            #endregion
+            //Перемещаем группу в начало координат
+            document2D.ksMoveObj(drawingGroup.Reference, -mathPointParam.x, -mathPointParam.y);
+            //Вставляем группу
+            drawingGroup.Store();
+            //Закончили формировать эскиз
+            sketch.EndEdit();
             sketch.Update();
 
+            kompasDocument3D.Active = true;
+            
             string nameDocument = KompasDocument.PathName;
             nameDocument = nameDocument.Substring(0, nameDocument.Length - 3);
             nameDocument = $"{nameDocument}m3d";

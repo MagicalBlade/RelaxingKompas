@@ -1,5 +1,6 @@
 ﻿using Kompas6API5;
 using Kompas6Constants;
+using Kompas6Constants3D;
 using KompasAPI7;
 using System;
 using System.IO;
@@ -79,7 +80,7 @@ namespace RelaxingKompas.Data
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "");
-            drawingGroup.ReadFromClip(false, false);
+            drawingGroup.ReadFromClip(false, false); //Считываем буфер в группу
 
             ksDocument2D document2D = (ksDocument2D)Kompas.ActiveDocument2D();
 
@@ -89,7 +90,6 @@ namespace RelaxingKompas.Data
             ksMathPointParam mathPointParam = rectParam.GetpBot(); 
             #endregion
             document2D.ksMoveObj(drawingGroup.Reference, -mathPointParam.x, -mathPointParam.y);//Перемещаем группу в начало координат
-            document2D.ksDestroyObjects(drawingGroup.Reference);
             drawingGroup.Store(); //Вставляем группу
 
             #region Разрушить контуры
@@ -106,12 +106,13 @@ namespace RelaxingKompas.Data
             #endregion
         }
         /// <summary>
-        /// Закрыть документ
+        /// Закрыть документ переключиться на родительский чертеж
         /// </summary>
         /// <param name="kompasDocument"></param>
         static public void CloseDocument(IKompasDocument kompasDocument)
         {
             kompasDocument.Close(DocumentCloseOptions.kdDoNotSaveChanges);
+            KompasDocument.Active = true;
         }
         /// <summary>
         /// Сохранить документ
@@ -162,6 +163,73 @@ namespace RelaxingKompas.Data
                 }
                 return true;
             }
+        }
+        static public bool ExtrusionSketch()
+        {
+            IDocuments documents = Application.Documents;
+            IKompasDocument3D kompasDocument3D = (IKompasDocument3D)documents.Add(DocumentTypeEnum.ksDocumentPart, true);//Создаем документ 3D деталь
+            IPart7 part7 = kompasDocument3D.TopPart;
+            IPlane3D planeYOZ = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeYOZ];
+            IModelContainer modelContainer = (IModelContainer)part7;
+            ISketchs sketchs = modelContainer.Sketchs;
+            ISketch sketch = sketchs.Add();
+            sketch.Angle = 90;
+            sketch.Plane = planeYOZ; //Эскиз будет размещаться на плоскости "Спереди"
+
+            IKompasDocument kompasDocument = sketch.BeginEdit(); //Начало формирования эскиза
+
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
+            IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
+            IDrawingGroup drawingGroup = drawingGroups.Add(true, "");
+            drawingGroup.ReadFromClip(false, false); //Считываем буфер в группу
+            drawingGroup.Store(); //Вставляем группу
+
+            sketch.EndEdit(); //Закончили формировать эскиз
+            sketch.Update();
+
+            string nameDocument = KompasDocument.PathName;
+            nameDocument = nameDocument.Substring(0, nameDocument.Length - 3);
+            nameDocument = $"{nameDocument}m3d";
+
+            //WriteVariable(kompasDocument, "t", FormWeightAndSize.tb_thickness.Text, "Толщина");
+            //WriteVariable(kompasDocument, "H", FormWeightAndSize.tb_width.Text, "Ширина");
+            //WriteVariable(kompasDocument, "L", FormWeightAndSize.tb_length.Text, "Длинна");
+            //WriteVariable(kompasDocument, "steel", "1", FormWeightAndSize.tb_steel.Text); //Сталь
+
+            if (FormWeightAndSize.tb_thickness.Text == "")
+            {
+                Application.MessageBoxEx("не указана толщина", "ошибка", 0);
+                return false;
+            }
+
+            #region Выдавливаем эскиз
+            IExtrusions extrusions = modelContainer.Extrusions;
+            IExtrusion extrusion = extrusions.Add(ksObj3dTypeEnum.o3d_bossExtrusion);
+            extrusion.Direction = ksDirectionTypeEnum.dtMiddlePlane; //Выдавливание "симметрично"
+            extrusion.Sketch = (Sketch)sketch;
+            extrusion.Depth[true] = Convert.ToDouble(Convert.ToDouble(FormWeightAndSize.tb_thickness.Text)); //Толщина выдавливания
+            if (!extrusion.Update())
+            {
+                Application.MessageBoxEx("не удалось выдавить", "ошибка", 0);
+                return false;
+            }
+            if (WindowLibrarySettings.cb_3Ddetail.Checked)
+            {
+                kompasDocument3D.SaveAs(nameDocument);
+                if (kompasDocument3D.Name == "")
+                {
+                    Application.MessageBoxEx("не удалось сохранить", "ошибка", 0);
+                    return false;
+                }
+            }
+
+            if (WindowLibrarySettings.cb_Close3Ddetail.Checked) //Закрываем 3D деталь
+            {
+                kompasDocument3D.Close(DocumentCloseOptions.kdDoNotSaveChanges);
+            }
+
+            #endregion
+            return true;
         }
         /// <summary>
         /// Запись переменных в документ

@@ -128,6 +128,10 @@ namespace RelaxingKompas
             {
                 DataWeightAndSize.CloseDocument(DataWeightAndSize.KompasDocument); 
             }
+            if (DataWeightAndSize.WindowLibrarySettings.cb_Creat3Ddetail.Checked) //Создаем 3D деталь
+            {
+                DataWeightAndSize.ExtrusionSketch();
+            }
         }
 
         private void FormattingText()

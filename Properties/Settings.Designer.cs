@@ -130,5 +130,29 @@ namespace RelaxingKompas.Properties {
                 this["SaveFragment"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Is3Ddetail {
+            get {
+                return ((bool)(this["Is3Ddetail"]));
+            }
+            set {
+                this["Is3Ddetail"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsClose3Ddetail {
+            get {
+                return ((bool)(this["IsClose3Ddetail"]));
+            }
+            set {
+                this["IsClose3Ddetail"] = value;
+            }
+        }
     }
 }

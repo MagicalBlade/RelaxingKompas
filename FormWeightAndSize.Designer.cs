@@ -307,8 +307,10 @@
             // 
             // FormWeightAndSize
             // 
+            this.AcceptButton = this.b_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.b_Cancel;
             this.ClientSize = new System.Drawing.Size(496, 213);
             this.Controls.Add(this.b_settings);
             this.Controls.Add(this.tb_pos);
@@ -335,12 +337,9 @@
             this.Controls.Add(this.tb_thickness);
             this.Controls.Add(this.b_Cancel);
             this.Controls.Add(this.b_ok);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "FormWeightAndSize";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Подсчет массы по площади";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormWeightAndSize_FormClosing);

@@ -388,6 +388,7 @@ namespace RelaxingKompas
 
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
+
         }
 
         private void LibrarySettings()

@@ -18,7 +18,6 @@ namespace RelaxingKompas
         public FormWeightAndSize()
         {
             InitializeComponent();
-
             #region Загрузка настроек
             tb_density.Text = Properties.Settings.Default.Density;
             cb_clipboard.Checked = Properties.Settings.Default.IsClipboard;

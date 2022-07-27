@@ -62,9 +62,9 @@ namespace RelaxingKompas
 
         private void b_ok_Click(object sender, EventArgs e)
         {
-            if (tb_thickness.Text == "")
+            if (tb_thickness.Text == "" && DataWeightAndSize.WindowLibrarySettings.cb_Creat3Ddetail.Checked)
             {
-                Data.DataWeightAndSize.Application.MessageBoxEx("Введите толщину", "Ошибка", 0);
+                DataWeightAndSize.Application.MessageBoxEx("Введите толщину", "Ошибка", 0);
                 return;
             }
             DataWeightAndSize.Weight = tb_weight.Text;
@@ -148,6 +148,11 @@ namespace RelaxingKompas
         private void b_settings_Click(object sender, EventArgs e)
         {
             Data.DataWeightAndSize.WindowLibrarySettings.ShowDialog();
+        }
+
+        private void b_Cancel_Click(object sender, EventArgs e)
+        {
+            Hide();
         }
     }
 }

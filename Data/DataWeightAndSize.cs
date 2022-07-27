@@ -259,10 +259,18 @@ namespace RelaxingKompas.Data
         {
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
             IVariable7 variable = kompasDocument2D1.Variable[false, NameVariable];
+            if (Value == "" && variable != null)
+            {
+                variable.Expression = "0";
+                kompasDocument2D1.RebuildDocument();
+                return;
+            }
             if (variable == null)
             {
-                IVariable7 newvariable = kompasDocument2D1.AddVariable(NameVariable, Convert.ToDouble(Value), Note);
+                IVariable7 newvariable = kompasDocument2D1.AddVariable(NameVariable, 0, Note);
+                newvariable.Expression = Value;
                 newvariable.Note = Note;
+                newvariable.External = true;
             }
             else
             {

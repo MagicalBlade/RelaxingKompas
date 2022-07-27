@@ -52,6 +52,7 @@
             this.tb_steel = new System.Windows.Forms.TextBox();
             this.l_steel = new System.Windows.Forms.Label();
             this.b_settings = new System.Windows.Forms.Button();
+            this.b_Cancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // b_ok
@@ -294,6 +295,16 @@
             this.b_settings.UseVisualStyleBackColor = true;
             this.b_settings.Click += new System.EventHandler(this.b_settings_Click);
             // 
+            // b_Cancel
+            // 
+            this.b_Cancel.Location = new System.Drawing.Point(243, 183);
+            this.b_Cancel.Name = "b_Cancel";
+            this.b_Cancel.Size = new System.Drawing.Size(75, 23);
+            this.b_Cancel.TabIndex = 1;
+            this.b_Cancel.Text = "Отмена";
+            this.b_Cancel.UseVisualStyleBackColor = true;
+            this.b_Cancel.Click += new System.EventHandler(this.b_Cancel_Click);
+            // 
             // FormWeightAndSize
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,6 +333,7 @@
             this.Controls.Add(this.tb_weight);
             this.Controls.Add(this.tb_density);
             this.Controls.Add(this.tb_thickness);
+            this.Controls.Add(this.b_Cancel);
             this.Controls.Add(this.b_ok);
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -362,5 +374,6 @@
         internal System.Windows.Forms.TextBox tb_steel;
         private System.Windows.Forms.Label l_steel;
         private System.Windows.Forms.Button b_settings;
+        internal System.Windows.Forms.Button b_Cancel;
     }
 }

@@ -268,7 +268,14 @@ namespace RelaxingKompas.Data
             if (variable == null)
             {
                 IVariable7 newvariable = kompasDocument2D1.AddVariable(NameVariable, 0, Note);
-                newvariable.Expression = Value;
+                if (Value == "")
+                {
+                    newvariable.Expression = "0";
+                }
+                else
+                {
+                    newvariable.Expression = Value;
+                }
                 newvariable.Note = Note;
                 newvariable.External = true;
             }

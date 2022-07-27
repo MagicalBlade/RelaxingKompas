@@ -213,18 +213,23 @@ namespace RelaxingKompas.Data
             //WriteVariable(kompasDocument, "L", FormWeightAndSize.tb_length.Text, "Длинна");
             //WriteVariable(kompasDocument, "steel", "1", FormWeightAndSize.tb_steel.Text); //Сталь
 
-            if (FormWeightAndSize.tb_thickness.Text == "")
-            {
-                Application.MessageBoxEx("не указана толщина", "ошибка", 0);
-                return false;
-            }
 
             #region Выдавливаем эскиз
             IExtrusions extrusions = modelContainer.Extrusions;
             IExtrusion extrusion = extrusions.Add(ksObj3dTypeEnum.o3d_bossExtrusion);
             extrusion.Direction = ksDirectionTypeEnum.dtMiddlePlane; //Выдавливание "симметрично"
             extrusion.Sketch = (Sketch)sketch;
-            extrusion.Depth[true] = Convert.ToDouble(Convert.ToDouble(FormWeightAndSize.tb_thickness.Text)); //Толщина выдавливания
+
+            if (FormWeightAndSize.tb_thickness.Text == "")
+            {
+                Application.MessageBoxEx("Не указана толщина. Выдавливание произведено с толщиной равно единице.", "ошибка", 0);
+                extrusion.Depth[true] = 1; //Толщина выдавливания
+            }
+            else
+            {
+                extrusion.Depth[true] = Convert.ToDouble(FormWeightAndSize.tb_thickness.Text); //Толщина выдавливания
+            }
+
             if (!extrusion.Update())
             {
                 Application.MessageBoxEx("не удалось выдавить", "ошибка", 0);

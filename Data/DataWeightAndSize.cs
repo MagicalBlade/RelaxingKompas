@@ -173,10 +173,12 @@ namespace RelaxingKompas.Data
             IKompasDocument3D kompasDocument3D = (IKompasDocument3D)documents.Add(DocumentTypeEnum.ksDocumentPart, true);//Создаем документ 3D деталь
             IPart7 part7 = kompasDocument3D.TopPart;
             IPlane3D planeYOZ = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeYOZ];
+            IModelObject axes3DOZ = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOZ];
             IModelContainer modelContainer = (IModelContainer)part7;
             ISketchs sketchs = modelContainer.Sketchs;
             ISketch sketch = sketchs.Add();
-            sketch.Angle = 90;
+            sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = axes3DOZ;
+            sketch.LeftHandedCS = true;
             sketch.Plane = planeYOZ; //Эскиз будет размещаться на плоскости "Спереди"
 
             IKompasDocument kompasDocument = sketch.BeginEdit(); //Начало формирования эскиза

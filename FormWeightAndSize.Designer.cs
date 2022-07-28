@@ -297,6 +297,7 @@
             // 
             // b_Cancel
             // 
+            this.b_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.b_Cancel.Location = new System.Drawing.Point(243, 183);
             this.b_Cancel.Name = "b_Cancel";
             this.b_Cancel.Size = new System.Drawing.Size(75, 23);
@@ -340,6 +341,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.KeyPreview = true;
             this.Name = "FormWeightAndSize";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Подсчет массы по площади";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormWeightAndSize_FormClosing);

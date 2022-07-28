@@ -121,15 +121,19 @@ namespace RelaxingKompas.Data
         /// <returns></returns>
         static public bool SaveDocument(IKompasDocument kompasDocument, string TypeFile)
         {
-            string nameDocument = KompasDocument.PathName;
-            nameDocument = nameDocument.Substring(0, nameDocument.Length - 3);
+            string NameFile = FormWeightAndSize.tb_pos.Text;
+            foreach (Char invalid_char in Path.GetInvalidFileNameChars())
+            {
+                NameFile = NameFile.Replace(invalid_char.ToString(), "");
+            }
+            string PathFile = $"{KompasDocument.Path}{NameFile}";
             if (TypeFile == "frw")
             {
                 if (!CheckFile())
                 {
                     return false;
                 }
-                kompasDocument.SaveAs($"{nameDocument}frw");
+                kompasDocument.SaveAs($"{PathFile}.frw");
             }
             if (TypeFile == "dxf")
             {
@@ -138,17 +142,17 @@ namespace RelaxingKompas.Data
                     return false;
                 }
                 ksDocument2D ksdocument2D = (ksDocument2D)Kompas.ActiveDocument2D();
-                ksdocument2D.ksSaveToDXF($"{nameDocument}dxf");
+                ksdocument2D.ksSaveToDXF($"{PathFile}.dxf");
             }
             return true;
             ///<summary> Проверка на возможность пересохранения файла ///</summary>
             bool CheckFile()
             {
-                if (File.Exists($"{nameDocument}{TypeFile}"))
+                if (File.Exists($"{PathFile}.{TypeFile}"))
                 {
                     try
                     {
-                        using (FileStream stream = File.Open($"{nameDocument}{TypeFile}", FileMode.Open, FileAccess.Read, FileShare.None))
+                        using (FileStream stream = File.Open($"{PathFile}.{TypeFile}", FileMode.Open, FileAccess.Read, FileShare.None))
                         {
                             stream.Close();
                         }
@@ -169,9 +173,16 @@ namespace RelaxingKompas.Data
         /// <returns></returns>
         static public bool ExtrusionSketch()
         {
+            string NameFile = FormWeightAndSize.tb_pos.Text;
+            foreach (Char invalid_char in Path.GetInvalidFileNameChars())
+            {
+                NameFile = NameFile.Replace(invalid_char.ToString(), "");
+            }
             IDocuments documents = Application.Documents;
             IKompasDocument3D kompasDocument3D = (IKompasDocument3D)documents.Add(DocumentTypeEnum.ksDocumentPart, true);//Создаем документ 3D деталь
             IPart7 part7 = kompasDocument3D.TopPart;
+            part7.Marking = NameFile;
+            part7.Name = "";
             IPlane3D planeYOZ = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeYOZ];
             IModelObject axes3DOZ = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOZ];
             IModelContainer modelContainer = (IModelContainer)part7;
@@ -180,6 +191,9 @@ namespace RelaxingKompas.Data
             sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = axes3DOZ;
             sketch.LeftHandedCS = true;
             sketch.Plane = planeYOZ; //Эскиз будет размещаться на плоскости "Спереди"
+            part7.Update();
+
+            string PathFile = $"{KompasDocument.Path}{part7.Marking}.m3d";
 
             IKompasDocument kompasDocument = sketch.BeginEdit(); //Начало формирования эскиза
 
@@ -203,11 +217,6 @@ namespace RelaxingKompas.Data
             sketch.Update();
 
             kompasDocument3D.Active = true;
-            
-            string nameDocument = KompasDocument.PathName;
-            nameDocument = nameDocument.Substring(0, nameDocument.Length - 3);
-            nameDocument = $"{nameDocument}m3d";
-
             //WriteVariable(kompasDocument, "t", FormWeightAndSize.tb_thickness.Text, "Толщина");
             //WriteVariable(kompasDocument, "H", FormWeightAndSize.tb_width.Text, "Ширина");
             //WriteVariable(kompasDocument, "L", FormWeightAndSize.tb_length.Text, "Длинна");
@@ -237,7 +246,7 @@ namespace RelaxingKompas.Data
             }
             if (WindowLibrarySettings.cb_3Ddetail.Checked)
             {
-                kompasDocument3D.SaveAs(nameDocument);
+                kompasDocument3D.SaveAs(PathFile);
                 if (kompasDocument3D.Name == "")
                 {
                     Application.MessageBoxEx("не удалось сохранить", "ошибка", 0);

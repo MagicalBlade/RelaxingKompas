@@ -325,6 +325,7 @@ namespace RelaxingKompas
             DataWeightAndSize.FormWeightAndSize = WindowWeightAndSize;
             DataWeightAndSize.WindowLibrarySettings = WindowLibrarySettings;
             WindowWeightAndSize.tb_thickness.Text = "";
+            DataWeightAndSize.Thickness = 0;
             WindowWeightAndSize.tb_steel.Text = "";
             WindowWeightAndSize.tb_weight.Text = "";
 
@@ -380,11 +381,10 @@ namespace RelaxingKompas
                 WindowWeightAndSize.tb_width.Text = $"{length}"; //Передаем ширину в форму
                 WindowWeightAndSize.tb_length.Text = $"{width}"; //Передаем длину в форму
             }
+
             WindowWeightAndSize.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
             WindowWeightAndSize.Weight(); //Вызываю вычисление массы
-
             ksdocument2D.ksWriteGroupToClip(group, true); //Копируем группу в буфер обмена
-
 
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу

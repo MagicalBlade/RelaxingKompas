@@ -237,7 +237,7 @@ namespace RelaxingKompas.Data
             extrusion.Direction = ksDirectionTypeEnum.dtMiddlePlane; //Выдавливание "симметрично"
             extrusion.Sketch = (Sketch)sketch;
 
-            if (FormWeightAndSize.tb_thickness.Text == "")
+            if (Thickness == 0)
             {
                 Application.MessageBoxEx("Не указана толщина. Выдавливание произведено с толщиной равно единице.", "ошибка", 0);
                 extrusion.Depth[true] = 1; //Толщина выдавливания

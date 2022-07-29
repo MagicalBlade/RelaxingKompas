@@ -35,7 +35,6 @@ namespace RelaxingKompas
             if (!double.TryParse(tb_thickness.Text, out thickness))
             {
                 tb_weight.Text = "";
-                return;
             }
             DataWeightAndSize.Thickness = thickness;
             if (tb_thickness.Text != "" && tb_density.Text != "" && tb_yardage.Text != "")
@@ -82,7 +81,7 @@ namespace RelaxingKompas
                 DataWeightAndSize.WriteWeightStamp();
             }
 
-            DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", tb_thickness.Text, "Толщина");
+            DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "H", tb_width.Text, "Ширина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "L", tb_length.Text, "Длинна");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "steel", "1", tb_steel.Text); //Сталь
@@ -103,7 +102,7 @@ namespace RelaxingKompas
             if (DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked)
             {
                 IKompasDocument kompasDocument = DataWeightAndSize.CreatFragment();
-                DataWeightAndSize.WriteVariable(kompasDocument, "t", tb_thickness.Text, "Толщина");
+                DataWeightAndSize.WriteVariable(kompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
                 DataWeightAndSize.WriteVariable(kompasDocument, "H", tb_width.Text, "Ширина");
                 DataWeightAndSize.WriteVariable(kompasDocument, "L", tb_length.Text, "Длинна");
                 DataWeightAndSize.WriteVariable(kompasDocument, "steel", "1", tb_steel.Text); //Сталь
@@ -143,8 +142,8 @@ namespace RelaxingKompas
 
         private void FormattingText()
         {
-            string plainText = $"{tb_pos.Text}\t{tb_thickness.Text}\t{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}\t{tb_yardage.Text}";
-            string htmlText = $"<table><tr><td>{tb_pos.Text}</td><td>{tb_thickness.Text}</td><td>{tb_width.Text}</td><td>{tb_length.Text}</td><td>{tb_steel.Text}</td><td>{tb_weight.Text}</td><td>{tb_yardage.Text}</tr></table>";
+            string plainText = $"{tb_pos.Text}\t{DataWeightAndSize.Thickness}\t{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}\t{tb_yardage.Text}";
+            string htmlText = $"<table><tr><td>{tb_pos.Text}</td><td>{DataWeightAndSize.Thickness}</td><td>{tb_width.Text}</td><td>{tb_length.Text}</td><td>{tb_steel.Text}</td><td>{tb_weight.Text}</td><td>{tb_yardage.Text}</tr></table>";
             Excel.CopyToExcel(plainText, htmlText);
         }
 

@@ -72,7 +72,6 @@
             this.tb_thickness.Name = "tb_thickness";
             this.tb_thickness.Size = new System.Drawing.Size(56, 20);
             this.tb_thickness.TabIndex = 0;
-            this.tb_thickness.Text = "10";
             this.tb_thickness.TextChanged += new System.EventHandler(this.tb_thickness_TextChanged);
             // 
             // tb_density

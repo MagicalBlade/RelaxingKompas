@@ -30,9 +30,17 @@ namespace RelaxingKompas
 
         internal void Weight()
         {
+            //Проверка на цифры в толщине
+            double thickness;
+            if (!double.TryParse(tb_thickness.Text, out thickness))
+            {
+                tb_weight.Text = "";
+                return;
+            }
+            DataWeightAndSize.Thickness = thickness;
             if (tb_thickness.Text != "" && tb_density.Text != "" && tb_yardage.Text != "")
             {
-                double weight = Convert.ToDouble(tb_thickness.Text) * Convert.ToDouble(tb_density.Text) * Convert.ToDouble(tb_yardage.Text) * Math.Pow(10, -9);
+                double weight = DataWeightAndSize.Thickness * Convert.ToDouble(tb_density.Text) * Convert.ToDouble(tb_yardage.Text) * Math.Pow(10, -9);
                 tb_weight.Text = $"{Math.Round(weight, comb_round.SelectedIndex, MidpointRounding.AwayFromZero)}";
             }
         }

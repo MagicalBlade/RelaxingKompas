@@ -18,8 +18,16 @@ namespace RelaxingKompas.Data
 
         private static FormLibrarySettings _windowLibrarySettings;
 
+        #region Данные
+        //Вес
         static private string _weight;
         public static string Weight { get => _weight; set => _weight = value; }
+        //Толщина
+        public static double Thickness { get => _thickness; set => _thickness = value; }
+
+        static private double _thickness = 0;
+        #endregion
+
 
         public static KompasObject Kompas { get => _kompas; set => _kompas = value; }
 
@@ -236,7 +244,7 @@ namespace RelaxingKompas.Data
             }
             else
             {
-                extrusion.Depth[true] = Convert.ToDouble(FormWeightAndSize.tb_thickness.Text); //Толщина выдавливания
+                extrusion.Depth[true] = Thickness; //Толщина выдавливания
             }
 
             if (!extrusion.Update())

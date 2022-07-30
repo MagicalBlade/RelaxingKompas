@@ -1,13 +1,7 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using KompasAPI7;
+﻿using ClosedXML.Excel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RelaxingKompas.Data
@@ -62,8 +56,13 @@ namespace RelaxingKompas.Data
 
         public static bool WriteExcelFile()
         {
-            string[] export = new[] 
+            string Path = DataWeightAndSize.KompasDocument.Path;
+            int rowcount = 0;
+            if (File.Exists($"{Path}Спецификация металла.xlsx"))
             {
+                string[][] export = new string[1][];
+                export[0] = new string[]
+                {
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 DataWeightAndSize.Thickness.ToString(),
                 DataWeightAndSize.FormWeightAndSize.tb_width.Text,
@@ -71,65 +70,57 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
-            };
-            string Path = DataWeightAndSize.KompasDocument.Path;
+                };
+                XLWorkbook workbook = new XLWorkbook($"{Path}Спецификация металла.xlsx");
+                IXLWorksheet worksheet = workbook.Worksheets.Worksheet(1);
 
-            using (SpreadsheetDocument document = SpreadsheetDocument.Create($"{Path}Спецификация металла.xlsx", SpreadsheetDocumentType.Workbook))
+                rowcount = worksheet.LastRowUsed().RowNumber();
+                InsertInformation(worksheet, export);
+                workbook.Save();
+            }
+            else
             {
-                List<OpenXmlAttribute> oxa;
-                OpenXmlWriter oxw;
-
-                document.AddWorkbookPart();
-                WorksheetPart wsp = document.WorkbookPart.AddNewPart<WorksheetPart>();
-
-                oxw = OpenXmlWriter.Create(wsp);
-                oxw.WriteStartElement(new Worksheet());
-                oxw.WriteStartElement(new SheetData());
-
-                oxa = new List<OpenXmlAttribute>();
-                oxa.Add(new OpenXmlAttribute("r", null, "1"));
-                oxw.WriteStartElement(new Row(), oxa);
-
-                for (int i = 0; i < export.Length; i++)
+                string[][] export = new string[2][];
+                export[0] = new string[]
                 {
-                    oxa = new List<OpenXmlAttribute>();
-                    oxa.Add(new OpenXmlAttribute("t", null, "str"));
-                    oxw.WriteStartElement(new Cell(), oxa);
+                "Позиция",
+                "Толщина",
+                "Ширина",
+                "Длина",
+                "Сталь",
+                "Вес, ед.",
+                "Площадь"
+                };
+                export[1] = new string[]
+                {
+                DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
+                DataWeightAndSize.Thickness.ToString(),
+                DataWeightAndSize.FormWeightAndSize.tb_width.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_length.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
+                };
+                XLWorkbook workbook = new XLWorkbook();
+                IXLWorksheet worksheet = workbook.Worksheets.Add("Позиции");
+                InsertInformation(worksheet, export);
+                workbook.SaveAs($"{Path}Спецификация металла.xlsx");
+            }
 
-                    oxw.WriteElement(new CellValue($"{export[i]}"));
-                    // this is for Cell
-                    oxw.WriteEndElement();
+            void InsertInformation(IXLWorksheet worksheet, string[][] export)
+            {
+                if (worksheet != null)
+                {
+                    for (int i = 0; i < export.Length; i++)
+                    {
+                        for (int j = 0; j < export[i].Length; j++)
+                        {
+                            worksheet.Cell(rowcount + i + 1, j + 1).Value = export[i][j];
+                            worksheet.Cell(rowcount + i + 1, j + 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);                            
+                        }
+                    }
                 }
-
-
-
-                // this is for Row
-                oxw.WriteEndElement();
-
-                // this is for SheetData
-                oxw.WriteEndElement();
-                // this is for Worksheet
-                oxw.WriteEndElement();
-                oxw.Close();
-
-                oxw = OpenXmlWriter.Create(document.WorkbookPart);
-                oxw.WriteStartElement(new Workbook());
-                oxw.WriteStartElement(new Sheets());
-
-                oxw.WriteElement(new Sheet()
-                {
-                    Name = "Блок",
-                    SheetId = 1,
-                    Id = document.WorkbookPart.GetIdOfPart(wsp)
-                });
-
-                // this is for Sheets
-                oxw.WriteEndElement();
-                // this is for Workbook
-                oxw.WriteEndElement();
-                oxw.Close();
-
-                document.Close();
+                worksheet.Columns(1, export[0].Length).AdjustToContents();
             }
             return true;
         }

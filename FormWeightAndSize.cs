@@ -81,6 +81,11 @@ namespace RelaxingKompas
                 DataWeightAndSize.WriteWeightStamp();
             }
 
+            if (true)
+            {
+                Excel.WriteExcelFile();
+            }
+
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "H", tb_width.Text, "Ширина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "L", tb_length.Text, "Длинна");

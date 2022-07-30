@@ -1,15 +1,7 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using KompasAPI7;
 using RelaxingKompas.Data;
-using KompasAPI7;
+using System;
+using System.Windows.Forms;
 
 namespace RelaxingKompas
 {
@@ -22,6 +14,7 @@ namespace RelaxingKompas
             tb_density.Text = Properties.Settings.Default.Density;
             cb_clipboard.Checked = Properties.Settings.Default.IsClipboard;
             cb_weight.Checked = Properties.Settings.Default.Isweight;
+            cb_Excel.Checked = Properties.Settings.Default.isExcel;
             comb_round.SelectedIndex = Properties.Settings.Default.Round;
             this.Location = Properties.Settings.Default.Point;
             #endregion
@@ -80,10 +73,18 @@ namespace RelaxingKompas
             {
                 DataWeightAndSize.WriteWeightStamp();
             }
-
-            if (true)
+            //Записуем данные в Excel файл
+            if (cb_Excel.Checked)
             {
-                Excel.WriteExcelFile();
+                try
+                {
+                    Excel.WriteExcelFile();
+                }
+                catch (DivideByZeroException ex)
+                {
+
+                    MessageBox.Show($"{ex}");;
+                }
             }
 
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
@@ -96,6 +97,7 @@ namespace RelaxingKompas
             Properties.Settings.Default.Density = tb_density.Text;
             Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
             Properties.Settings.Default.Isweight = cb_weight.Checked;
+            Properties.Settings.Default.isExcel = cb_Excel.Checked;
             Properties.Settings.Default.Round = comb_round.SelectedIndex;
             Properties.Settings.Default.Point = this.Location;
 

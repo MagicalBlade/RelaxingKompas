@@ -53,6 +53,7 @@
             this.l_steel = new System.Windows.Forms.Label();
             this.b_settings = new System.Windows.Forms.Button();
             this.b_Cancel = new System.Windows.Forms.Button();
+            this.cb_Excel = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // b_ok
@@ -76,7 +77,7 @@
             // 
             // tb_density
             // 
-            this.tb_density.Location = new System.Drawing.Point(94, 96);
+            this.tb_density.Location = new System.Drawing.Point(171, 105);
             this.tb_density.Margin = new System.Windows.Forms.Padding(5);
             this.tb_density.Name = "tb_density";
             this.tb_density.Size = new System.Drawing.Size(77, 20);
@@ -106,7 +107,7 @@
             // l_density
             // 
             this.l_density.AutoSize = true;
-            this.l_density.Location = new System.Drawing.Point(104, 72);
+            this.l_density.Location = new System.Drawing.Point(181, 81);
             this.l_density.Name = "l_density";
             this.l_density.Padding = new System.Windows.Forms.Padding(3);
             this.l_density.Size = new System.Drawing.Size(67, 19);
@@ -126,7 +127,7 @@
             // l_yardage
             // 
             this.l_yardage.AutoSize = true;
-            this.l_yardage.Location = new System.Drawing.Point(328, 71);
+            this.l_yardage.Location = new System.Drawing.Point(405, 80);
             this.l_yardage.Name = "l_yardage";
             this.l_yardage.Padding = new System.Windows.Forms.Padding(3);
             this.l_yardage.Size = new System.Drawing.Size(60, 19);
@@ -135,7 +136,7 @@
             // 
             // tb_yardage
             // 
-            this.tb_yardage.Location = new System.Drawing.Point(310, 95);
+            this.tb_yardage.Location = new System.Drawing.Point(387, 104);
             this.tb_yardage.Margin = new System.Windows.Forms.Padding(5);
             this.tb_yardage.Name = "tb_yardage";
             this.tb_yardage.ReadOnly = true;
@@ -147,7 +148,7 @@
             this.cb_clipboard.AutoSize = true;
             this.cb_clipboard.Checked = true;
             this.cb_clipboard.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_clipboard.Location = new System.Drawing.Point(190, 16);
+            this.cb_clipboard.Location = new System.Drawing.Point(267, 12);
             this.cb_clipboard.Name = "cb_clipboard";
             this.cb_clipboard.Size = new System.Drawing.Size(217, 17);
             this.cb_clipboard.TabIndex = 9;
@@ -157,7 +158,7 @@
             // cb_weight
             // 
             this.cb_weight.AutoSize = true;
-            this.cb_weight.Location = new System.Drawing.Point(190, 39);
+            this.cb_weight.Location = new System.Drawing.Point(267, 35);
             this.cb_weight.Name = "cb_weight";
             this.cb_weight.Size = new System.Drawing.Size(153, 17);
             this.cb_weight.TabIndex = 10;
@@ -177,7 +178,7 @@
             "0,0001",
             "0,00001",
             "0,000001"});
-            this.comb_round.Location = new System.Drawing.Point(181, 95);
+            this.comb_round.Location = new System.Drawing.Point(258, 104);
             this.comb_round.Margin = new System.Windows.Forms.Padding(5);
             this.comb_round.Name = "comb_round";
             this.comb_round.Size = new System.Drawing.Size(119, 21);
@@ -187,7 +188,7 @@
             // l_round
             // 
             this.l_round.AutoSize = true;
-            this.l_round.Location = new System.Drawing.Point(186, 71);
+            this.l_round.Location = new System.Drawing.Point(263, 80);
             this.l_round.Name = "l_round";
             this.l_round.Padding = new System.Windows.Forms.Padding(3);
             this.l_round.Size = new System.Drawing.Size(110, 19);
@@ -305,6 +306,16 @@
             this.b_Cancel.UseVisualStyleBackColor = true;
             this.b_Cancel.Click += new System.EventHandler(this.b_Cancel_Click);
             // 
+            // cb_Excel
+            // 
+            this.cb_Excel.AutoSize = true;
+            this.cb_Excel.Location = new System.Drawing.Point(267, 58);
+            this.cb_Excel.Name = "cb_Excel";
+            this.cb_Excel.Size = new System.Drawing.Size(141, 17);
+            this.cb_Excel.TabIndex = 10;
+            this.cb_Excel.Text = "Записать в Excel файл";
+            this.cb_Excel.UseVisualStyleBackColor = true;
+            // 
             // FormWeightAndSize
             // 
             this.AcceptButton = this.b_ok;
@@ -322,6 +333,7 @@
             this.Controls.Add(this.tb_width);
             this.Controls.Add(this.l_round);
             this.Controls.Add(this.comb_round);
+            this.Controls.Add(this.cb_Excel);
             this.Controls.Add(this.cb_weight);
             this.Controls.Add(this.cb_clipboard);
             this.Controls.Add(this.tb_yardage);
@@ -375,5 +387,6 @@
         private System.Windows.Forms.Label l_steel;
         private System.Windows.Forms.Button b_settings;
         internal System.Windows.Forms.Button b_Cancel;
+        internal System.Windows.Forms.CheckBox cb_Excel;
     }
 }

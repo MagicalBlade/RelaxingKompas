@@ -54,35 +54,13 @@ namespace RelaxingKompas.Data
             Clipboard.SetDataObject(dataObject); //Копируем в буфер обмена
         }
 
-        public static bool WriteExcelFile()
+        public static void WriteExcelFile()
         {
             string Path = DataWeightAndSize.KompasDocument.Path;
             int rowcount = 0;
-            if (File.Exists($"{Path}Спецификация металла.xlsx"))
+            string[][] newFileExport = new string[2][];
+            newFileExport[0] = new string[]
             {
-                string[][] export = new string[1][];
-                export[0] = new string[]
-                {
-                DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
-                DataWeightAndSize.Thickness.ToString(),
-                DataWeightAndSize.FormWeightAndSize.tb_width.Text,
-                DataWeightAndSize.FormWeightAndSize.tb_length.Text,
-                DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
-                DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
-                DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
-                };
-                XLWorkbook workbook = new XLWorkbook($"{Path}Спецификация металла.xlsx");
-                IXLWorksheet worksheet = workbook.Worksheets.Worksheet(1);
-
-                rowcount = worksheet.LastRowUsed().RowNumber();
-                InsertInformation(worksheet, export);
-                workbook.Save();
-            }
-            else
-            {
-                string[][] export = new string[2][];
-                export[0] = new string[]
-                {
                 "Позиция",
                 "Толщина",
                 "Ширина",
@@ -90,9 +68,9 @@ namespace RelaxingKompas.Data
                 "Сталь",
                 "Вес, ед.",
                 "Площадь"
-                };
-                export[1] = new string[]
-                {
+            };
+            newFileExport[1] = new string[]
+            {
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 DataWeightAndSize.Thickness.ToString(),
                 DataWeightAndSize.FormWeightAndSize.tb_width.Text,
@@ -100,10 +78,40 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
-                };
+            };
+            string[][] existsFileExport = new string[1][];
+            existsFileExport[0] = new string[]
+            {
+                DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
+                DataWeightAndSize.Thickness.ToString(),
+                DataWeightAndSize.FormWeightAndSize.tb_width.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_length.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
+            };
+
+            if (File.Exists($"{Path}Спецификация металла.xlsx"))
+            {
+                XLWorkbook workbook = new XLWorkbook($"{Path}Спецификация металла.xlsx");
+                IXLWorksheet worksheet = workbook.Worksheet(1);
+
+                if (worksheet.LastRowUsed() != null)
+                {
+                    rowcount = worksheet.LastRowUsed().RowNumber();
+                    InsertInformation(worksheet, existsFileExport);
+                }
+                else
+                {
+                    InsertInformation(worksheet, newFileExport);
+                }
+                workbook.Save();
+            }
+            else
+            {
                 XLWorkbook workbook = new XLWorkbook();
                 IXLWorksheet worksheet = workbook.Worksheets.Add("Позиции");
-                InsertInformation(worksheet, export);
+                InsertInformation(worksheet, newFileExport);
                 workbook.SaveAs($"{Path}Спецификация металла.xlsx");
             }
 
@@ -122,7 +130,7 @@ namespace RelaxingKompas.Data
                 }
                 worksheet.Columns(1, export[0].Length).AdjustToContents();
             }
-            return true;
+            return;
         }
     }
 }

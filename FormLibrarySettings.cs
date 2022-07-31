@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RelaxingKompas
@@ -24,12 +17,15 @@ namespace RelaxingKompas
             cb_Close3Ddetail.Checked = Properties.Settings.Default.IsClose3Ddetail;
             cb_Creat3Ddetail.Checked = Properties.Settings.Default.IsCreat3Ddetail;
             cb_CreatFragment.Checked = Properties.Settings.Default.IsCreatFragment;
+            cb_Excel.Checked = Properties.Settings.Default.isExcel;
+            tb_NameExcelFile.Text = Properties.Settings.Default.NameExcelFile;
+            rb_here.Checked = Properties.Settings.Default.rb_here;
+            rb_onDirectory.Checked = Properties.Settings.Default.rb_onDirectory;
+            tb_PathExcelFile.Text = Properties.Settings.Default.tb_PathExcelFile;
             #endregion
 
             Check3Ddetail();
             CheckFragment();
-            
-
         }
 
         private void b_save_Click(object sender, EventArgs e)
@@ -43,6 +39,11 @@ namespace RelaxingKompas
             Properties.Settings.Default.IsClose3Ddetail= cb_Close3Ddetail.Checked;
             Properties.Settings.Default.IsCreat3Ddetail= cb_Creat3Ddetail.Checked;
             Properties.Settings.Default.IsCreatFragment= cb_CreatFragment.Checked;
+            Properties.Settings.Default.isExcel = cb_Excel.Checked;
+            Properties.Settings.Default.NameExcelFile = tb_NameExcelFile.Text;
+            Properties.Settings.Default.rb_here = rb_here.Checked;
+            Properties.Settings.Default.rb_onDirectory = rb_onDirectory.Checked;
+            Properties.Settings.Default.tb_PathExcelFile = tb_PathExcelFile.Text;
             Properties.Settings.Default.Save();
             #endregion
         }
@@ -94,6 +95,15 @@ namespace RelaxingKompas
         private void cb_CreatFragment_CheckedChanged(object sender, EventArgs e)
         {
             CheckFragment();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                tb_PathExcelFile.Text = folderBrowserDialog.SelectedPath;
+            }
         }
     }
 }

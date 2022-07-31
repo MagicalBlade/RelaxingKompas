@@ -1,6 +1,7 @@
 ﻿using KompasAPI7;
 using RelaxingKompas.Data;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RelaxingKompas
@@ -14,7 +15,6 @@ namespace RelaxingKompas
             tb_density.Text = Properties.Settings.Default.Density;
             cb_clipboard.Checked = Properties.Settings.Default.IsClipboard;
             cb_weight.Checked = Properties.Settings.Default.Isweight;
-            cb_Excel.Checked = Properties.Settings.Default.isExcel;
             comb_round.SelectedIndex = Properties.Settings.Default.Round;
             this.Location = Properties.Settings.Default.Point;
             #endregion
@@ -74,16 +74,16 @@ namespace RelaxingKompas
                 DataWeightAndSize.WriteWeightStamp();
             }
             //Записуем данные в Excel файл
-            if (cb_Excel.Checked)
+            if (DataWeightAndSize.WindowLibrarySettings.cb_Excel.Checked)
             {
                 try
                 {
                     Excel.WriteExcelFile();
                 }
-                catch (DivideByZeroException ex)
+                catch (System.IO.IOException)
                 {
 
-                    MessageBox.Show($"{ex}");;
+                    MessageBox.Show($"Не удается записать Excel файл. Возможно он открыт в другой программе");
                 }
             }
 
@@ -97,7 +97,6 @@ namespace RelaxingKompas
             Properties.Settings.Default.Density = tb_density.Text;
             Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
             Properties.Settings.Default.Isweight = cb_weight.Checked;
-            Properties.Settings.Default.isExcel = cb_Excel.Checked;
             Properties.Settings.Default.Round = comb_round.SelectedIndex;
             Properties.Settings.Default.Point = this.Location;
 
@@ -163,5 +162,17 @@ namespace RelaxingKompas
         {
             Hide();
         }
+
+
+        private void tb_pos_Enter(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        private void tb_pos_Leave(object sender, EventArgs e)
+        {
+        }
+
     }
 }

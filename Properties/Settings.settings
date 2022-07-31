@@ -44,5 +44,17 @@
     <Setting Name="isExcel" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="NameExcelFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Спецификация металла</Value>
+    </Setting>
+    <Setting Name="rb_here" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="rb_onDirectory" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="tb_PathExcelFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

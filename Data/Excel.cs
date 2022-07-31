@@ -56,7 +56,27 @@ namespace RelaxingKompas.Data
 
         public static void WriteExcelFile()
         {
-            string Path = DataWeightAndSize.KompasDocument.Path;
+            string PathExcelFile = DataWeightAndSize.KompasDocument.Path;
+            string NameExcelFile = "Спецификация металла";
+            if (DataWeightAndSize.WindowLibrarySettings.tb_NameExcelFile.Text != "")
+            {
+                NameExcelFile = DataWeightAndSize.WindowLibrarySettings.tb_NameExcelFile.Text;
+                foreach (char item in Path.GetInvalidFileNameChars())
+                {
+                    NameExcelFile = NameExcelFile.Replace(item.ToString(), "");
+                }
+            }
+            if (DataWeightAndSize.WindowLibrarySettings.rb_onDirectory.Checked)
+            {
+                if (Directory.Exists(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text))
+                {
+                    PathExcelFile = DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text;
+                }
+                else
+                {
+                    DataWeightAndSize.Application.MessageBoxEx($"Путь не найден. Файл сохранен: {PathExcelFile}", "Ошибка", 0);
+                }
+            }
             int rowcount = 0;
             string[][] newFileExport = new string[2][];
             newFileExport[0] = new string[]
@@ -91,9 +111,9 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
             };
 
-            if (File.Exists($"{Path}Спецификация металла.xlsx"))
+            if (File.Exists($"{PathExcelFile}{NameExcelFile}.xlsx"))
             {
-                XLWorkbook workbook = new XLWorkbook($"{Path}Спецификация металла.xlsx");
+                XLWorkbook workbook = new XLWorkbook($"{PathExcelFile}{NameExcelFile}.xlsx");
                 IXLWorksheet worksheet = workbook.Worksheet(1);
 
                 if (worksheet.LastRowUsed() != null)
@@ -112,7 +132,7 @@ namespace RelaxingKompas.Data
                 XLWorkbook workbook = new XLWorkbook();
                 IXLWorksheet worksheet = workbook.Worksheets.Add("Позиции");
                 InsertInformation(worksheet, newFileExport);
-                workbook.SaveAs($"{Path}Спецификация металла.xlsx");
+                workbook.SaveAs($"{PathExcelFile}{NameExcelFile}.xlsx");
             }
 
             void InsertInformation(IXLWorksheet worksheet, string[][] export)

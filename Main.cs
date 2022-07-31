@@ -18,6 +18,9 @@ namespace RelaxingKompas
     [ClassInterface(ClassInterfaceType.AutoDual)]
     public class Main
     {
+        [DllImport("User32.dll", EntryPoint = "UnhookWindowsHookEx", SetLastError = true)]
+        private static extern byte UnhookWindowsHookEx(IntPtr hHook);
+
         private KompasObject _kompas;
         public KompasObject kompas { get => _kompas; set => _kompas = value; }
 
@@ -348,6 +351,9 @@ namespace RelaxingKompas
             #endregion
 
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
+
+            kompas.ksSetCriticalProcess();
+
             ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83); //Параметры МЦХ
             int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади
             if (group == 0)
@@ -386,6 +392,11 @@ namespace RelaxingKompas
             WindowWeightAndSize.Weight(); //Вызываю вычисление массы
             ksdocument2D.ksWriteGroupToClip(group, true); //Копируем группу в буфер обмена
 
+            if (UnhookWindowsHookEx((IntPtr)kompas.ksGetHWindow()) != 0)
+            {
+                MessageBox.Show("Yes");
+            }
+            
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
 

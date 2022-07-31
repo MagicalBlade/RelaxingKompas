@@ -190,5 +190,53 @@ namespace RelaxingKompas.Properties {
                 this["isExcel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Спецификация металла")]
+        public string NameExcelFile {
+            get {
+                return ((string)(this["NameExcelFile"]));
+            }
+            set {
+                this["NameExcelFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool rb_here {
+            get {
+                return ((bool)(this["rb_here"]));
+            }
+            set {
+                this["rb_here"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool rb_onDirectory {
+            get {
+                return ((bool)(this["rb_onDirectory"]));
+            }
+            set {
+                this["rb_onDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string tb_PathExcelFile {
+            get {
+                return ((string)(this["tb_PathExcelFile"]));
+            }
+            set {
+                this["tb_PathExcelFile"] = value;
+            }
+        }
     }
 }

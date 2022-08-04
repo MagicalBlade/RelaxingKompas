@@ -12,6 +12,8 @@ using System.Text;
 using System.Diagnostics;
 using System.Windows.Interop;
 using RelaxingKompas.Data;
+using System.Runtime.InteropServices.ComTypes;
+using RelaxingKompas.Event;
 
 namespace RelaxingKompas
 {
@@ -399,7 +401,7 @@ namespace RelaxingKompas
             
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
-
+            
         }
 
         private void LibrarySettings()
@@ -427,6 +429,20 @@ namespace RelaxingKompas
                 case 4: WeightAndSize(); break;
                 case 5: LibrarySettings(); break;
             }
+        }
+
+        public bool LibInterfaceNotifyEntry(object application)
+        {
+            bool result = true;
+
+            // Захват интерфейса приложения КОМПАС
+            if (kompas == null && application != null)
+            {
+                kompas = (KompasObject)application;
+
+            }
+
+            return result;
         }
 
         public object ExternalGetResourceModule()
@@ -458,11 +474,6 @@ namespace RelaxingKompas
             return result;
         }
 
-        private static bool Test(int obj)
-        {
-            MessageBox.Show("Test");
-            return true;
-        }
 
         #region COM Registration
         // Эта функция выполняется при регистрации класса для COM

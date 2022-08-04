@@ -237,6 +237,7 @@
             this.tb_pos.Size = new System.Drawing.Size(83, 20);
             this.tb_pos.TabIndex = 17;
             this.tb_pos.Enter += new System.EventHandler(this.tb_pos_Enter);
+            this.tb_pos.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_pos_KeyPress);
             this.tb_pos.Leave += new System.EventHandler(this.tb_pos_Leave);
             // 
             // l_pos

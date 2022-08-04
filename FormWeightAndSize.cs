@@ -1,7 +1,9 @@
-﻿using KompasAPI7;
+﻿using Kompas6API5;
+using KompasAPI7;
 using RelaxingKompas.Data;
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
 namespace RelaxingKompas
@@ -18,7 +20,7 @@ namespace RelaxingKompas
             comb_round.SelectedIndex = Properties.Settings.Default.Round;
             this.Location = Properties.Settings.Default.Point;
             #endregion
-
+            
         }
 
         internal void Weight()
@@ -166,13 +168,22 @@ namespace RelaxingKompas
 
         private void tb_pos_Enter(object sender, EventArgs e)
         {
-
-            
+            /*
+            IConnectionPointContainer connectionPointContainer = DataWeightAndSize.Kompas as IConnectionPointContainer;
+            IConnectionPoint m_ConnPt = null;
+            int m_Cookie;
+            Event.ApplicationEvent applicationEvent = new Event.ApplicationEvent();
+            connectionPointContainer.FindConnectionPoint(typeof(ksKompasObjectNotify).GUID, out m_ConnPt);
+            m_ConnPt.Advise(applicationEvent, out m_Cookie);
+            */
         }
 
         private void tb_pos_Leave(object sender, EventArgs e)
         {
         }
 
+        internal void tb_pos_KeyPress(object sender, KeyPressEventArgs e)
+        {
+        }
     }
 }

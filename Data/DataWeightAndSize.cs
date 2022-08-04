@@ -46,7 +46,18 @@ namespace RelaxingKompas.Data
         static public void WriteWeightStamp()
         {
             ILayoutSheets layoutSheets = KompasDocument.LayoutSheets;
+            if (layoutSheets == null) return;
+            if (layoutSheets.Count == 0) return;
             ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
+            if (layoutSheet == null)
+            {
+                foreach (ILayoutSheet item in layoutSheets)
+                {
+                    layoutSheet = item;
+                    break;
+                }
+            };
             IStamp stamp = layoutSheet.Stamp;
             IText text = stamp.Text[5];
             text.Str = $"{Weight}";
@@ -62,8 +73,17 @@ namespace RelaxingKompas.Data
         {
             ILayoutSheets layoutSheets = KompasDocument.LayoutSheets;
             if (layoutSheets == null) return "";
+            if (layoutSheets.Count == 0) return "";
             ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
-            if (layoutSheet == null) return "";
+            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
+            if (layoutSheet == null) 
+            { 
+                foreach (ILayoutSheet item in layoutSheets)
+                {
+                    layoutSheet = item;
+                    break;
+                }
+            };
             IStamp stamp = layoutSheet.Stamp;
             if (stamp == null) return "";
             IText text = stamp.Text[NumberCell];

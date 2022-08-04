@@ -66,8 +66,10 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -80,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Data\DataWeightAndSize.cs" />
     <Compile Include="Data\Excel.cs" />
+    <Compile Include="Event\ApplicationEvent.cs" />
     <Compile Include="FormLibrarySettings.cs">
       <SubType>Form</SubType>
     </Compile>

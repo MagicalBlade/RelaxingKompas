@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Data\DataWeightAndSize.cs" />
     <Compile Include="Data\Excel.cs" />
+    <Compile Include="Data\Registration.cs" />
     <Compile Include="Event\ApplicationEvent.cs" />
     <Compile Include="FormLibrarySettings.cs">
       <SubType>Form</SubType>
@@ -102,6 +103,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="FormRegistration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRegistration.Designer.cs">
+      <DependentUpon>FormRegistration.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FormLibrarySettings.resx">
@@ -109,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormWeightAndSize.resx">
       <DependentUpon>FormWeightAndSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRegistration.resx">
+      <DependentUpon>FormRegistration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

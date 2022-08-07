@@ -14,6 +14,8 @@ using System.Windows.Interop;
 using RelaxingKompas.Data;
 using System.Runtime.InteropServices.ComTypes;
 using RelaxingKompas.Event;
+using System.Security.Cryptography;
+using RelaxingKompas.Properties;
 
 namespace RelaxingKompas
 {
@@ -47,6 +49,9 @@ namespace RelaxingKompas
         private System.Windows.Forms.IWin32Window _win32;
 
         #endregion
+        private string IDKey => Registration.IDKey;
+
+        private string EncryptKey => Registration.EncryptKey;
 
         // Имя библиотеки
         [return: MarshalAs(UnmanagedType.BStr)]
@@ -416,10 +421,15 @@ namespace RelaxingKompas
         // Головная функция библиотеки
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
+            if (EncryptKey != Settings.Default.Key)
+            {
+                FormRegistration formRegistration = new FormRegistration();
+                formRegistration.ShowDialog();
+                return;
+            }
             kompas = (KompasObject)kompas_;
             Data.DataWeightAndSize.Kompas = kompas;
             Application = (IApplication)kompas.ksGetApplication7();
-
             //Вызываем команды
             switch (command)
             {

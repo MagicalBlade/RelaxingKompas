@@ -47,12 +47,7 @@ namespace RelaxingKompas
         public System.Windows.Forms.IWin32Window Win32 { get => _win32; set => _win32 = value; }
 
         private System.Windows.Forms.IWin32Window _win32;
-
         #endregion
-        private string IDKey => Registration.IDKey;
-
-        private string EncryptKey => Registration.EncryptKey;
-
         // Имя библиотеки
         [return: MarshalAs(UnmanagedType.BStr)]
         public string GetLibraryName()
@@ -406,7 +401,9 @@ namespace RelaxingKompas
             
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
-            
+            WindowWeightAndSize.Owner.Hide();
+
+
         }
 
         private void LibrarySettings()
@@ -421,7 +418,12 @@ namespace RelaxingKompas
         // Головная функция библиотеки
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
-            if (EncryptKey != Settings.Default.Key)
+            if (Registration.IDKey == null)
+            {
+                Registration.GetIDKey();
+                Registration.EncryptKey = Registration.Encrypt(Registration.IDKey, "MagicalBlade-RelaxingKompas");
+            }
+            if (Registration.EncryptKey != Settings.Default.Key)
             {
                 FormRegistration formRegistration = new FormRegistration();
                 formRegistration.ShowDialog();

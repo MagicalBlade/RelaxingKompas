@@ -11,10 +11,10 @@ namespace RelaxingKompas.Data
 {
     internal static class Registration
     {
-        public static string IDKey { get => GetIDKey(); set => _iDKey = value; }
+        public static string IDKey { get => _iDKey; set => _iDKey = value; }
 
         private static string _iDKey;
-        public static string EncryptKey { get => Encrypt(IDKey, "MagicalBlade-RelaxingKompas"); set => _encryptKey = value; }
+        public static string EncryptKey { get => _encryptKey; set => _encryptKey = value; }
 
         private static string _encryptKey;
 
@@ -23,7 +23,7 @@ namespace RelaxingKompas.Data
         /// Получение ID системы
         /// </summary>
         /// <returns></returns>
-        public static string GetIDKey()
+        public static void GetIDKey()
         {
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -37,7 +37,8 @@ namespace RelaxingKompas.Data
             process.WaitForExit();
             string output = process.StandardOutput.ReadToEnd();
             string[] chars = { " ", "\r", "\n" };
-            return output.Split(chars, StringSplitOptions.RemoveEmptyEntries)[1].Replace("-", "");
+            IDKey = output.Split(chars, StringSplitOptions.RemoveEmptyEntries)[1].Replace("-", "");
+            //return output.Split(chars, StringSplitOptions.RemoveEmptyEntries)[1].Replace("-", "");
         }
         /// /// Шифрует строку value
         /// 

@@ -1,4 +1,5 @@
 ﻿using Kompas6API5;
+using RelaxingKompas.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,6 +94,7 @@ namespace RelaxingKompas.Event
             //var key1 = Key.G;
             //var target = Keyboard.FocusedElement;
             //target.RaiseEvent(new KeyEventArgs(Keyboard.PrimaryDevice,PresentationSource.FromVisual((System.Windows.Media.Visual)target),0,key1));
+            
             return true;
         }
 

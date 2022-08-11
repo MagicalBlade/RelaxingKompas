@@ -209,19 +209,54 @@ namespace RelaxingKompas.Data
             IDocuments documents = Application.Documents;
             IKompasDocument3D kompasDocument3D = (IKompasDocument3D)documents.Add(DocumentTypeEnum.ksDocumentPart, true);//Создаем документ 3D деталь
             IPart7 part7 = kompasDocument3D.TopPart;
-            part7.Marking = NameFile;
-            part7.Name = "";
-            IPlane3D planeYOZ = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeYOZ];
-            IModelObject axes3DOZ = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOZ];
+            //part7.Marking = NameFile;
+            part7.Name = NameFile;
             IModelContainer modelContainer = (IModelContainer)part7;
             ISketchs sketchs = modelContainer.Sketchs;
             ISketch sketch = sketchs.Add();
-            sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = axes3DOZ;
-            sketch.LeftHandedCS = true;
-            sketch.Plane = planeYOZ; //Эскиз будет размещаться на плоскости "Спереди"
+            IModelObject axes3DOZ;
+            IPlane3D plane;
+            switch (DataWeightAndSize.WindowLibrarySettings.cmb_plane.SelectedItem)
+            {
+                case "Сверху":
+                    sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOX] = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOY];
+                    sketch.LeftHandedCS = false;
+                    plane = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeXOY];
+                    break;
+                case "Снизу":
+                    sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOX];
+                    sketch.LeftHandedCS = true;
+                    plane = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeXOY];
+                    break;
+                case "Спереди":
+                    sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOZ];
+                    sketch.LeftHandedCS = true;
+                    plane = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeYOZ];
+                    break;
+                case "Сзади":
+                    sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOZ];
+                    sketch.LeftHandedCS = false;
+                    plane = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeYOZ];
+                    break;
+                case "Слева":
+                    sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOZ];
+                    sketch.LeftHandedCS = true;
+                    plane = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeXOZ];
+                    break;
+                case "Справа":
+                    sketch.DirectingObject[ksObj3dTypeEnum.o3d_axisOY] = part7.DefaultObject[ksObj3dTypeEnum.o3d_axisOZ];
+                    sketch.LeftHandedCS = false;
+                    plane = (IPlane3D)part7.DefaultObject[ksObj3dTypeEnum.o3d_planeXOZ];
+                    break;
+                default:
+                    System.Windows.Forms.MessageBox.Show("Не выбрана плоскость");
+                    return true;
+            }
+            
+            sketch.Plane = plane;
             part7.Update();
 
-            string PathFile = $"{KompasDocument.Path}{part7.Marking}.m3d";
+            string PathFile = $"{KompasDocument.Path}{part7.Name}.m3d";
 
             IKompasDocument kompasDocument = sketch.BeginEdit(); //Начало формирования эскиза
 

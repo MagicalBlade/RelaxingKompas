@@ -250,5 +250,17 @@ namespace RelaxingKompas.Properties {
                 this["Key"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int cmb_plane {
+            get {
+                return ((int)(this["cmb_plane"]));
+            }
+            set {
+                this["cmb_plane"] = value;
+            }
+        }
     }
 }

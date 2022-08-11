@@ -22,6 +22,7 @@ namespace RelaxingKompas
             rb_here.Checked = Properties.Settings.Default.rb_here;
             rb_onDirectory.Checked = Properties.Settings.Default.rb_onDirectory;
             tb_PathExcelFile.Text = Properties.Settings.Default.tb_PathExcelFile;
+            cmb_plane.SelectedIndex = Properties.Settings.Default.cmb_plane;
             #endregion
 
             Check3Ddetail();
@@ -44,6 +45,7 @@ namespace RelaxingKompas
             Properties.Settings.Default.rb_here = rb_here.Checked;
             Properties.Settings.Default.rb_onDirectory = rb_onDirectory.Checked;
             Properties.Settings.Default.tb_PathExcelFile = tb_PathExcelFile.Text;
+            Properties.Settings.Default.cmb_plane = cmb_plane.SelectedIndex;
             Properties.Settings.Default.Save();
             #endregion
         }

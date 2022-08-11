@@ -393,17 +393,9 @@ namespace RelaxingKompas
             WindowWeightAndSize.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
             WindowWeightAndSize.Weight(); //Вызываю вычисление массы
             ksdocument2D.ksWriteGroupToClip(group, true); //Копируем группу в буфер обмена
-
-            if (UnhookWindowsHookEx((IntPtr)kompas.ksGetHWindow()) != 0)
-            {
-                MessageBox.Show("Yes");
-            }
             
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
-            WindowWeightAndSize.Owner.Hide();
-
-
         }
 
         private void LibrarySettings()
@@ -418,6 +410,7 @@ namespace RelaxingKompas
         // Головная функция библиотеки
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
+            /*
             if (Registration.IDKey == null)
             {
                 Registration.GetIDKey();
@@ -429,6 +422,7 @@ namespace RelaxingKompas
                 formRegistration.ShowDialog();
                 return;
             }
+            */
             kompas = (KompasObject)kompas_;
             Data.DataWeightAndSize.Kompas = kompas;
             Application = (IApplication)kompas.ksGetApplication7();

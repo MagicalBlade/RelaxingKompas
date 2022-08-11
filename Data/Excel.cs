@@ -148,7 +148,8 @@ namespace RelaxingKompas.Data
                         }
                     }
                 }
-                worksheet.Columns(1, export[0].Length).AdjustToContents();
+                //Ширина колонки по содержимому
+                worksheet.Columns(1, export[0].Length).AdjustToContents(); 
             }
             return;
         }

@@ -29,23 +29,25 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cb_3Ddetail = new System.Windows.Forms.CheckBox();
             this.cb_SaveFragment = new System.Windows.Forms.CheckBox();
             this.cb_CloseDrawing = new System.Windows.Forms.CheckBox();
-            this.cb_Creat3Ddetail = new System.Windows.Forms.CheckBox();
             this.cb_CreatFragment = new System.Windows.Forms.CheckBox();
-            this.cb_Close3Ddetail = new System.Windows.Forms.CheckBox();
             this.cb_SaveDxf = new System.Windows.Forms.CheckBox();
             this.cb_CloseFragment = new System.Windows.Forms.CheckBox();
+            this.cb_3Ddetail = new System.Windows.Forms.CheckBox();
+            this.cb_Creat3Ddetail = new System.Windows.Forms.CheckBox();
+            this.cb_Close3Ddetail = new System.Windows.Forms.CheckBox();
             this.b_save = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cb_Excel = new System.Windows.Forms.CheckBox();
-            this.l_NameExcelFile = new System.Windows.Forms.Label();
-            this.tb_NameExcelFile = new System.Windows.Forms.TextBox();
-            this.rb_here = new System.Windows.Forms.RadioButton();
-            this.rb_onDirectory = new System.Windows.Forms.RadioButton();
-            this.tb_PathExcelFile = new System.Windows.Forms.TextBox();
             this.b_FolderDialog = new System.Windows.Forms.Button();
+            this.tb_PathExcelFile = new System.Windows.Forms.TextBox();
+            this.rb_onDirectory = new System.Windows.Forms.RadioButton();
+            this.rb_here = new System.Windows.Forms.RadioButton();
+            this.tb_NameExcelFile = new System.Windows.Forms.TextBox();
+            this.l_NameExcelFile = new System.Windows.Forms.Label();
+            this.cb_Excel = new System.Windows.Forms.CheckBox();
+            this.cmb_plane = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -63,16 +65,6 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Общие";
-            // 
-            // cb_3Ddetail
-            // 
-            this.cb_3Ddetail.AutoSize = true;
-            this.cb_3Ddetail.Location = new System.Drawing.Point(6, 42);
-            this.cb_3Ddetail.Name = "cb_3Ddetail";
-            this.cb_3Ddetail.Size = new System.Drawing.Size(134, 17);
-            this.cb_3Ddetail.TabIndex = 1;
-            this.cb_3Ddetail.Text = "Сохранять 3D деталь";
-            this.cb_3Ddetail.UseVisualStyleBackColor = true;
             // 
             // cb_SaveFragment
             // 
@@ -94,17 +86,6 @@
             this.cb_CloseDrawing.Text = "Закрыть чертеж";
             this.cb_CloseDrawing.UseVisualStyleBackColor = true;
             // 
-            // cb_Creat3Ddetail
-            // 
-            this.cb_Creat3Ddetail.AutoSize = true;
-            this.cb_Creat3Ddetail.Location = new System.Drawing.Point(6, 19);
-            this.cb_Creat3Ddetail.Name = "cb_Creat3Ddetail";
-            this.cb_Creat3Ddetail.Size = new System.Drawing.Size(123, 17);
-            this.cb_Creat3Ddetail.TabIndex = 1;
-            this.cb_Creat3Ddetail.Text = "Создать 3D деталь";
-            this.cb_Creat3Ddetail.UseVisualStyleBackColor = true;
-            this.cb_Creat3Ddetail.CheckedChanged += new System.EventHandler(this.cb_Creat3Ddetail_CheckedChanged);
-            // 
             // cb_CreatFragment
             // 
             this.cb_CreatFragment.AutoSize = true;
@@ -115,16 +96,6 @@
             this.cb_CreatFragment.Text = "Создать фрагмент";
             this.cb_CreatFragment.UseVisualStyleBackColor = true;
             this.cb_CreatFragment.CheckedChanged += new System.EventHandler(this.cb_CreatFragment_CheckedChanged);
-            // 
-            // cb_Close3Ddetail
-            // 
-            this.cb_Close3Ddetail.AutoSize = true;
-            this.cb_Close3Ddetail.Location = new System.Drawing.Point(6, 65);
-            this.cb_Close3Ddetail.Name = "cb_Close3Ddetail";
-            this.cb_Close3Ddetail.Size = new System.Drawing.Size(125, 17);
-            this.cb_Close3Ddetail.TabIndex = 0;
-            this.cb_Close3Ddetail.Text = "Закрыть 3D деталь";
-            this.cb_Close3Ddetail.UseVisualStyleBackColor = true;
             // 
             // cb_SaveDxf
             // 
@@ -146,6 +117,37 @@
             this.cb_CloseFragment.Text = "Закрыть фрагмент";
             this.cb_CloseFragment.UseVisualStyleBackColor = true;
             // 
+            // cb_3Ddetail
+            // 
+            this.cb_3Ddetail.AutoSize = true;
+            this.cb_3Ddetail.Location = new System.Drawing.Point(6, 42);
+            this.cb_3Ddetail.Name = "cb_3Ddetail";
+            this.cb_3Ddetail.Size = new System.Drawing.Size(134, 17);
+            this.cb_3Ddetail.TabIndex = 1;
+            this.cb_3Ddetail.Text = "Сохранять 3D деталь";
+            this.cb_3Ddetail.UseVisualStyleBackColor = true;
+            // 
+            // cb_Creat3Ddetail
+            // 
+            this.cb_Creat3Ddetail.AutoSize = true;
+            this.cb_Creat3Ddetail.Location = new System.Drawing.Point(6, 19);
+            this.cb_Creat3Ddetail.Name = "cb_Creat3Ddetail";
+            this.cb_Creat3Ddetail.Size = new System.Drawing.Size(123, 17);
+            this.cb_Creat3Ddetail.TabIndex = 1;
+            this.cb_Creat3Ddetail.Text = "Создать 3D деталь";
+            this.cb_Creat3Ddetail.UseVisualStyleBackColor = true;
+            this.cb_Creat3Ddetail.CheckedChanged += new System.EventHandler(this.cb_Creat3Ddetail_CheckedChanged);
+            // 
+            // cb_Close3Ddetail
+            // 
+            this.cb_Close3Ddetail.AutoSize = true;
+            this.cb_Close3Ddetail.Location = new System.Drawing.Point(6, 65);
+            this.cb_Close3Ddetail.Name = "cb_Close3Ddetail";
+            this.cb_Close3Ddetail.Size = new System.Drawing.Size(125, 17);
+            this.cb_Close3Ddetail.TabIndex = 0;
+            this.cb_Close3Ddetail.Text = "Закрыть 3D деталь";
+            this.cb_Close3Ddetail.UseVisualStyleBackColor = true;
+            // 
             // b_save
             // 
             this.b_save.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -159,6 +161,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.cmb_plane);
             this.groupBox2.Controls.Add(this.b_FolderDialog);
             this.groupBox2.Controls.Add(this.tb_PathExcelFile);
             this.groupBox2.Controls.Add(this.rb_onDirectory);
@@ -176,32 +180,32 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Посчитать массу";
             // 
-            // cb_Excel
+            // b_FolderDialog
             // 
-            this.cb_Excel.AutoSize = true;
-            this.cb_Excel.Location = new System.Drawing.Point(159, 19);
-            this.cb_Excel.Name = "cb_Excel";
-            this.cb_Excel.Size = new System.Drawing.Size(141, 17);
-            this.cb_Excel.TabIndex = 2;
-            this.cb_Excel.Text = "Записать в Excel файл";
-            this.cb_Excel.UseVisualStyleBackColor = true;
+            this.b_FolderDialog.Location = new System.Drawing.Point(265, 114);
+            this.b_FolderDialog.Name = "b_FolderDialog";
+            this.b_FolderDialog.Size = new System.Drawing.Size(75, 23);
+            this.b_FolderDialog.TabIndex = 8;
+            this.b_FolderDialog.Text = "Обзор";
+            this.b_FolderDialog.UseVisualStyleBackColor = true;
+            this.b_FolderDialog.Click += new System.EventHandler(this.button1_Click);
             // 
-            // l_NameExcelFile
+            // tb_PathExcelFile
             // 
-            this.l_NameExcelFile.AutoSize = true;
-            this.l_NameExcelFile.Location = new System.Drawing.Point(156, 46);
-            this.l_NameExcelFile.Name = "l_NameExcelFile";
-            this.l_NameExcelFile.Size = new System.Drawing.Size(67, 13);
-            this.l_NameExcelFile.TabIndex = 3;
-            this.l_NameExcelFile.Text = "Имя файла:";
+            this.tb_PathExcelFile.Location = new System.Drawing.Point(245, 88);
+            this.tb_PathExcelFile.Name = "tb_PathExcelFile";
+            this.tb_PathExcelFile.Size = new System.Drawing.Size(125, 20);
+            this.tb_PathExcelFile.TabIndex = 7;
             // 
-            // tb_NameExcelFile
+            // rb_onDirectory
             // 
-            this.tb_NameExcelFile.Location = new System.Drawing.Point(229, 42);
-            this.tb_NameExcelFile.Name = "tb_NameExcelFile";
-            this.tb_NameExcelFile.Size = new System.Drawing.Size(141, 20);
-            this.tb_NameExcelFile.TabIndex = 4;
-            this.tb_NameExcelFile.Text = "Спецификация металла";
+            this.rb_onDirectory.AutoSize = true;
+            this.rb_onDirectory.Location = new System.Drawing.Point(159, 88);
+            this.rb_onDirectory.Name = "rb_onDirectory";
+            this.rb_onDirectory.Size = new System.Drawing.Size(80, 17);
+            this.rb_onDirectory.TabIndex = 6;
+            this.rb_onDirectory.Text = "По адресу:";
+            this.rb_onDirectory.UseVisualStyleBackColor = true;
             // 
             // rb_here
             // 
@@ -215,32 +219,64 @@
             this.rb_here.Text = "В папке с чертежом";
             this.rb_here.UseVisualStyleBackColor = true;
             // 
-            // rb_onDirectory
+            // tb_NameExcelFile
             // 
-            this.rb_onDirectory.AutoSize = true;
-            this.rb_onDirectory.Location = new System.Drawing.Point(159, 88);
-            this.rb_onDirectory.Name = "rb_onDirectory";
-            this.rb_onDirectory.Size = new System.Drawing.Size(80, 17);
-            this.rb_onDirectory.TabIndex = 6;
-            this.rb_onDirectory.Text = "По адресу:";
-            this.rb_onDirectory.UseVisualStyleBackColor = true;
+            this.tb_NameExcelFile.Location = new System.Drawing.Point(229, 42);
+            this.tb_NameExcelFile.Name = "tb_NameExcelFile";
+            this.tb_NameExcelFile.Size = new System.Drawing.Size(141, 20);
+            this.tb_NameExcelFile.TabIndex = 4;
+            this.tb_NameExcelFile.Text = "Спецификация металла";
             // 
-            // tb_PathExcelFile
+            // l_NameExcelFile
             // 
-            this.tb_PathExcelFile.Location = new System.Drawing.Point(245, 88);
-            this.tb_PathExcelFile.Name = "tb_PathExcelFile";
-            this.tb_PathExcelFile.Size = new System.Drawing.Size(125, 20);
-            this.tb_PathExcelFile.TabIndex = 7;
+            this.l_NameExcelFile.AutoSize = true;
+            this.l_NameExcelFile.Location = new System.Drawing.Point(156, 46);
+            this.l_NameExcelFile.Name = "l_NameExcelFile";
+            this.l_NameExcelFile.Size = new System.Drawing.Size(67, 13);
+            this.l_NameExcelFile.TabIndex = 3;
+            this.l_NameExcelFile.Text = "Имя файла:";
             // 
-            // b_FolderDialog
+            // cb_Excel
             // 
-            this.b_FolderDialog.Location = new System.Drawing.Point(265, 114);
-            this.b_FolderDialog.Name = "b_FolderDialog";
-            this.b_FolderDialog.Size = new System.Drawing.Size(75, 23);
-            this.b_FolderDialog.TabIndex = 8;
-            this.b_FolderDialog.Text = "Обзор";
-            this.b_FolderDialog.UseVisualStyleBackColor = true;
-            this.b_FolderDialog.Click += new System.EventHandler(this.button1_Click);
+            this.cb_Excel.AutoSize = true;
+            this.cb_Excel.Location = new System.Drawing.Point(159, 19);
+            this.cb_Excel.Name = "cb_Excel";
+            this.cb_Excel.Size = new System.Drawing.Size(141, 17);
+            this.cb_Excel.TabIndex = 2;
+            this.cb_Excel.Text = "Записать в Excel файл";
+            this.cb_Excel.UseVisualStyleBackColor = true;
+            // 
+            // cmb_plane
+            // 
+            this.cmb_plane.AutoCompleteCustomSource.AddRange(new string[] {
+            "Сверху",
+            "Снизу",
+            "Спереди",
+            "Сзади",
+            "Слева",
+            "Справа"});
+            this.cmb_plane.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_plane.FormattingEnabled = true;
+            this.cmb_plane.Items.AddRange(new object[] {
+            "Сверху",
+            "Снизу",
+            "Спереди",
+            "Сзади",
+            "Слева",
+            "Справа"});
+            this.cmb_plane.Location = new System.Drawing.Point(6, 101);
+            this.cmb_plane.Name = "cmb_plane";
+            this.cmb_plane.Size = new System.Drawing.Size(121, 21);
+            this.cmb_plane.TabIndex = 9;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 85);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(139, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Плоскость выдавливания";
             // 
             // FormLibrarySettings
             // 
@@ -284,5 +320,7 @@
         internal System.Windows.Forms.RadioButton rb_here;
         private System.Windows.Forms.Button b_FolderDialog;
         internal System.Windows.Forms.TextBox tb_PathExcelFile;
+        private System.Windows.Forms.Label label1;
+        internal System.Windows.Forms.ComboBox cmb_plane;
     }
 }

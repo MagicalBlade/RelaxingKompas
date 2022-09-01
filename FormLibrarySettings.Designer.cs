@@ -264,7 +264,8 @@
             "Сзади",
             "Слева",
             "Справа"});
-            this.cmb_plane.Location = new System.Drawing.Point(6, 101);
+            this.cmb_plane.Location = new System.Drawing.Point(8, 103);
+            this.cmb_plane.Margin = new System.Windows.Forms.Padding(5);
             this.cmb_plane.Name = "cmb_plane";
             this.cmb_plane.Size = new System.Drawing.Size(121, 21);
             this.cmb_plane.TabIndex = 9;

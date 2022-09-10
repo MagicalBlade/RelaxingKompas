@@ -58,11 +58,13 @@ namespace RelaxingKompas.Data
                     break;
                 }
             };
-            IStamp stamp = layoutSheet.Stamp;
-            IText text = stamp.Text[5];
-            text.Str = $"{Weight}";
-            stamp.Update();
-            layoutSheet.Update();
+            //Запись в свойства
+            IPropertyMng propertyMng = (IPropertyMng)Application;
+            _Property propertyWeight = propertyMng.GetProperty( KompasDocument, "Масса");
+            IPropertyKeeper propertyKeeper = (IPropertyKeeper)KompasDocument;
+            //Запись массы
+            propertyKeeper.SetPropertyValue(propertyWeight, $"{Weight}", false);
+            propertyWeight.Update();
         }
         /// <summary>
         /// Получение данных из ячейки штампа

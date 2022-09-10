@@ -349,7 +349,6 @@ namespace RelaxingKompas
                     WindowWeightAndSize.tb_steel.Text = profile[4];
                 }
             }
-
             #endregion
 
             ksDocument2D ksdocument2D = kompas.ActiveDocument2D();

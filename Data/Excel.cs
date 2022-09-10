@@ -87,6 +87,7 @@ namespace RelaxingKompas.Data
                 "Длина",
                 "Сталь",
                 "Вес, ед.",
+                "Номер листа",
                 "Площадь"
             };
             newFileExport[1] = new string[]
@@ -97,6 +98,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
             };
             string[][] existsFileExport = new string[1][];
@@ -108,6 +110,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
             };
 

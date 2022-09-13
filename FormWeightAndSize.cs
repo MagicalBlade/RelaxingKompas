@@ -168,25 +168,9 @@ namespace RelaxingKompas
             Hide();
         }
 
-
-        private void tb_pos_Enter(object sender, EventArgs e)
+        private void b_insertText_Click(object sender, EventArgs e)
         {
-            /*
-            IConnectionPointContainer connectionPointContainer = DataWeightAndSize.Kompas as IConnectionPointContainer;
-            IConnectionPoint m_ConnPt = null;
-            int m_Cookie;
-            Event.ApplicationEvent applicationEvent = new Event.ApplicationEvent();
-            connectionPointContainer.FindConnectionPoint(typeof(ksKompasObjectNotify).GUID, out m_ConnPt);
-            m_ConnPt.Advise(applicationEvent, out m_Cookie);
-            */
-        }
-
-        private void tb_pos_Leave(object sender, EventArgs e)
-        {
-        }
-
-        internal void tb_pos_KeyPress(object sender, KeyPressEventArgs e)
-        {
+            tb_pos.Text = DataWeightAndSize.CopyText();
         }
     }
 }

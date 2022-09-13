@@ -53,6 +53,7 @@
             this.l_steel = new System.Windows.Forms.Label();
             this.b_settings = new System.Windows.Forms.Button();
             this.b_Cancel = new System.Windows.Forms.Button();
+            this.b_insertText = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // b_ok
@@ -236,9 +237,6 @@
             this.tb_pos.Name = "tb_pos";
             this.tb_pos.Size = new System.Drawing.Size(83, 20);
             this.tb_pos.TabIndex = 17;
-            this.tb_pos.Enter += new System.EventHandler(this.tb_pos_Enter);
-            this.tb_pos.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_pos_KeyPress);
-            this.tb_pos.Leave += new System.EventHandler(this.tb_pos_Leave);
             // 
             // l_pos
             // 
@@ -308,6 +306,17 @@
             this.b_Cancel.UseVisualStyleBackColor = true;
             this.b_Cancel.Click += new System.EventHandler(this.b_Cancel_Click);
             // 
+            // b_insertText
+            // 
+            this.b_insertText.Location = new System.Drawing.Point(20, 179);
+            this.b_insertText.Name = "b_insertText";
+            this.b_insertText.Size = new System.Drawing.Size(75, 23);
+            this.b_insertText.TabIndex = 19;
+            this.b_insertText.Tag = "йцуйцу";
+            this.b_insertText.Text = "позиция";
+            this.b_insertText.UseVisualStyleBackColor = true;
+            this.b_insertText.Click += new System.EventHandler(this.b_insertText_Click);
+            // 
             // FormWeightAndSize
             // 
             this.AcceptButton = this.b_ok;
@@ -315,6 +324,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_Cancel;
             this.ClientSize = new System.Drawing.Size(496, 213);
+            this.Controls.Add(this.b_insertText);
             this.Controls.Add(this.b_settings);
             this.Controls.Add(this.tb_pos);
             this.Controls.Add(this.l_length);
@@ -378,5 +388,6 @@
         private System.Windows.Forms.Label l_steel;
         private System.Windows.Forms.Button b_settings;
         internal System.Windows.Forms.Button b_Cancel;
+        private System.Windows.Forms.Button b_insertText;
     }
 }

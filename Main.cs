@@ -74,19 +74,23 @@ namespace RelaxingKompas
                     break;
                 case 3:
                     result = "Вставить таблицу";
-                    command = 2;
+                    command = 3;
                     break;
                 case 4:
                     result = "Посчитать массу";
-                    command = 2;
+                    command = 4;
                     break;
                 case 5:
-                    result = "Настройки";
-                    command = 2;
+                    result = "Скопировать текст из элемента";
+                    command = 5;
                     break;
                 case 6:
+                    result = "Настройки";
+                    command = 6;
+                    break;
+                case 7:
                     command = -1;
-                    itemType = 3; // "ENDMENU"
+                    itemType = 7; // "ENDMENU"
                     break;
             }
             return result;
@@ -402,6 +406,13 @@ namespace RelaxingKompas
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowLibrarySettings.ShowDialog(Win32);
         }
+        /// <summary>
+        /// Копирование текста из элементов модели
+        /// </summary>
+        private void CopyText()
+        {
+            Clipboard.SetText(DataWeightAndSize.CopyText());
+        }
 
         #endregion
 
@@ -423,8 +434,9 @@ namespace RelaxingKompas
             }
             */
             kompas = (KompasObject)kompas_;
-            Data.DataWeightAndSize.Kompas = kompas;
+            DataWeightAndSize.Kompas = kompas;
             Application = (IApplication)kompas.ksGetApplication7();
+            DataWeightAndSize.Application = Application;
             //Вызываем команды
             switch (command)
             {
@@ -432,7 +444,8 @@ namespace RelaxingKompas
                 case 2: CopyTable(); break;
                 case 3: InsertTable(); break;
                 case 4: WeightAndSize(); break;
-                case 5: LibrarySettings(); break;
+                case 5: CopyText(); break;
+                case 6: LibrarySettings(); break;
             }
         }
 

@@ -366,5 +366,41 @@ namespace RelaxingKompas.Data
             }
             kompasDocument2D1.RebuildDocument();
         }
+        /// <summary>
+        /// Копирование текста из элементов чертежа
+        /// </summary>
+        static public string CopyText()
+        {
+            IKompasDocument kompasDocument = (IKompasDocument)Application.ActiveDocument;
+            if (kompasDocument == null)
+            {
+                Application.MessageBoxEx("Документ не открыт", "Внимание", 0);
+                return "";
+            }
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            object selectObject = selectionManager.SelectedObjects;
+            if (selectObject == null)
+            {
+                Application.MessageBoxEx("Выберите элемент!", "Внимание", 0);
+                return "";
+            }
+            if (selectObject.GetType().Name == "Object[]")
+            {
+                Application.MessageBoxEx("Выберите один элемент!", "Внимание", 0);
+                return "";
+            }
+
+            IKompasAPIObject kompasAPIObject = (IKompasAPIObject)selectObject;
+            System.Windows.Forms.MessageBox.Show($"{kompasAPIObject.Type}");
+            switch (kompasAPIObject.Type)
+            {
+                case KompasAPIObjectTypeEnum.ksObjectDrawingText:
+                    IText text = (IText)kompasAPIObject;
+                    return text.Str;
+                default:
+                    return "";
+            }
+        }
     }
 }

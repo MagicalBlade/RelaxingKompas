@@ -1,4 +1,6 @@
-﻿namespace RelaxingKompas
+﻿using System.Windows.Forms;
+
+namespace RelaxingKompas
 {
     partial class FormWeightAndSize
     {
@@ -308,14 +310,17 @@
             // 
             // b_insertText
             // 
+            this.b_insertText.AccessibleDescription = "";
             this.b_insertText.Location = new System.Drawing.Point(20, 179);
             this.b_insertText.Name = "b_insertText";
             this.b_insertText.Size = new System.Drawing.Size(75, 23);
             this.b_insertText.TabIndex = 19;
-            this.b_insertText.Tag = "йцуйцу";
+            this.b_insertText.Tag = "";
             this.b_insertText.Text = "позиция";
             this.b_insertText.UseVisualStyleBackColor = true;
             this.b_insertText.Click += new System.EventHandler(this.b_insertText_Click);
+            ToolTip toolTip = new ToolTip();
+            toolTip.SetToolTip(b_insertText, "Копирует текст из выделенного элемента в ячейку позиция.");
             // 
             // FormWeightAndSize
             // 

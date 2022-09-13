@@ -392,7 +392,7 @@ namespace RelaxingKompas.Data
             }
 
             IKompasAPIObject kompasAPIObject = (IKompasAPIObject)selectObject;
-            System.Windows.Forms.MessageBox.Show($"{kompasAPIObject.Type}");
+            //System.Windows.Forms.MessageBox.Show($"{kompasAPIObject.Type}");
             switch (kompasAPIObject.Type)
             {
                 case KompasAPIObjectTypeEnum.ksObjectDrawingText:

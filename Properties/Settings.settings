@@ -48,10 +48,10 @@
       <Value Profile="(Default)">Спецификация металла</Value>
     </Setting>
     <Setting Name="rb_here" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="rb_onDirectory" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="tb_PathExcelFile" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

@@ -118,24 +118,21 @@ namespace RelaxingKompas
                 DataWeightAndSize.WriteVariable(kompasDocument, "weight", tb_weight.Text, "Вес");
 
                 DataWeightAndSize.PastGroup(kompasDocument); //Вставляем в него контур
-                if (DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked) //Сохраняем фрагмент
-                {
-                    if (!DataWeightAndSize.SaveDocument(kompasDocument, "frw"))
-                    {
-                        return;
-                    }
-                }
                 if (DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked) //Сохраняем dxf
                 {
-                    if (!DataWeightAndSize.SaveDocument(kompasDocument, "dxf"))
+                    DataWeightAndSize.SaveDocument(kompasDocument, "dxf");
+                }
+                if (DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked) //Сохраняем фрагмент
+                {
+                    if (DataWeightAndSize.SaveDocument(kompasDocument, "frw"))
                     {
-                        return;
+                        if (DataWeightAndSize.WindowLibrarySettings.cb_CloseFragment.Checked) //Закрываем фрагмент
+                        {
+                            DataWeightAndSize.CloseDocument(kompasDocument);
+                        }
                     }
                 }
-                if (DataWeightAndSize.WindowLibrarySettings.cb_CloseFragment.Checked) //Закрываем фрагмент
-                {
-                    DataWeightAndSize.CloseDocument(kompasDocument);
-                }
+
             }
             //Создаем 3D деталь
             if (DataWeightAndSize.WindowLibrarySettings.cb_Creat3Ddetail.Checked) 

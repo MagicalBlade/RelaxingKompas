@@ -57,7 +57,7 @@ namespace RelaxingKompas
 
         private void Check3Ddetail ()
         {
-            #region Галочки сощдания детали
+            #region Галочки создания детали
             if (!cb_Creat3Ddetail.Checked)
             {
                 cb_3Ddetail.Checked = false;

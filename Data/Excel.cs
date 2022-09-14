@@ -70,11 +70,21 @@ namespace RelaxingKompas.Data
             {
                 if (Directory.Exists(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text))
                 {
-                    PathExcelFile = DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text;
+                    PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Excel\\";
+                    try
+                    {
+                        Directory.CreateDirectory(PathExcelFile);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show($"Не удалось сохранить Excel файл. Проверьте возможность сохранения по выбранному пути.");
+                        return;
+
+                    }
                 }
                 else
                 {
-                    DataWeightAndSize.Application.MessageBoxEx($"Путь не найден. Файл сохранен: {PathExcelFile}", "Ошибка", 0);
+                    DataWeightAndSize.Application.MessageBoxEx($"Путь не найден. Excel файл сохранен: {PathExcelFile}", "Ошибка", 0);
                 }
             }
             int rowcount = 0;

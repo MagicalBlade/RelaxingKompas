@@ -205,7 +205,7 @@ namespace RelaxingKompas.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool rb_here {
             get {
                 return ((bool)(this["rb_here"]));
@@ -217,7 +217,7 @@ namespace RelaxingKompas.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool rb_onDirectory {
             get {
                 return ((bool)(this["rb_onDirectory"]));

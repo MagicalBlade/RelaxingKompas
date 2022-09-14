@@ -16,6 +16,7 @@ using System.Runtime.InteropServices.ComTypes;
 using RelaxingKompas.Event;
 using System.Security.Cryptography;
 using RelaxingKompas.Properties;
+using System.Text.RegularExpressions;
 
 namespace RelaxingKompas
 {
@@ -340,7 +341,10 @@ namespace RelaxingKompas
 
 
             #region Получаем данные из штампа
-            WindowWeightAndSize.tb_pos.Text = DataWeightAndSize.GetCellStamp(2); //Ячейка позиции
+            const string pattern = "[^\\d\\.]";
+            string postext = DataWeightAndSize.GetCellStamp(2); //Ячейка позиции
+            postext = Regex.Replace(postext, pattern, "");
+            WindowWeightAndSize.tb_pos.Text = postext.Trim('.');
             WindowWeightAndSize.tb_sheet.Text = DataWeightAndSize.GetCellStamp(16001); //Ячейки номера листа
 
             string stampid3 = DataWeightAndSize.GetCellStamp(3);//Ячейка с толщиной, материалом и т.д.

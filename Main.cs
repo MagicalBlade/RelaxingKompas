@@ -239,19 +239,24 @@ namespace RelaxingKompas
             IApplication application = kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            IKompasAPIObject selecobjects =  selectionManager.SelectedObjects;
+            object selecobjects =  selectionManager.SelectedObjects;
             if (selecobjects == null)
             {
                 application.MessageBoxEx("Не выбрана таблица", "Ошибка", 0);
                 return;
             }
-            if (selecobjects.Type != KompasAPIObjectTypeEnum.ksObjectDrawingTable)
+            if (selecobjects.GetType().Name == "Object[]")
             {
-                application.MessageBoxEx("Выбрана не таблица, либо несколько таблиц", "Ошибка", 0);
+                application.MessageBoxEx("Выбрано элементов. Выберите одну таблицу.", "Ошибка", 0);
+                return;
+            }
+            IKompasAPIObject kompasAPIObject = (IKompasAPIObject)selecobjects;
+            if (kompasAPIObject.Type != KompasAPIObjectTypeEnum.ksObjectDrawingTable)
+            {
+                application.MessageBoxEx("Выбрана не таблица.", "Ошибка", 0);
                 return;
             }
             ITable table = (ITable)selecobjects;
-            
             #region Оформляем таблицу для буфера обмена
             string plainText = ""; //Таблица для текстового формата
             string copytable = "<table>"; //Таблица для html формата

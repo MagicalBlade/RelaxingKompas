@@ -431,11 +431,16 @@ namespace RelaxingKompas.Data
             }
 
             IKompasAPIObject kompasAPIObject = (IKompasAPIObject)selectObject;
-            //System.Windows.Forms.MessageBox.Show($"{kompasAPIObject.Type}");
+            System.Windows.Forms.MessageBox.Show($"{kompasAPIObject.Type}");
+            IText text;
             switch (kompasAPIObject.Type)
             {
                 case KompasAPIObjectTypeEnum.ksObjectDrawingText:
-                    IText text = (IText)kompasAPIObject;
+                    text = (IText)kompasAPIObject;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectMarkLeader:
+                    IMarkLeader markLeader = (IMarkLeader)kompasAPIObject;
+                    text = markLeader.Designation;
                     return text.Str;
                 default:
                     return "";

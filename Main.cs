@@ -341,7 +341,7 @@ namespace RelaxingKompas
 
 
             #region Получаем данные из штампа
-            const string pattern = "[^\\d\\.]";
+            const string pattern = "[^\\d\\.,-]";
             string postext = DataWeightAndSize.GetCellStamp(2); //Ячейка позиции
             postext = Regex.Replace(postext, pattern, "");
             WindowWeightAndSize.tb_pos.Text = postext.Trim('.');

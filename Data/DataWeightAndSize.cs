@@ -159,16 +159,20 @@ namespace RelaxingKompas.Data
             string PathFile;
             if (TypeFile == "frw")
             {
-                try
+                PathFile = $"{KompasDocument.Path}{NameFile}";
+                if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
-                    Directory.CreateDirectory($"{KompasDocument.Path.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты");
+                    try
+                    {
+                        Directory.CreateDirectory($"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты");
+                    }
+                    catch (Exception)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Не удалось сохранить фрагмент. Проверьте возможность сохранения по выбранному пути.");
+                        return false;
+                    }
+                    PathFile = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты\\{NameFile}";
                 }
-                catch (Exception)
-                {
-                    System.Windows.Forms.MessageBox.Show("Не удалось сохранить фрагмент. Проверьте возможность сохранения по выбранному пути.");
-                    return false;
-                }
-                PathFile = $"{KompasDocument.Path.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты\\{NameFile}";
                 if (!CheckFile())
                 {
                     return false;
@@ -177,16 +181,21 @@ namespace RelaxingKompas.Data
             }
             if (TypeFile == "dxf")
             {
-                try
+                PathFile = $"{KompasDocument.Path}{NameFile}";
+                if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
-                    Directory.CreateDirectory($"{KompasDocument.Path.TrimEnd('\\')}\\Документы из библиотеки\\Контуры");
+                    try
+                    {
+                        Directory.CreateDirectory($"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Контуры");
+                    }
+                    catch (Exception)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Не удалось сохранить контур. Проверьте возможность сохранения по выбранному пути.");
+                        return false;
+                    }
+                    PathFile = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Контуры\\{NameFile}";
                 }
-                catch (Exception)
-                {
-                    System.Windows.Forms.MessageBox.Show("Не удалось сохранить контур. Проверьте возможность сохранения по выбранному пути.");
-                    return false;
-                }
-                PathFile = $"{KompasDocument.Path.TrimEnd('\\')}\\Документы из библиотеки\\Контуры\\{NameFile}";
+
                 if (!CheckFile())
                 {
                     return false;
@@ -278,14 +287,18 @@ namespace RelaxingKompas.Data
             
             sketch.Plane = plane;
             part7.Update();
-            try
+            string PathFile = $"{KompasDocument.Path}{part7.Name}.m3d";
+            if (WindowLibrarySettings.rb_onDirectory.Checked)
             {
-                Directory.CreateDirectory($"{KompasDocument.Path.TrimEnd('\\')}\\Документы из библиотеки\\3D детали");
+                try
+                {
+                    Directory.CreateDirectory($"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\3D детали");
+                }
+                catch (Exception)
+                {
+                }
+                PathFile = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\3D детали\\{part7.Name}.m3d";
             }
-            catch (Exception)
-            {
-            }
-            string PathFile = $"{KompasDocument.Path.TrimEnd('\\')}\\Документы из библиотеки\\3D детали\\{part7.Name}.m3d";
 
             IKompasDocument kompasDocument = sketch.BeginEdit(); //Начало формирования эскиза
 

@@ -229,7 +229,7 @@ namespace RelaxingKompas.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\")]
         public string tb_PathExcelFile {
             get {
                 return ((string)(this["tb_PathExcelFile"]));

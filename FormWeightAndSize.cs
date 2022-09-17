@@ -171,7 +171,11 @@ namespace RelaxingKompas
 
         private void b_insertText_Click(object sender, EventArgs e)
         {
-            tb_pos.Text = DataWeightAndSize.CopyText();
+            string posName = DataWeightAndSize.CopyText();
+            if (posName != "")
+            {
+               tb_pos.Text = posName;
+            }
         }
     }
 }

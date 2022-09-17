@@ -132,6 +132,10 @@ namespace RelaxingKompas
                         }
                     }
                 }
+                else if (DataWeightAndSize.WindowLibrarySettings.cb_CloseFragment.Checked)
+                {
+                    DataWeightAndSize.CloseDocument(kompasDocument);//Закрываем фрагмент
+                }
 
             }
             //Создаем 3D деталь

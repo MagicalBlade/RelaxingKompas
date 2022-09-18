@@ -150,4 +150,7 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)$(TargetName).dll" "e:\Program Files\ASCON\KOMPAS-3D v20\Libs\RelaxingKompas\" /y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

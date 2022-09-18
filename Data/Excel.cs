@@ -128,7 +128,6 @@ namespace RelaxingKompas.Data
             {
                 XLWorkbook workbook = new XLWorkbook($"{PathExcelFile}{NameExcelFile}.xlsx");
                 IXLWorksheet worksheet = workbook.Worksheet(1);
-
                 if (worksheet.LastRowUsed() != null)
                 {
                     rowcount = worksheet.LastRowUsed().RowNumber();
@@ -152,12 +151,13 @@ namespace RelaxingKompas.Data
             {
                 if (worksheet != null)
                 {
+                    worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     for (int i = 0; i < export.Length; i++)
                     {
                         for (int j = 0; j < export[i].Length; j++)
                         {
-                            worksheet.Cell(rowcount + i + 1, j + 1).Value = export[i][j];
-                            worksheet.Cell(rowcount + i + 1, j + 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);                            
+                            IXLCell cell = worksheet.Cell(rowcount + i + 1, j + 1);
+                            cell.SetValue(export[i][j]);
                         }
                     }
                 }

@@ -30,6 +30,7 @@ namespace RelaxingKompas
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.b_ok = new System.Windows.Forms.Button();
             this.tb_thickness = new System.Windows.Forms.TextBox();
             this.tb_density = new System.Windows.Forms.TextBox();
@@ -56,6 +57,7 @@ namespace RelaxingKompas
             this.b_settings = new System.Windows.Forms.Button();
             this.b_Cancel = new System.Windows.Forms.Button();
             this.b_insertText = new System.Windows.Forms.Button();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // b_ok
@@ -94,6 +96,7 @@ namespace RelaxingKompas
             this.tb_weight.Name = "tb_weight";
             this.tb_weight.Size = new System.Drawing.Size(46, 20);
             this.tb_weight.TabIndex = 3;
+            this.tb_weight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tb_weight_MouseDown);
             // 
             // l_thickness
             // 
@@ -317,10 +320,9 @@ namespace RelaxingKompas
             this.b_insertText.TabIndex = 19;
             this.b_insertText.Tag = "";
             this.b_insertText.Text = "позиция";
+            this.toolTip.SetToolTip(this.b_insertText, "Копирует текст из выделенного элемента в ячейку позиция.");
             this.b_insertText.UseVisualStyleBackColor = true;
             this.b_insertText.Click += new System.EventHandler(this.b_insertText_Click);
-            ToolTip toolTip = new ToolTip();
-            toolTip.SetToolTip(b_insertText, "Копирует текст из выделенного элемента в ячейку позиция.");
             // 
             // FormWeightAndSize
             // 
@@ -394,5 +396,6 @@ namespace RelaxingKompas
         private System.Windows.Forms.Button b_settings;
         internal System.Windows.Forms.Button b_Cancel;
         private System.Windows.Forms.Button b_insertText;
+        private ToolTip toolTip;
     }
 }

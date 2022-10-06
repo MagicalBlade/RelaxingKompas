@@ -177,5 +177,10 @@ namespace RelaxingKompas
                tb_pos.Text = posName;
             }
         }
+
+        private void tb_weight_MouseDown(object sender, MouseEventArgs e)
+        {
+            Clipboard.SetText(tb_weight.Text);
+        }
     }
 }

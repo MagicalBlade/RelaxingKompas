@@ -431,7 +431,6 @@ namespace RelaxingKompas.Data
             }
 
             IKompasAPIObject kompasAPIObject = (IKompasAPIObject)selectObject;
-            System.Windows.Forms.MessageBox.Show($"{kompasAPIObject.Type}");
             IText text;
             switch (kompasAPIObject.Type)
             {

@@ -180,7 +180,10 @@ namespace RelaxingKompas
 
         private void tb_weight_MouseDown(object sender, MouseEventArgs e)
         {
-            Clipboard.SetText(tb_weight.Text);
+            if (tb_weight.Text != null && tb_weight.Text != "")
+            {
+                Clipboard.SetText(tb_weight.Text);
+            }
         }
     }
 }

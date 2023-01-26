@@ -86,12 +86,16 @@ namespace RelaxingKompas
                     command = 5;
                     break;
                 case 6:
-                    result = "Настройки";
+                    result = "Расставить условные обозначения отверстий";
                     command = 6;
                     break;
                 case 7:
+                    result = "Настройки";
+                    command = 7;
+                    break;
+                case 8:
                     command = -1;
-                    itemType = 7; // "ENDMENU"
+                    itemType = 8; // "ENDMENU"
                     break;
             }
             return result;
@@ -423,6 +427,74 @@ namespace RelaxingKompas
             Clipboard.SetText(DataWeightAndSize.CopyText());
         }
 
+        /// <summary>
+        /// Расставить условные обозначения отверстий
+        /// </summary>
+        private void PlaceSymbolHole()
+        {
+            string pathlibrary = $"{kompas.ksSystemPath(1)}"; //Получить путь к папаке библиотеки
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument2D;
+            IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument2D;
+
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            IDrawingContainer drawingContainer = (IDrawingContainer)view;
+            ICircles circles = drawingContainer.Circles;
+            IInsertionObjects insertionObjects = drawingContainer.InsertionObjects;
+            IInsertionsManager insertionsManager = (IInsertionsManager)kompasDocument2D;
+
+            Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>();
+
+            foreach (ICircle circle in circles)
+            {
+                if (circleList.ContainsKey(circle.Radius * 2))
+                {
+                    circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                }
+                else
+                {
+                    circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                }
+            }
+            
+
+            foreach (var item in circleList.Keys)
+            {
+                string pathHole = $@"{pathlibrary}\RelaxingKompas\Hole\D{item}.frw";
+                if (!File.Exists($"{pathHole}"))
+                {
+                    //Записать список не найденных условных обозначений
+                    continue;
+                }
+                IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
+                IDrawingGroup drawingGroup = drawingGroups.Add(true, $"D{item}");
+                drawingGroup.Open();
+                InsertionDefinition insertionDefinition = insertionsManager.AddDefinition(
+            Kompas6Constants.ksInsertionTypeEnum.ksTBodyFragment, "", pathHole);
+                IInsertionObject insertionObjectx1 = insertionObjects.Add(insertionDefinition);
+                insertionObjectx1.SetPlacement(0, 0, 0, false);
+                insertionObjectx1.Update();
+
+                drawingGroup.Close();
+
+                ICopyObjectParam copyObjectParam = (ICopyObjectParam)kompasDocument1.GetInterface(KompasAPIObjectTypeEnum.ksObjectCopyObjectParam);
+                copyObjectParam.XOld = 0;
+                copyObjectParam.YOld = 0;
+
+                foreach (var coordinates in circleList[item])
+                {
+                    copyObjectParam.XNew = coordinates[0];
+                    copyObjectParam.YNew = coordinates[1];
+                    kompasDocument2D1.CopyObjects(drawingGroup, copyObjectParam);
+                }
+                drawingGroup.Delete();
+            }
+            
+
+        }
+
         #endregion
 
 
@@ -454,7 +526,8 @@ namespace RelaxingKompas
                 case 3: InsertTable(); break;
                 case 4: WeightAndSize(); break;
                 case 5: CopyText(); break;
-                case 6: LibrarySettings(); break;
+                case 6: PlaceSymbolHole(); break;
+                case 7: LibrarySettings(); break;
             }
         }
 

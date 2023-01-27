@@ -432,6 +432,7 @@ namespace RelaxingKompas
         /// </summary>
         private void PlaceSymbolHole()
         {
+            string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
             string pathlibrary = $"{kompas.ksSystemPath(1)}"; //Получить путь к папаке библиотеки
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument2D;
@@ -444,9 +445,10 @@ namespace RelaxingKompas
             ICircles circles = drawingContainer.Circles;
             IInsertionObjects insertionObjects = drawingContainer.InsertionObjects;
             IInsertionsManager insertionsManager = (IInsertionsManager)kompasDocument2D;
-
-            Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>();
-
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            document2DAPI5.ksEnableUndo(true);
+            Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
+            //Заполняем словарь
             foreach (ICircle circle in circles)
             {
                 if (circleList.ContainsKey(circle.Radius * 2))
@@ -458,38 +460,42 @@ namespace RelaxingKompas
                     circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
                 }
             }
-            
-
-            foreach (var item in circleList.Keys)
+            foreach (var diameter in circleList.Keys)
             {
-                string pathHole = $@"{pathlibrary}\RelaxingKompas\Hole\D{item}.frw";
+                string pathHole = $@"{pathlibrary}\RelaxingKompas\Hole\D{diameter}.frw";
+                //Проверка наличия файла с условным обозначением
                 if (!File.Exists($"{pathHole}"))
                 {
-                    //Записать список не найденных условных обозначений
+                    lostHole += $"ø{diameter}: {circleList[diameter].Count}шт.{Environment.NewLine}";
                     continue;
                 }
                 IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
-                IDrawingGroup drawingGroup = drawingGroups.Add(true, $"D{item}");
-                drawingGroup.Open();
+                IDrawingGroup drawingGroup = drawingGroups.Add(true, $"D{diameter}");
+                drawingGroup.Open(); //Открываем группу для записи в неё
+                #region Подготавливаем и вставляем фрагмент содержащий условное обозначение отверстий в начало координат
                 InsertionDefinition insertionDefinition = insertionsManager.AddDefinition(
-            Kompas6Constants.ksInsertionTypeEnum.ksTBodyFragment, "", pathHole);
+    Kompas6Constants.ksInsertionTypeEnum.ksTBodyFragment, "", pathHole);
                 IInsertionObject insertionObjectx1 = insertionObjects.Add(insertionDefinition);
                 insertionObjectx1.SetPlacement(0, 0, 0, false);
-                insertionObjectx1.Update();
-
-                drawingGroup.Close();
-
+                insertionObjectx1.Update(); 
+                #endregion
+                drawingGroup.Close();//Закрываем группу
                 ICopyObjectParam copyObjectParam = (ICopyObjectParam)kompasDocument1.GetInterface(KompasAPIObjectTypeEnum.ksObjectCopyObjectParam);
                 copyObjectParam.XOld = 0;
                 copyObjectParam.YOld = 0;
-
-                foreach (var coordinates in circleList[item])
+                //Копируем условное обозначание в центры нужных отверстий
+                foreach (var coordinates in circleList[diameter])
                 {
                     copyObjectParam.XNew = coordinates[0];
                     copyObjectParam.YNew = coordinates[1];
                     kompasDocument2D1.CopyObjects(drawingGroup, copyObjectParam);
                 }
                 drawingGroup.Delete();
+            }
+            document2DAPI5.ksEnableUndo(false);
+            if (lostHole != $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}")
+            {
+                MessageBox.Show($"{lostHole}");
             }
             
 

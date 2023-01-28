@@ -437,6 +437,8 @@ namespace RelaxingKompas
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument2D;
             IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument2D;
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            document2DAPI5.ksUndoContainer(true);
 
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
@@ -445,8 +447,6 @@ namespace RelaxingKompas
             ICircles circles = drawingContainer.Circles;
             IInsertionObjects insertionObjects = drawingContainer.InsertionObjects;
             IInsertionsManager insertionsManager = (IInsertionsManager)kompasDocument2D;
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
-            document2DAPI5.ksEnableUndo(true);
             Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
             //Заполняем словарь
             foreach (ICircle circle in circles)
@@ -474,7 +474,7 @@ namespace RelaxingKompas
                 drawingGroup.Open(); //Открываем группу для записи в неё
                 #region Подготавливаем и вставляем фрагмент содержащий условное обозначение отверстий в начало координат
                 InsertionDefinition insertionDefinition = insertionsManager.AddDefinition(
-    Kompas6Constants.ksInsertionTypeEnum.ksTBodyFragment, "", pathHole);
+    Kompas6Constants.ksInsertionTypeEnum.ksTBodyFragment, $"D{diameter}", pathHole);
                 IInsertionObject insertionObjectx1 = insertionObjects.Add(insertionDefinition);
                 insertionObjectx1.SetPlacement(0, 0, 0, false);
                 insertionObjectx1.Update(); 
@@ -492,7 +492,7 @@ namespace RelaxingKompas
                 }
                 drawingGroup.Delete();
             }
-            document2DAPI5.ksEnableUndo(false);
+            document2DAPI5.ksUndoContainer(false);
             if (lostHole != $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}")
             {
                 MessageBox.Show($"{lostHole}");

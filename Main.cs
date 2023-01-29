@@ -432,6 +432,9 @@ namespace RelaxingKompas
         /// </summary>
         private void PlaceSymbolHole()
         {
+            
+            ICircles circles;
+            Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
             string pathlibrary = $"{kompas.ksSystemPath(1)}"; //Получить путь к папаке библиотеки
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
@@ -440,26 +443,73 @@ namespace RelaxingKompas
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
             document2DAPI5.ksUndoContainer(true);
 
-            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-            IViews views = viewsAndLayersManager.Views;
-            IView view = views.ActiveView;
-            IDrawingContainer drawingContainer = (IDrawingContainer)view;
-            ICircles circles = drawingContainer.Circles;
-            IInsertionObjects insertionObjects = drawingContainer.InsertionObjects;
-            IInsertionsManager insertionsManager = (IInsertionsManager)kompasDocument2D;
-            Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
-            //Заполняем словарь
-            foreach (ICircle circle in circles)
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            dynamic selected = selectionManager.SelectedObjects;
+            List<object> selectedObjects = new List<object>();
+            if (selected == null) //Если не выбраны объекты чертежа поиск окружностей по всему виду
             {
-                if (circleList.ContainsKey(circle.Radius * 2))
+                IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+                IViews views = viewsAndLayersManager.Views;
+                IView view = views.ActiveView;
+                IDrawingContainer drawingContainer = (IDrawingContainer)view;
+                circles = drawingContainer.Circles;
+                //Заполняем словарь
+                foreach (ICircle circle in circles)
                 {
-                    circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
-                }
-                else
-                {
-                    circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                    if (circleList.ContainsKey(circle.Radius * 2))
+                    {
+                        circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                    }
+                    else
+                    {
+                        circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                    }
                 }
             }
+            else if (selected is object[]) //Если выбраны объекты чертежа поиск окружностей по выбранным объектам
+            {
+                selectedObjects.AddRange(selected);
+                //Заполняем словарь
+                foreach (object item in selectedObjects)
+                {
+                    if (item is ICircle)
+                    {
+                        ICircle circle = (ICircle)item;
+                        if (circleList.ContainsKey(circle.Radius * 2))
+                        {
+                            circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                        }
+                        else
+                        {
+                            circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                        }
+                    }
+                }
+            }
+            else //Если выбран только один объект чертежа
+            {
+                selectedObjects.Add(selected);
+                //Заполняем словарь
+                foreach (object item in selectedObjects)
+                {
+                    if (item is ICircle)
+                    {
+                        ICircle circle = (ICircle)item;
+                        if (circleList.ContainsKey(circle.Radius * 2))
+                        {
+                            circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                        }
+                        else
+                        {
+                            circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                        }
+                    }
+                }
+
+            }
+
+            
+
             foreach (var diameter in circleList.Keys)
             {
                 string pathHole = $@"{pathlibrary}\RelaxingKompas\Hole\D{diameter}.frw";
@@ -471,15 +521,9 @@ namespace RelaxingKompas
                 }
                 IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
                 IDrawingGroup drawingGroup = drawingGroups.Add(true, $"D{diameter}");
-                drawingGroup.Open(); //Открываем группу для записи в неё
-                #region Подготавливаем и вставляем фрагмент содержащий условное обозначение отверстий в начало координат
-                InsertionDefinition insertionDefinition = insertionsManager.AddDefinition(
-    Kompas6Constants.ksInsertionTypeEnum.ksTBodyFragment, $"D{diameter}", pathHole);
-                IInsertionObject insertionObjectx1 = insertionObjects.Add(insertionDefinition);
-                insertionObjectx1.SetPlacement(0, 0, 0, false);
-                insertionObjectx1.Update(); 
-                #endregion
-                drawingGroup.Close();//Закрываем группу
+                drawingGroup.ReadFragment(pathHole,true,0,0,1,0,true);
+                drawingGroup.Store();
+
                 ICopyObjectParam copyObjectParam = (ICopyObjectParam)kompasDocument1.GetInterface(KompasAPIObjectTypeEnum.ksObjectCopyObjectParam);
                 copyObjectParam.XOld = 0;
                 copyObjectParam.YOld = 0;

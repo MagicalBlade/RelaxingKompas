@@ -86,14 +86,18 @@ namespace RelaxingKompas
                     command = 5;
                     break;
                 case 6:
-                    result = "Расставить условные обозначения отверстий";
+                    result = "Скрыть/показать разрыв вида";
                     command = 6;
                     break;
                 case 7:
+                    result = "";
+                    command = 6;
+                    break;
+                case 8:
                     result = "Настройки";
                     command = 7;
                     break;
-                case 8:
+                case 9:
                     command = -1;
                     itemType = 8; // "ENDMENU"
                     break;
@@ -545,6 +549,28 @@ namespace RelaxingKompas
 
         }
 
+        private void BreakView()
+        {
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            IBreakViewParam breakViewParam = (IBreakViewParam)view;
+            if (breakViewParam.BreaksCount == 0)
+            {
+                return;
+            }
+            if (breakViewParam.BreaksVisible == false)
+            {
+                breakViewParam.BreaksVisible = true;
+            }
+            else
+            {
+                breakViewParam.BreaksVisible = false;
+            }
+            view.Update();
+        }
+
         #endregion
 
 
@@ -577,7 +603,8 @@ namespace RelaxingKompas
                 case 4: WeightAndSize(); break;
                 case 5: CopyText(); break;
                 case 6: PlaceSymbolHole(); break;
-                case 7: LibrarySettings(); break;
+                case 7: BreakView(); break;
+                case 8: LibrarySettings(); break;
             }
         }
 

@@ -94,10 +94,14 @@ namespace RelaxingKompas
                     command = 6;
                     break;
                 case 8:
-                    result = "Настройки";
+                    result = "Вставить точки по координатам из файла";
                     command = 7;
                     break;
                 case 9:
+                    result = "Настройки";
+                    command = 7;
+                    break;
+                case 10:
                     command = -1;
                     itemType = 8; // "ENDMENU"
                     break;
@@ -571,6 +575,86 @@ namespace RelaxingKompas
             view.Update();
         }
 
+        /// <summary>
+        /// Вставить точки по координатам из текстового файла
+        /// </summary>
+        private void InsertPointXY()
+        {
+            string log = "";
+            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
+            dialog.DefaultExt = "txt";
+            dialog.Filter = "Text files (*.txt)|*.txt";
+            string resultDialog = "";
+            string openText = "";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                resultDialog = dialog.FileName;
+            }
+            try
+            {
+                using (StreamReader reader = new StreamReader(resultDialog, System.Text.Encoding.Default))
+                {
+                    openText = reader.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e}");
+                return;
+            }
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            Document2D document2D = kompas.ActiveDocument2D();
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            IDrawingContainer drawingContainer = (IDrawingContainer)view;
+            ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+            ILeaders leaders = symbols2DContainer.Leaders;
+            IPoints points = drawingContainer.Points;
+            document2D.ksUndoContainer(true);
+            foreach (string line in openText.Split(new string[] { "\r\n", "\r", "\n" },StringSplitOptions.None))
+            {
+                string[] colums = line.Split(new string[] { "\t", " "}, 3, StringSplitOptions.None);
+                if (colums.Length > 1)
+                {
+                    IPoint point = points.Add();
+                    try
+                    {
+                        point.X = double.Parse(colums[0]);
+                        point.Y = double.Parse(colums[1]);
+                        point.Style = 4; //Квадратная точка
+                        point.Update();
+                    }
+                    catch (Exception)
+                    {
+                        point.Delete();
+                        log += $"{line}\n";
+                        continue;
+                    }
+                    if (colums.Length > 2)
+                    {
+                        IBaseLeader baseLeader = leaders.Add(DrawingObjectTypeEnum.ksDrLeader);
+                        baseLeader.ArrowType = ksArrowEnum.ksPoint;
+                        ILeader leader = (ILeader)baseLeader;
+                        IText text = leader.TextOnShelf;
+                        text.Str += colums[2];
+                        IBranchs branchs = (IBranchs)baseLeader;
+                        branchs.X0 = point.X + 10 / view.Scale;
+                        branchs.Y0 = point.Y + 10 / view.Scale;
+                        branchs.AddBranchByPoint(1, point.X, point.Y);
+                        baseLeader.Update();
+                    }
+                }
+            }
+            document2D.ksUndoContainer(false);
+            /*
+            if (log != "")
+            {
+                kompas.ksMessage($"Проверьте правильность записи чисел координат. Не удалось расставить точки:\n{log} ");
+            }
+            */
+        }
+
         #endregion
 
 
@@ -604,7 +688,8 @@ namespace RelaxingKompas
                 case 5: CopyText(); break;
                 case 6: PlaceSymbolHole(); break;
                 case 7: BreakView(); break;
-                case 8: LibrarySettings(); break;
+                case 8: InsertPointXY(); break;
+                case 9: LibrarySettings(); break;
             }
         }
 

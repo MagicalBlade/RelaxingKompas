@@ -590,6 +590,10 @@ namespace RelaxingKompas
             {
                 resultDialog = dialog.FileName;
             }
+            if (!File.Exists(resultDialog))
+            {
+                return;
+            }
             try
             {
                 using (StreamReader reader = new StreamReader(resultDialog, System.Text.Encoding.Default))

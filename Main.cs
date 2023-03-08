@@ -444,7 +444,7 @@ namespace RelaxingKompas
             ICircles circles;
             Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
-            string pathlibrary = $"{kompas.ksSystemPath(1)}"; //Получить путь к папаке библиотеки
+            string pathlibrary = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}"; //Получить путь к папаке библиотеки
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument2D;
             IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument2D;
@@ -520,7 +520,7 @@ namespace RelaxingKompas
 
             foreach (var diameter in circleList.Keys)
             {
-                string pathHole = $@"{pathlibrary}\RelaxingKompas\Hole\D{diameter}.frw";
+                string pathHole = $@"{pathlibrary}\Hole\D{diameter}.frw";
                 //Проверка наличия файла с условным обозначением
                 if (!File.Exists($"{pathHole}"))
                 {

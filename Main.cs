@@ -440,17 +440,16 @@ namespace RelaxingKompas
         /// </summary>
         private void PlaceSymbolHole()
         {
-            
             ICircles circles;
             Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
-            string pathlibrary = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}"; //Получить путь к папаке библиотеки
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument2D;
             IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument2D;
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            ILibraryManager libraryManager = (ILibraryManager)Application.LibraryManager;
+            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
             document2DAPI5.ksUndoContainer(true);
-
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             dynamic selected = selectionManager.SelectedObjects;
             List<object> selectedObjects = new List<object>();

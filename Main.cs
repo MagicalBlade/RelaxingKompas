@@ -17,6 +17,8 @@ using RelaxingKompas.Event;
 using System.Security.Cryptography;
 using RelaxingKompas.Properties;
 using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.VisualBasic.Logging;
 
 namespace RelaxingKompas
 {
@@ -98,10 +100,14 @@ namespace RelaxingKompas
                     command = 7;
                     break;
                 case 9:
-                    result = "Настройки";
+                    result = "Добавить редакцию";
                     command = 7;
                     break;
                 case 10:
+                    result = "Настройки";
+                    command = 7;
+                    break;
+                case 11:
                     command = -1;
                     itemType = 8; // "ENDMENU"
                     break;
@@ -595,7 +601,7 @@ namespace RelaxingKompas
             }
             try
             {
-                using (StreamReader reader = new StreamReader(resultDialog, System.Text.Encoding.Default))
+                using (StreamReader reader = new StreamReader(resultDialog, System.Text.Encoding.UTF8))
                 {
                     openText = reader.ReadToEnd();
                 }
@@ -657,6 +663,71 @@ namespace RelaxingKompas
             }
             */
         }
+        /// <summary>
+        /// Добавить рекдацию в штам чертежа
+        /// </summary>
+        private void AddRedaction()
+        {
+            string dataRedaction = DateTime.Now.ToString("dd.MM");
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            if (layoutSheets.Count == 0)
+            {
+                Application.MessageBoxEx("Проблема с наличием листов. Обратитесь к администратору.", "Ошибка", 1);
+                return;
+            }
+            ILayoutSheet layoutSheet = null;
+            foreach (ILayoutSheet item1 in layoutSheets)
+            {
+                layoutSheet = item1;
+                break;
+            }
+            if (layoutSheet == null)
+            {
+                Application.MessageBoxEx("Проблема с наличием листов. Обратитесь к администратору.", "Ошибка", 1);
+                return;
+            }
+            IStamp stamp = layoutSheet.Stamp;
+            List<string[]> redaction = new List<string[]>();
+            for (int i = 0; i < 4; i++)
+            {
+                if (stamp.Text[140 + i].Str != "")
+                {
+                    redaction.Add(new string[]
+                    {
+                            stamp.Text[140 + i].Str,
+                            stamp.Text[150 + i].Str,
+                            stamp.Text[180 + i].Str
+                    });
+                }
+            }
+            string numberRedaction;
+            if (redaction.Count == 0)
+            {
+                numberRedaction = "1";
+            }
+            else
+            {
+                int numberRedactionInt;
+                if (!int.TryParse(redaction[redaction.Count - 1][0], out numberRedactionInt))
+                {
+                    Application.MessageBoxEx("не корректный номер редакции", "Ошибка", 1);
+                }
+                numberRedactionInt += 1;
+                numberRedaction = numberRedactionInt.ToString();
+            }
+            redaction.Add(new string[] { numberRedaction, "ред.", dataRedaction });
+            int increment = 0;
+            if (redaction.Count == 5) { increment = 1; }
+            for (int i = 0; i < redaction.Count - increment; i++)
+            {
+                stamp.Text[140 + i].Str = redaction[i + increment][0];
+                stamp.Text[150 + i].Str = redaction[i + increment][1];
+                stamp.Text[180 + i].Str = redaction[i + increment][2];
+            }
+            stamp.Update();
+            layoutSheet.Update();
+        }
 
         #endregion
 
@@ -692,7 +763,8 @@ namespace RelaxingKompas
                 case 6: PlaceSymbolHole(); break;
                 case 7: BreakView(); break;
                 case 8: InsertPointXY(); break;
-                case 9: LibrarySettings(); break;
+                case 9: AddRedaction(); break;
+                case 10: LibrarySettings(); break;
             }
         }
 

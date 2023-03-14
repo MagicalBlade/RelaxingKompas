@@ -595,7 +595,7 @@ namespace RelaxingKompas
             }
             try
             {
-                using (StreamReader reader = new StreamReader(resultDialog, System.Text.Encoding.Default))
+                using (StreamReader reader = new StreamReader(resultDialog, System.Text.Encoding.UTF8))
                 {
                     openText = reader.ReadToEnd();
                 }

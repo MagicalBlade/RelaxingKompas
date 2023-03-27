@@ -441,6 +441,38 @@ namespace RelaxingKompas.Data
                     IMarkLeader markLeader = (IMarkLeader)kompasAPIObject;
                     text = markLeader.Designation;
                     return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectLeader:
+                    ILeader leader = (ILeader)kompasAPIObject;
+                    text = leader.TextOnShelf;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectPositionLeader:
+                    IPositionLeader positionLeader = (IPositionLeader)kompasAPIObject;
+                    text = positionLeader.Positions;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectBrandLeader:
+                    IBrandLeader brandLeader = (IBrandLeader)kompasAPIObject;
+                    text = brandLeader.Designation;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectChangeLeader:
+                    IChangeLeader changeLeader = (IChangeLeader)kompasAPIObject;
+                    text = changeLeader.Designation;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectCutLine:
+                     ICutLine cutLine = (ICutLine)kompasAPIObject;
+                    text = cutLine.Text;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectViewPointer:
+                     IViewPointer viewPointer = (IViewPointer)kompasAPIObject;
+                    text = viewPointer.Text;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectUnitMarking:
+                    IUnitMarking unitMarking = (IUnitMarking)kompasAPIObject;
+                    text = unitMarking.TextUp;
+                    return text.Str;
+                case KompasAPIObjectTypeEnum.ksObjectCutUnitMarking:
+                    ICutUnitMarking cutUnitMarking = (ICutUnitMarking)kompasAPIObject;
+                    text = cutUnitMarking.TextUp;
+                    return text.Str;
                 default:
                     return "";
             }

@@ -245,7 +245,6 @@ namespace RelaxingKompas.Data
             IModelContainer modelContainer = (IModelContainer)part7;
             ISketchs sketchs = modelContainer.Sketchs;
             ISketch sketch = sketchs.Add();
-            IModelObject axes3DOZ;
             IPlane3D plane;
             //Выбор плоскости выдавливания
             switch (DataWeightAndSize.WindowLibrarySettings.cmb_plane.SelectedItem)

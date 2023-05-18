@@ -17,6 +17,13 @@ using RelaxingKompas.Event;
 using System.Security.Cryptography;
 using RelaxingKompas.Properties;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic.Logging;
+using RelaxingKompas.Classes;
+using RelaxingKompas.Windows;
+using RelaxingKompas.Utils;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace RelaxingKompas
 {
@@ -98,10 +105,14 @@ namespace RelaxingKompas
                     command = 7;
                     break;
                 case 9:
-                    result = "Настройки";
+                    result = "Шероховатость";
                     command = 7;
                     break;
                 case 10:
+                    result = "Настройки";
+                    command = 7;
+                    break;
+                case 11:
                     command = -1;
                     itemType = 8; // "ENDMENU"
                     break;
@@ -658,6 +669,168 @@ namespace RelaxingKompas
             */
         }
 
+        /// <summary>
+        /// Вставить шероховатость в зависимости от категории кромок и толщины детали
+        /// </summary>
+        private void InsertRough()
+        {
+            ILibraryManager libraryManager = Application.LibraryManager;
+            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
+            Sto_012 sto_012_2018 = null;
+            Sto_012 sto_012_2007 = null;
+            try
+            {
+                sto_012_2007 = JsonUtils.Deserialize<Sto_012>($"{pathlibrary}\\Resources\\CTO-ГК «Трансстрой»-012-2007.json");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка в файле - CTO-ГК «Трансстрой»-012-2007.json. Загружены значения по умолчанию");
+            }
+            try
+            {
+                sto_012_2018 = JsonUtils.Deserialize<Sto_012>($"{pathlibrary}\\Resources\\CTO-ГК «Трансстрой»-012-2018.json");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка в файле - CTO-ГК «Трансстрой»-012-2018.json. Загружены значения по умолчанию");
+            }
+
+            //Создаю СТО
+            if (sto_012_2018 == null)
+            {
+                sto_012_2018 = new Sto_012
+                (
+                new int[][]
+                    {
+                        new int[] { 2, 12, 50 },
+                        new int[] { 14, 30, 60 },
+                        new int[] { 32, 60, 70 }
+                    },
+                new int[][]
+                    {
+                        new int[] { 2, 12, 50 },
+                        new int[] { 14, 30, 60 },
+                        new int[] { 32, 60, 70 }
+                    },
+                new int[][]
+                    {
+                        new int[] { 2, 12, 50 },
+                        new int[] { 14, 30, 60 },
+                        new int[] { 32, 60, 70 }
+                    }
+                );
+                try
+                {
+                    JsonUtils.Serialize($"{pathlibrary}\\Resources\\CTO-ГК «Трансстрой»-012-2018.json", sto_012_2018);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Не удалос сохранить файл CTO-ГК «Трансстрой»-012-2018.json. Обратитесь к администратору");
+                }
+            }
+            if (sto_012_2007 == null)
+            {
+                sto_012_2007 = new Sto_012
+                (
+                new int[][]
+                    {
+                        new int[] { 2, 12, 50 },
+                        new int[] { 14, 30, 80 },
+                        new int[] { 32, 60, 160 }
+                    },
+                new int[][]
+                    {
+                        new int[] { 2, 12, 80 },
+                        new int[] { 14, 30, 160 },
+                        new int[] { 32, 60, 320 }
+                    },
+                new int[][]
+                    {
+                        new int[] { 2, 12, 160 },
+                        new int[] { 14, 30, 320 },
+                        new int[] { 32, 60, 320 }
+                    }
+                );
+                try
+                {
+                    JsonUtils.Serialize($"{pathlibrary}\\Resources\\CTO-ГК «Трансстрой»-012-2007.json", sto_012_2007);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Не удалос сохранить файл CTO-ГК «Трансстрой»-012-2007.json. Обратитесь к администратору");
+                }
+            }
+
+
+            IDrawingDocument kompasDocument = (IDrawingDocument)Application.ActiveDocument;
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            IStamp stamp = layoutSheet.Stamp;
+            IText text3 = stamp.Text[3];
+            string text3Str = text3.Str;
+            string thickness = "";
+            if (text3Str != "")
+            {
+                string[] profile = text3Str.Split("$dsm; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (profile.Length > 4)
+                {
+                    thickness = profile[1];
+                }
+            }
+
+            RougForm roughWindow = new RougForm();
+            roughWindow.tb_thickness.Text = thickness;
+            roughWindow.rb_Sto_2018.Checked = Settings.Default.rb_Sto_2018;
+            roughWindow.rb_Sto_2007.Checked = Settings.Default.rb_Sto_2007;
+            roughWindow.ShowDialog();
+            if (roughWindow.DialogResult == DialogResult.Cancel)
+            {
+                return;
+            }
+            Settings.Default.rb_Sto_2018 = roughWindow.rb_Sto_2018.Checked;
+            Settings.Default.rb_Sto_2007 = roughWindow.rb_Sto_2007.Checked;
+            Settings.Default.Save();
+            int thicknessInt;
+            try
+            {
+                thicknessInt = int.Parse(roughWindow.tb_thickness.Text);
+            }
+            catch (Exception)
+            {
+                kompas.ksMessage("Ошибка в написании толщины");
+                return;
+            }
+
+            int roug = 0;
+            if (roughWindow.rb_Sto_2018.Checked)
+            {
+                roug = sto_012_2018.GetRough(roughWindow.RoughKat, thicknessInt);
+                if (roug == 0)
+                {
+                    kompas.ksMessage("Не найдена указанная толщина");
+                }
+            }
+            else
+            {
+                roug = sto_012_2007.GetRough(roughWindow.RoughKat, thicknessInt);
+                if (roug == 0)
+                {
+                    kompas.ksMessage("Не найдена указанная толщина");
+                }
+            }
+            ISpecRough specRough = kompasDocument.SpecRough;
+            if (specRough != null)
+            {
+                specRough.Text = $"Rz {roug}";
+                specRough.AddSign = false;
+                specRough.SignType = ksRoughSignEnum.ksNoProcessingType;
+                specRough.Distance = 2;
+                specRough.Update();
+            }
+
+
+        }
+
         #endregion
 
 
@@ -692,7 +865,8 @@ namespace RelaxingKompas
                 case 6: PlaceSymbolHole(); break;
                 case 7: BreakView(); break;
                 case 8: InsertPointXY(); break;
-                case 9: LibrarySettings(); break;
+                case 9: InsertRough(); break;
+                case 10: LibrarySettings(); break;
             }
         }
 

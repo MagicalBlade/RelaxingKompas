@@ -91,7 +91,7 @@ namespace RelaxingKompas
             // 
             // tb_weight
             // 
-            this.tb_weight.Location = new System.Drawing.Point(378, 153);
+            this.tb_weight.Location = new System.Drawing.Point(296, 153);
             this.tb_weight.Margin = new System.Windows.Forms.Padding(5);
             this.tb_weight.Name = "tb_weight";
             this.tb_weight.Size = new System.Drawing.Size(46, 20);
@@ -122,7 +122,7 @@ namespace RelaxingKompas
             // l_weight
             // 
             this.l_weight.AutoSize = true;
-            this.l_weight.Location = new System.Drawing.Point(378, 129);
+            this.l_weight.Location = new System.Drawing.Point(296, 129);
             this.l_weight.Name = "l_weight";
             this.l_weight.Padding = new System.Windows.Forms.Padding(3);
             this.l_weight.Size = new System.Drawing.Size(46, 19);
@@ -274,7 +274,7 @@ namespace RelaxingKompas
             // 
             // tb_steel
             // 
-            this.tb_steel.Location = new System.Drawing.Point(296, 153);
+            this.tb_steel.Location = new System.Drawing.Point(352, 153);
             this.tb_steel.Margin = new System.Windows.Forms.Padding(5);
             this.tb_steel.Name = "tb_steel";
             this.tb_steel.Size = new System.Drawing.Size(72, 20);
@@ -283,7 +283,7 @@ namespace RelaxingKompas
             // l_steel
             // 
             this.l_steel.AutoSize = true;
-            this.l_steel.Location = new System.Drawing.Point(310, 129);
+            this.l_steel.Location = new System.Drawing.Point(366, 129);
             this.l_steel.Name = "l_steel";
             this.l_steel.Padding = new System.Windows.Forms.Padding(3);
             this.l_steel.Size = new System.Drawing.Size(43, 19);

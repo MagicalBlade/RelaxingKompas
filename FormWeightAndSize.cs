@@ -152,10 +152,10 @@ namespace RelaxingKompas
 
         private void FormattingText()
         {
-            string plainText = $"{tb_pos.Text}\t{DataWeightAndSize.Thickness}\t{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}" +
+            string plainText = $"{tb_pos.Text}\t\t\t{DataWeightAndSize.Thickness}х{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}\t" +
                 $"\t{tb_sheet.Text}\t{tb_yardage.Text}";
-            string htmlText = $"<table><tr><td>{tb_pos.Text}</td><td>{DataWeightAndSize.Thickness}</td><td>{tb_width.Text}</td>" +
-                $"<td>{tb_length.Text}</td><td>{tb_steel.Text}</td><td>{tb_weight.Text}</td><td>{tb_sheet.Text}</td><td>{tb_yardage.Text}</td></tr></table>";
+            string htmlText = $"<table><tr><td>{tb_pos.Text}</td><td></td><td></td><td>{DataWeightAndSize.Thickness}х{tb_width.Text}</td>" +
+                $"<td>{tb_length.Text}</td><td>{tb_steel.Text}</td><td>{tb_weight.Text}</td><td></td><td>{tb_sheet.Text}</td><td>{tb_yardage.Text}</td></tr></table>";
             Excel.CopyToExcel(plainText, htmlText);
         }
 

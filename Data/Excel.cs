@@ -92,22 +92,26 @@ namespace RelaxingKompas.Data
             newFileExport[0] = new string[]
             {
                 "Позиция",
-                "Толщина",
-                "Ширина",
+                "Кол. т.",
+                "Кол. н.",
+                "Сечение",
                 "Длина",
                 "Сталь",
                 "Вес, ед.",
+                "Вес, общ.",
                 "Номер листа",
                 "Площадь"
             };
             newFileExport[1] = new string[]
             {
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
-                DataWeightAndSize.Thickness.ToString(),
-                DataWeightAndSize.FormWeightAndSize.tb_width.Text,
+                "",
+                "",
+                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                "",
                 DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
             };
@@ -115,15 +119,17 @@ namespace RelaxingKompas.Data
             existsFileExport[0] = new string[]
             {
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
-                DataWeightAndSize.Thickness.ToString(),
-                DataWeightAndSize.FormWeightAndSize.tb_width.Text,
+                "",
+                "",
+                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                "",
                 DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
             };
-
+            
             if (File.Exists($"{PathExcelFile}{NameExcelFile}.xlsx"))
             {
                 XLWorkbook workbook = new XLWorkbook($"{PathExcelFile}{NameExcelFile}.xlsx");

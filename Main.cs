@@ -113,6 +113,10 @@ namespace RelaxingKompas
                     command = 7;
                     break;
                 case 11:
+                    result = "Копирование данных из штампа";
+                    command = 7;
+                    break;
+                case 12:
                     command = -1;
                     itemType = 8; // "ENDMENU"
                     break;
@@ -433,11 +437,6 @@ namespace RelaxingKompas
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
         }
 
-        private void LibrarySettings()
-        {
-            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
-            WindowLibrarySettings.ShowDialog(Win32);
-        }
         /// <summary>
         /// Копирование текста из элементов модели
         /// </summary>
@@ -831,6 +830,21 @@ namespace RelaxingKompas
 
         }
 
+        private void LibrarySettings()
+        {
+            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
+            WindowLibrarySettings.ShowDialog(Win32);
+        }
+
+        private void CopyDataFromStamp()
+        {
+            DataWeightAndSize.KompasDocument = Application.ActiveDocument;
+            string plainText = $"{DataWeightAndSize.GetCellStamp(2)}\t{DataWeightAndSize.GetCellStamp(5)}\t{DataWeightAndSize.GetCellStamp(16001)}";
+            string htmlText = $"<table><tr><td>{DataWeightAndSize.GetCellStamp(2)}</td><td>{DataWeightAndSize.GetCellStamp(5)}<td>{DataWeightAndSize.GetCellStamp(16001)}</td>" +
+                $"</tr></table>";
+            Excel.CopyToExcel(plainText, htmlText);
+        }
+
         #endregion
 
 
@@ -867,6 +881,7 @@ namespace RelaxingKompas
                 case 8: InsertPointXY(); break;
                 case 9: InsertRough(); break;
                 case 10: LibrarySettings(); break;
+                case 11: CopyDataFromStamp(); break;
             }
         }
 

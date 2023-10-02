@@ -136,6 +136,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dll\Kompas6API5.dll" />
+    <Content Include="dll\Kompas6Constants.dll" />
+    <Content Include="dll\Kompas6Constants3D.dll" />
+    <Content Include="dll\KompasAPI7.dll" />
     <Content Include="RelaxingKompas.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

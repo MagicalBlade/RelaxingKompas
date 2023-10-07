@@ -853,8 +853,10 @@ namespace RelaxingKompas
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            if (selectionManager.SelectedObjects == null)
+            dynamic selectedobjects = selectionManager.SelectedObjects;
+            if (selectedobjects == null)
             {
                 MessageBox.Show("Test");
                 return;
@@ -863,6 +865,12 @@ namespace RelaxingKompas
             FormTolerance formTolerance = new FormTolerance();
             formTolerance.ShowDialog();
             if (formTolerance.DialogResult == DialogResult.Cancel) return;
+
+            if (selectedobjects is object)
+            {
+                MessageBox.Show($"{((IDrawingObject)selectedobjects).DrawingObjectType}");
+            }
+
             Application.MessageBoxEx("Выполнено", "Заголовок", 64);
         }
         #endregion

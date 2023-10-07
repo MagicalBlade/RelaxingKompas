@@ -114,6 +114,12 @@
       <DependentUpon>FormRegistration.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\JsonUtils.cs" />
+    <Compile Include="Windows\FormTolerance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\FormTolerance.Designer.cs">
+      <DependentUpon>FormTolerance.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\RougForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,6 +136,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRegistration.resx">
       <DependentUpon>FormRegistration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\FormTolerance.resx">
+      <DependentUpon>FormTolerance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\RougForm.resx">
       <DependentUpon>RougForm.cs</DependentUpon>

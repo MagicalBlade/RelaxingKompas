@@ -98,27 +98,31 @@ namespace RelaxingKompas
                     break;
                 case 7:
                     result = "";
-                    command = 6;
+                    command = 7;
                     break;
                 case 8:
                     result = "Вставить точки по координатам из файла";
-                    command = 7;
+                    command = 8;
                     break;
                 case 9:
                     result = "Шероховатость";
-                    command = 7;
+                    command = 9;
                     break;
                 case 10:
                     result = "Настройки";
-                    command = 7;
+                    command = 10;
                     break;
                 case 11:
                     result = "Копирование данных из штампа";
-                    command = 7;
+                    command = 11;
                     break;
                 case 12:
+                    result = "Простановка допусков/припусков";
+                    command = 12;
+                    break;
+                case 13:
                     command = -1;
-                    itemType = 8; // "ENDMENU"
+                    itemType = 13; // "ENDMENU"
                     break;
             }
             return result;
@@ -845,6 +849,22 @@ namespace RelaxingKompas
             Excel.CopyToExcel(plainText, htmlText);
         }
 
+        private void SetTolerance()
+        {
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (selectionManager.SelectedObjects == null)
+            {
+                MessageBox.Show("Test");
+                return;
+            }
+
+            FormTolerance formTolerance = new FormTolerance();
+            formTolerance.ShowDialog();
+            if (formTolerance.DialogResult == DialogResult.Cancel) return;
+            Application.MessageBoxEx("Выполнено", "Заголовок", 64);
+        }
         #endregion
 
 
@@ -882,6 +902,7 @@ namespace RelaxingKompas
                 case 9: InsertRough(); break;
                 case 10: LibrarySettings(); break;
                 case 11: CopyDataFromStamp(); break;
+                case 12: SetTolerance(); break;
             }
         }
 

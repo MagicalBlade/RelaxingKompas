@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -108,7 +109,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 "",
                 "",
-                DataWeightAndSize.Thickness.ToString(),
+                DataWeightAndSize.FormWeightAndSize.tb_thickness.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_width.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
@@ -123,7 +124,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 "",
                 "",
-                DataWeightAndSize.Thickness.ToString(),
+                DataWeightAndSize.FormWeightAndSize.tb_thickness.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_width.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
@@ -163,15 +164,49 @@ namespace RelaxingKompas.Data
                     worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     for (int i = 0; i < export.Length; i++)
                     {
-                        for (int j = 0; j < export[i].Length; j++)
+                        worksheet.Cell(rowcount + i + 1, 1).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount + i + 1, 2).Style.NumberFormat.Format = "General";
+                        worksheet.Cell(rowcount + i + 1, 3).Style.NumberFormat.Format = "General";
+                        worksheet.Cell(rowcount + i + 1, 4).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount + i + 1, 5).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount + i + 1, 6).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount + i + 1, 7).Style.NumberFormat.Format = "General";
+                        worksheet.Cell(rowcount + i + 1, 8).Style.NumberFormat.Format = "General";
+                        worksheet.Cell(rowcount + i + 1, 9).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount + i + 1, 10).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount + i + 1, 11).Style.NumberFormat.Format = "General";
+
+                        worksheet.Cell(rowcount + i + 1, 1).SetValue<string>(export[i][0]);
+                        worksheet.Cell(rowcount + i + 1, 2).SetValue<string>(export[i][1]);
+                        worksheet.Cell(rowcount + i + 1, 3).SetValue<string>(export[i][2]);
+                        worksheet.Cell(rowcount + i + 1, 4).SetValue<string>(export[i][3]);
+                        worksheet.Cell(rowcount + i + 1, 5).SetValue<string>(export[i][4]);
+                        worksheet.Cell(rowcount + i + 1, 6).SetValue<string>(export[i][5]);
+                        worksheet.Cell(rowcount + i + 1, 8).SetValue<string>(export[i][7]);
+                        worksheet.Cell(rowcount + i + 1, 9).SetValue<string>(export[i][8]);
+                        worksheet.Cell(rowcount + i + 1, 10).SetValue<string>(export[i][9]);
+                        try
                         {
-                            IXLCell cell = worksheet.Cell(rowcount + i + 1, j + 1);
-                            cell.SetValue(export[i][j]);
+                            worksheet.Cell(rowcount + i + 1, 7).SetValue<double>(Convert.ToDouble((export[i][6]), CultureInfo.DefaultThreadCurrentCulture));
+                        }
+                        catch (Exception)
+                        {
+                            worksheet.Cell(rowcount + i + 1, 7).Style.NumberFormat.Format = "@";
+                            worksheet.Cell(rowcount + i + 1, 7).SetValue<string>(export[i][6]);
+                        }
+                        try
+                        {
+                            worksheet.Cell(rowcount + i + 1, 11).SetValue<double>(Convert.ToDouble((export[i][10]), CultureInfo.DefaultThreadCurrentCulture));
+                        }
+                        catch (Exception)
+                        {
+                            worksheet.Cell(rowcount + i + 1, 11).Style.NumberFormat.Format = "@";
+                            worksheet.Cell(rowcount + i + 1, 11).SetValue<string>(export[i][10]);
                         }
                     }
                 }
                 //Ширина колонки по содержимому
-                worksheet.Columns(1, export[0].Length).AdjustToContents(); 
+                worksheet.Columns(1, export[0].Length).AdjustToContents();
             }
             return;
         }

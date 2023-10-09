@@ -24,6 +24,7 @@ using RelaxingKompas.Utils;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Windows.Navigation;
 
 namespace RelaxingKompas
 {
@@ -856,22 +857,44 @@ namespace RelaxingKompas
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             dynamic selectedobjects = selectionManager.SelectedObjects;
-            if (selectedobjects == null)
-            {
-                MessageBox.Show("Test");
-                return;
-            }
-
+            if (selectedobjects == null) return;
             FormTolerance formTolerance = new FormTolerance();
-            formTolerance.ShowDialog();
-            if (formTolerance.DialogResult == DialogResult.Cancel) return;
 
             if (selectedobjects is object)
             {
-                MessageBox.Show($"{((IDrawingObject)selectedobjects).DrawingObjectType}");
+                if (selectedobjects is IDimensionText dimensionText)
+                {
+                    formTolerance.tb_Up.Text = dimensionText.HighDeviation.Str;
+                    formTolerance.tb_Down.Text = dimensionText.LowDeviation.Str;
+                    formTolerance.ShowDialog();
+                    if (formTolerance.DialogResult == DialogResult.Cancel) return;
+                    SetDimensionText(dimensionText);
+                }
+            }
+
+            if (selectedobjects is object[] objects)
+            {
+                formTolerance.ShowDialog();
+                if (formTolerance.DialogResult == DialogResult.Cancel) return;
+                foreach (var item in objects)
+                {
+                    if (item is IDimensionText dimensionText)
+                    {
+                        SetDimensionText(dimensionText);
+                    }
+                }
             }
 
             Application.MessageBoxEx("Выполнено", "Заголовок", 64);
+
+            void SetDimensionText(IDimensionText dimensionText)
+            {
+                dimensionText.HighDeviation.Str = formTolerance.tb_Up.Text;
+                dimensionText.LowDeviation.Str= formTolerance.tb_Down.Text;
+                dimensionText.DeviationOn = true;
+                dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
+                ((IDrawingObject)dimensionText).Update();
+            }
         }
         #endregion
 

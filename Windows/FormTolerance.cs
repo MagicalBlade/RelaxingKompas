@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Controls;
 using ClosedXML;
 using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 
 namespace RelaxingKompas.Windows
 {
@@ -34,35 +35,102 @@ namespace RelaxingKompas.Windows
 
         private void tb_Up_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-
-            
+  
         }
 
         private void tb_Up_KeyPress(object sender, KeyPressEventArgs e)
         {
-            string text = ((System.Windows.Forms.TextBox)sender).Text;
-            text += e.KeyChar;
-            Regex reg = new Regex(@"^([+-.,]|\d)+");
-            if (reg.IsMatch(text))
+            if (System.Windows.Forms.Control.ModifierKeys == Keys.Control || e.KeyChar == (char)Keys.Back)
             {
                 e.Handled = false;
+                return;
             }
-            else
-            {
-                e.Handled= true;
-            }
-            
 
-            //string reg = "+-0123456789.,";
-            //foreach (char item in reg)
+
+            //string text = ((System.Windows.Forms.TextBox)sender).Text;
+            //text += e.KeyChar;
+            //Regex reg = new Regex(@"^([+-.,]|\d)+");
+            //if (reg.IsMatch(text))
             //{
-            //    if (e.KeyChar == item)
-            //    {
-            //        e.Handled = false;
-            //        return;
-            //    }
+            //    e.Handled = false;
             //}
-            //e.Handled = true;
+            //else
+            //{
+            //    e.Handled= true;
+            //}
+
+            System.Windows.Forms.TextBox textBox = (System.Windows.Forms.TextBox)sender;
+            switch (textBox.Text.Length)
+            {
+                case 0:
+                    if ("+-0123456789.,".IndexOf(e.KeyChar) != -1)
+                    {
+                        e.Handled = false;
+                        return;
+                    }
+                    break;
+                //case 1:
+                //    foreach (var item in "0123456789")
+                //    {
+                //        if (e.KeyChar == item)
+                //        {
+                //            e.Handled = false;
+                //            return;
+                //        }
+                //    }
+                //    foreach (var item in ".,")
+                //    {
+                //        if (e.KeyChar == item)
+                //        {
+                //            if (textBox.Text.IndexOf(item) != -1)
+                //            {
+                //                e.Handled = true;
+                //                return;
+                //            }
+                //        }
+                //    }
+                //    break;
+                //case 2:
+                //    foreach (var item in "0123456789")
+                //    {
+                //        if (e.KeyChar == item)
+                //        {
+                //            e.Handled = false;
+                //            return;
+                //        }
+                //    }
+                //    foreach (var item in ".,")
+                //    {
+                //        if (e.KeyChar == item)
+                //        {
+                //            if (textBox.Text.IndexOf(item) != -1)
+                //            {
+                //                e.Handled = true;
+                //                return;
+                //            }
+                //        }
+                //    }
+                //    break;
+                default:
+                    if (char.IsNumber(e.KeyChar))
+                    {
+                        e.Handled = false;
+                        return;
+                    }
+                    break;
+            }
+
+            e.Handled = true;
+        }
+
+        private void tb_Up_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+        }
+
+        private void tb_Up_KeyUp(object sender, KeyEventArgs e)
+        {
+            
         }
     }
 }

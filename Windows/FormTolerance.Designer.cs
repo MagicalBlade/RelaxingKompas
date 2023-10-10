@@ -63,7 +63,9 @@
             this.tb_Up.Name = "tb_Up";
             this.tb_Up.Size = new System.Drawing.Size(100, 20);
             this.tb_Up.TabIndex = 0;
+            this.tb_Up.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_Up_KeyDown);
             this.tb_Up.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_Up_KeyPress);
+            this.tb_Up.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tb_Up_KeyUp);
             this.tb_Up.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_Up_PreviewKeyDown);
             // 
             // tb_Down

@@ -31,13 +31,6 @@ namespace RelaxingKompas.Windows
 
             }
         }
-
-
-        private void tb_Up_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-  
-        }
-
         private void tb_Up_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (System.Windows.Forms.Control.ModifierKeys == Keys.Control || e.KeyChar == (char)Keys.Back)
@@ -45,8 +38,6 @@ namespace RelaxingKompas.Windows
                 e.Handled = false;
                 return;
             }
-
-
             //string text = ((System.Windows.Forms.TextBox)sender).Text;
             //text += e.KeyChar;
             //Regex reg = new Regex(@"^([+-.,]|\d)+");
@@ -69,68 +60,23 @@ namespace RelaxingKompas.Windows
                         return;
                     }
                     break;
-                //case 1:
-                //    foreach (var item in "0123456789")
-                //    {
-                //        if (e.KeyChar == item)
-                //        {
-                //            e.Handled = false;
-                //            return;
-                //        }
-                //    }
-                //    foreach (var item in ".,")
-                //    {
-                //        if (e.KeyChar == item)
-                //        {
-                //            if (textBox.Text.IndexOf(item) != -1)
-                //            {
-                //                e.Handled = true;
-                //                return;
-                //            }
-                //        }
-                //    }
-                //    break;
-                //case 2:
-                //    foreach (var item in "0123456789")
-                //    {
-                //        if (e.KeyChar == item)
-                //        {
-                //            e.Handled = false;
-                //            return;
-                //        }
-                //    }
-                //    foreach (var item in ".,")
-                //    {
-                //        if (e.KeyChar == item)
-                //        {
-                //            if (textBox.Text.IndexOf(item) != -1)
-                //            {
-                //                e.Handled = true;
-                //                return;
-                //            }
-                //        }
-                //    }
-                //    break;
                 default:
                     if (char.IsNumber(e.KeyChar))
                     {
                         e.Handled = false;
                         return;
                     }
+                    if (".,".IndexOf(e.KeyChar) != -1)
+                    {
+                        if (textBox.Text.IndexOf(e.KeyChar) == -1)
+                        {
+                            e.Handled = false;
+                            return;
+                        }
+                    }
                     break;
             }
-
             e.Handled = true;
-        }
-
-        private void tb_Up_KeyDown(object sender, KeyEventArgs e)
-        {
-            
-        }
-
-        private void tb_Up_KeyUp(object sender, KeyEventArgs e)
-        {
-            
         }
     }
 }

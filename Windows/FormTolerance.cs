@@ -1,16 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Controls;
-using ClosedXML;
-using System.Text.RegularExpressions;
-using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 
 namespace RelaxingKompas.Windows
 {
@@ -33,7 +22,7 @@ namespace RelaxingKompas.Windows
         }
         private void tb_Up_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (System.Windows.Forms.Control.ModifierKeys == Keys.Control || e.KeyChar == (char)Keys.Back)
+            if (Control.ModifierKeys == Keys.Control || e.KeyChar == (char)Keys.Back)
             {
                 e.Handled = false;
                 return;
@@ -77,17 +66,6 @@ namespace RelaxingKompas.Windows
                     break;
             }
             e.Handled = true;
-        }
-
-        private void tb_Up_Validating(object sender, CancelEventArgs e)
-        {
-            System.Windows.Forms.TextBox textBox = (System.Windows.Forms.TextBox)sender;
-            if (textBox.Text.Length == 2)
-            {
-                e.Cancel = true;
-                textBox.Select(0, textBox.Text.Length);
-                this.errorProvider1.SetError(textBox, "Bad");
-            }
         }
     }
 }

@@ -67,7 +67,6 @@
             this.tb_Up.Size = new System.Drawing.Size(100, 20);
             this.tb_Up.TabIndex = 0;
             this.tb_Up.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_Up_KeyPress);
-            this.tb_Up.Validating += new System.ComponentModel.CancelEventHandler(this.tb_Up_Validating);
             // 
             // tb_Down
             // 

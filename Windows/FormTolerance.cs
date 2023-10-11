@@ -57,10 +57,26 @@ namespace RelaxingKompas.Windows
                     }
                     if (".,".IndexOf(e.KeyChar) != -1)
                     {
-                        if (textBox.Text.IndexOf(e.KeyChar) == -1)
+                        if (textBox.SelectedText.Length != 0)
                         {
-                            e.Handled = false;
-                            return;
+                            if (textBox.Text.IndexOf('.') == -1 && textBox.Text.IndexOf(',') == -1)
+                            {
+                                e.Handled = false;
+                                return;
+                            }
+                            else if (textBox.SelectedText.IndexOf('.') != -1 || textBox.SelectedText.IndexOf(',') != -1)
+                            {
+                                e.Handled = false;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (textBox.Text.IndexOf('.') == -1 && textBox.Text.IndexOf(',') == -1)
+                            {
+                                e.Handled = false;
+                                return;
+                            }
                         }
                     }
                     break;

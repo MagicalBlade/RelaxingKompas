@@ -78,5 +78,16 @@ namespace RelaxingKompas.Windows
             }
             e.Handled = true;
         }
+
+        private void tb_Up_Validating(object sender, CancelEventArgs e)
+        {
+            System.Windows.Forms.TextBox textBox = (System.Windows.Forms.TextBox)sender;
+            if (textBox.Text.Length == 2)
+            {
+                e.Cancel = true;
+                textBox.Select(0, textBox.Text.Length);
+                this.errorProvider1.SetError(textBox, "Bad");
+            }
+        }
     }
 }

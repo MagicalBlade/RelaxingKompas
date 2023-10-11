@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.b_ok = new System.Windows.Forms.Button();
             this.b_cancel = new System.Windows.Forms.Button();
             this.tb_Up = new System.Windows.Forms.TextBox();
@@ -35,6 +36,8 @@
             this.l_Up = new System.Windows.Forms.Label();
             this.l_Down = new System.Windows.Forms.Label();
             this.b_plusminus = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // b_ok
@@ -64,6 +67,7 @@
             this.tb_Up.Size = new System.Drawing.Size(100, 20);
             this.tb_Up.TabIndex = 0;
             this.tb_Up.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_Up_KeyPress);
+            this.tb_Up.Validating += new System.ComponentModel.CancelEventHandler(this.tb_Up_Validating);
             // 
             // tb_Down
             // 
@@ -100,6 +104,10 @@
             this.b_plusminus.UseVisualStyleBackColor = true;
             this.b_plusminus.Click += new System.EventHandler(this.b_plusminus_Click);
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
             // FormTolerance
             // 
             this.AcceptButton = this.b_ok;
@@ -118,6 +126,7 @@
             this.Name = "FormTolerance";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Допуск/припуск";
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,5 +141,6 @@
         private System.Windows.Forms.Label l_Up;
         private System.Windows.Forms.Label l_Down;
         private System.Windows.Forms.Button b_plusminus;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }

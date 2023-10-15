@@ -58,7 +58,7 @@ namespace RelaxingKompas
         private System.Windows.Forms.IWin32Window _win32;
         #endregion
 
-        private List<string> setToleranceHistory = new List<string>();
+        public List<string> setToleranceHistory = new List<string>();
 
         // Имя библиотеки
         [return: MarshalAs(UnmanagedType.BStr)]
@@ -873,7 +873,11 @@ namespace RelaxingKompas
                     formTolerance.tb_Up.Text = dimensionText.HighDeviation.Str;
                     formTolerance.tb_Down.Text = dimensionText.LowDeviation.Str;
                     formTolerance.ShowDialog();
-                    if (formTolerance.DialogResult == DialogResult.Cancel) return;
+                    if (formTolerance.DialogResult == DialogResult.Cancel)
+                    {
+                        if (formTolerance.historyisclear) setToleranceHistory.Clear();
+                        return;
+                    }
                     SetDimensionText(dimensionText);
                 }
             }
@@ -881,7 +885,11 @@ namespace RelaxingKompas
             if (selectedobjects is object[] objects)
             {
                 formTolerance.ShowDialog();
-                if (formTolerance.DialogResult == DialogResult.Cancel) return;
+                if (formTolerance.DialogResult == DialogResult.Cancel)
+                {
+                    if (formTolerance.historyisclear) setToleranceHistory.Clear();
+                    return;
+                }
                 foreach (var item in objects)
                 {
                     if (item is IDimensionText dimensionText)
@@ -890,6 +898,7 @@ namespace RelaxingKompas
                     }
                 }
             }
+            if (formTolerance.historyisclear) setToleranceHistory.Clear();
             if (setToleranceHistory.IndexOf($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}") == -1)
             {
                 setToleranceHistory.Add($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}");

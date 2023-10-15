@@ -41,6 +41,7 @@
             this.lb_history = new System.Windows.Forms.ListBox();
             this.mainBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.mainBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.b_clear_history = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource1)).BeginInit();
@@ -142,6 +143,16 @@
             // 
             this.mainBindingSource1.DataSource = typeof(RelaxingKompas.Main);
             // 
+            // b_clear_history
+            // 
+            this.b_clear_history.Location = new System.Drawing.Point(392, 154);
+            this.b_clear_history.Name = "b_clear_history";
+            this.b_clear_history.Size = new System.Drawing.Size(75, 23);
+            this.b_clear_history.TabIndex = 12;
+            this.b_clear_history.Text = "Очистить";
+            this.b_clear_history.UseVisualStyleBackColor = true;
+            this.b_clear_history.Click += new System.EventHandler(this.b_clear_history_Click);
+            // 
             // FormTolerance
             // 
             this.AcceptButton = this.b_ok;
@@ -149,6 +160,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_cancel;
             this.ClientSize = new System.Drawing.Size(510, 268);
+            this.Controls.Add(this.b_clear_history);
             this.Controls.Add(this.lb_history);
             this.Controls.Add(this.l_history);
             this.Controls.Add(this.b_ok);
@@ -184,5 +196,6 @@
         private System.Windows.Forms.BindingSource mainBindingSource1;
         private System.Windows.Forms.Label l_history;
         internal System.Windows.Forms.ListBox lb_history;
+        private System.Windows.Forms.Button b_clear_history;
     }
 }

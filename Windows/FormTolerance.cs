@@ -9,6 +9,7 @@ namespace RelaxingKompas.Windows
     {
         private string tb_Up_oldvalue;
         private string tb_Down_oldvalue;
+        public bool historyisclear = false;
 
         public FormTolerance()
         {
@@ -105,6 +106,12 @@ namespace RelaxingKompas.Windows
                 tb_Down.Text = toleranse[1];
                 DialogResult = DialogResult.OK;
             }
+        }
+
+        private void b_clear_history_Click(object sender, EventArgs e)
+        {
+            lb_history.Items.Clear();
+            historyisclear = true;
         }
     }
 }

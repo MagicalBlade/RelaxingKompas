@@ -25,6 +25,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Windows.Navigation;
+using System.Globalization;
 
 namespace RelaxingKompas
 {
@@ -855,6 +856,34 @@ namespace RelaxingKompas
 
         private void SetTolerance()
         {
+            ILibraryManager libraryManager = Application.LibraryManager;
+            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
+            string pathtolerance = $"{pathlibrary}\\Resources\\ToleranceData.txt";
+            List<double[]> toleranceData = new List<double[]>();
+            if (File.Exists(pathtolerance))
+            {
+                using (StreamReader sr = File.OpenText(pathtolerance))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string[] temp = sr.ReadLine().Split(' ');
+                        try
+                        {
+                            toleranceData.Add(
+                            new double[]
+                            {
+                                double.Parse(temp[0], CultureInfo.DefaultThreadCurrentCulture),
+                                double.Parse(temp[1], CultureInfo.DefaultThreadCurrentCulture),
+                                double.Parse(temp[2], CultureInfo.DefaultThreadCurrentCulture),
+                            });
+                        }
+                        catch (Exception)
+                        {
+                            Application.MessageBoxEx("В файле с допусками ошибка в числах.", "Ошибка", 64);
+                        }
+                    }
+                }
+            }
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
@@ -878,7 +907,7 @@ namespace RelaxingKompas
                         if (formTolerance.historyisclear) setToleranceHistory.Clear();
                         return;
                     }
-                    SetDimensionText(dimensionText);
+                    SetDimensionText(dimensionText, formTolerance.autotolerance);
                 }
             }
 
@@ -894,7 +923,7 @@ namespace RelaxingKompas
                 {
                     if (item is IDimensionText dimensionText)
                     {
-                        SetDimensionText(dimensionText);
+                        SetDimensionText(dimensionText, formTolerance.autotolerance);
                     }
                 }
             }
@@ -908,13 +937,35 @@ namespace RelaxingKompas
 
             Application.MessageBoxEx("Выполнено", "Заголовок", 64);
 
-            void SetDimensionText(IDimensionText dimensionText)
+            void SetDimensionText(IDimensionText dimensionText, bool auto)
             {
-                dimensionText.HighDeviation.Str = formTolerance.tb_Up.Text;
-                dimensionText.LowDeviation.Str= formTolerance.tb_Down.Text;
-                dimensionText.DeviationOn = true;
-                dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
-                ((IDrawingObject)dimensionText).Update();
+                if (auto)
+                {
+                    //if (tolerance == null) return;
+
+                    foreach (var item in toleranceData)
+                    {
+                        if (item.Length != 3) continue;
+                        if (dimensionText.NominalValue >= item[1] && dimensionText.NominalValue < item[2])
+                        {
+                            dimensionText.HighDeviation.Str = $"+{item[0]}";
+                            dimensionText.LowDeviation.Str = $"-{item[0]}";
+                            dimensionText.DeviationOn = true;
+                            dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
+                            ((IDrawingObject)dimensionText).Update();
+                            return;
+                        }
+                    }
+                    Application.MessageBoxEx("Не у далось автоматически проставить допуски. Проверьте файл с допусками.", "Ошибка", 64);
+                }
+                else
+                {
+                    dimensionText.HighDeviation.Str = formTolerance.tb_Up.Text;
+                    dimensionText.LowDeviation.Str= formTolerance.tb_Down.Text;
+                    dimensionText.DeviationOn = true;
+                    dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
+                    ((IDrawingObject)dimensionText).Update();
+                }
             }
         }
         #endregion

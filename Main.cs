@@ -858,6 +858,9 @@ namespace RelaxingKompas
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            document2DAPI5.ksUndoContainer(true);
+
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             dynamic selectedobjects = selectionManager.SelectedObjects;
             if (selectedobjects == null) return;
@@ -892,6 +895,7 @@ namespace RelaxingKompas
                 setToleranceHistory.Add($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}");
             }
 
+            document2DAPI5.ksUndoContainer(false);
 
             Application.MessageBoxEx("Выполнено", "Заголовок", 64);
 

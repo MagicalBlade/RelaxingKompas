@@ -128,7 +128,7 @@
             // lb_history
             // 
             this.lb_history.FormattingEnabled = true;
-            this.lb_history.Location = new System.Drawing.Point(371, 79);
+            this.lb_history.Location = new System.Drawing.Point(371, 53);
             this.lb_history.Name = "lb_history";
             this.lb_history.Size = new System.Drawing.Size(120, 95);
             this.lb_history.TabIndex = 11;

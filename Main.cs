@@ -57,6 +57,9 @@ namespace RelaxingKompas
 
         private System.Windows.Forms.IWin32Window _win32;
         #endregion
+
+        private List<string> setToleranceHistory = new List<string>();
+
         // Имя библиотеки
         [return: MarshalAs(UnmanagedType.BStr)]
         public string GetLibraryName()
@@ -859,7 +862,7 @@ namespace RelaxingKompas
             dynamic selectedobjects = selectionManager.SelectedObjects;
             if (selectedobjects == null) return;
             FormTolerance formTolerance = new FormTolerance();
-
+            formTolerance.lb_history.Items.AddRange(setToleranceHistory.ToArray());
             if (selectedobjects is object)
             {
                 if (selectedobjects is IDimensionText dimensionText)
@@ -884,6 +887,11 @@ namespace RelaxingKompas
                     }
                 }
             }
+            if (setToleranceHistory.IndexOf($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}") == -1)
+            {
+                setToleranceHistory.Add($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}");
+            }
+
 
             Application.MessageBoxEx("Выполнено", "Заголовок", 64);
 

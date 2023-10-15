@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media;
 
 namespace RelaxingKompas.Windows
 {
@@ -88,10 +90,21 @@ namespace RelaxingKompas.Windows
         {
             tb_Up.BeginInvoke(new Action(tb_Up.SelectAll));
         }
-
         private void tb_Down_Enter(object sender, EventArgs e)
         {
             tb_Down.BeginInvoke(new Action(tb_Down.SelectAll));
+        }
+        private void lb_history_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = this.lb_history.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
+            {
+                string text = lb_history.SelectedItem as string;
+                string[] toleranse = text.Split('/');
+                tb_Up.Text = toleranse[0];
+                tb_Down.Text = toleranse[1];
+                DialogResult = DialogResult.OK;
+            }
         }
     }
 }

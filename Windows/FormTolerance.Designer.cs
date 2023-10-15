@@ -37,13 +37,19 @@
             this.l_Down = new System.Windows.Forms.Label();
             this.b_plusminus = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.l_history = new System.Windows.Forms.Label();
+            this.lb_history = new System.Windows.Forms.ListBox();
+            this.mainBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.mainBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // b_ok
             // 
             this.b_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.b_ok.Location = new System.Drawing.Point(137, 128);
+            this.b_ok.Location = new System.Drawing.Point(151, 128);
             this.b_ok.Name = "b_ok";
             this.b_ok.Size = new System.Drawing.Size(75, 23);
             this.b_ok.TabIndex = 3;
@@ -53,7 +59,7 @@
             // b_cancel
             // 
             this.b_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.b_cancel.Location = new System.Drawing.Point(218, 128);
+            this.b_cancel.Location = new System.Drawing.Point(232, 128);
             this.b_cancel.Name = "b_cancel";
             this.b_cancel.Size = new System.Drawing.Size(75, 23);
             this.b_cancel.TabIndex = 4;
@@ -98,9 +104,9 @@
             // 
             // b_plusminus
             // 
-            this.b_plusminus.Location = new System.Drawing.Point(346, 89);
+            this.b_plusminus.Location = new System.Drawing.Point(333, 86);
             this.b_plusminus.Name = "b_plusminus";
-            this.b_plusminus.Size = new System.Drawing.Size(75, 23);
+            this.b_plusminus.Size = new System.Drawing.Size(32, 32);
             this.b_plusminus.TabIndex = 6;
             this.b_plusminus.Text = "+/-";
             this.b_plusminus.UseVisualStyleBackColor = true;
@@ -110,6 +116,32 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // l_history
+            // 
+            this.l_history.AutoSize = true;
+            this.l_history.Location = new System.Drawing.Point(408, 37);
+            this.l_history.Name = "l_history";
+            this.l_history.Size = new System.Drawing.Size(50, 13);
+            this.l_history.TabIndex = 10;
+            this.l_history.Text = "История";
+            // 
+            // lb_history
+            // 
+            this.lb_history.FormattingEnabled = true;
+            this.lb_history.Location = new System.Drawing.Point(371, 79);
+            this.lb_history.Name = "lb_history";
+            this.lb_history.Size = new System.Drawing.Size(120, 95);
+            this.lb_history.TabIndex = 11;
+            this.lb_history.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lb_history_MouseDoubleClick);
+            // 
+            // mainBindingSource
+            // 
+            this.mainBindingSource.DataSource = typeof(RelaxingKompas.Main);
+            // 
+            // mainBindingSource1
+            // 
+            this.mainBindingSource1.DataSource = typeof(RelaxingKompas.Main);
+            // 
             // FormTolerance
             // 
             this.AcceptButton = this.b_ok;
@@ -117,18 +149,22 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_cancel;
             this.ClientSize = new System.Drawing.Size(510, 268);
+            this.Controls.Add(this.lb_history);
+            this.Controls.Add(this.l_history);
+            this.Controls.Add(this.b_ok);
             this.Controls.Add(this.b_plusminus);
             this.Controls.Add(this.l_Down);
             this.Controls.Add(this.l_Up);
             this.Controls.Add(this.tb_Down);
             this.Controls.Add(this.tb_Up);
             this.Controls.Add(this.b_cancel);
-            this.Controls.Add(this.b_ok);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormTolerance";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Допуск/припуск";
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -144,5 +180,9 @@
         private System.Windows.Forms.Label l_Down;
         private System.Windows.Forms.Button b_plusminus;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.BindingSource mainBindingSource;
+        private System.Windows.Forms.BindingSource mainBindingSource1;
+        private System.Windows.Forms.Label l_history;
+        internal System.Windows.Forms.ListBox lb_history;
     }
 }

@@ -66,7 +66,8 @@
             this.tb_Up.Name = "tb_Up";
             this.tb_Up.Size = new System.Drawing.Size(100, 20);
             this.tb_Up.TabIndex = 0;
-            this.tb_Up.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_Up_KeyPress);
+            this.tb_Up.TextChanged += new System.EventHandler(this.tb_Up_TextChanged);
+            this.tb_Up.Enter += new System.EventHandler(this.tb_Up_Enter);
             // 
             // tb_Down
             // 
@@ -74,6 +75,8 @@
             this.tb_Down.Name = "tb_Down";
             this.tb_Down.Size = new System.Drawing.Size(100, 20);
             this.tb_Down.TabIndex = 1;
+            this.tb_Down.TextChanged += new System.EventHandler(this.tb_Down_TextChanged);
+            this.tb_Down.Enter += new System.EventHandler(this.tb_Down_Enter);
             // 
             // l_Up
             // 

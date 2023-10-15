@@ -5,6 +5,9 @@ namespace RelaxingKompas.Windows
 {
     public partial class FormTolerance : Form
     {
+        private string tb_Up_oldvalue;
+        private string tb_Down_oldvalue;
+
         public FormTolerance()
         {
             InitializeComponent();
@@ -20,68 +23,75 @@ namespace RelaxingKompas.Windows
 
             }
         }
-        private void tb_Up_KeyPress(object sender, KeyPressEventArgs e)
+
+        private void tb_Up_TextChanged(object sender, EventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Control || e.KeyChar == (char)Keys.Back)
+            TextBox textBox = (TextBox)sender;
+            if (textBox.Text.Length == 1)
             {
-                e.Handled = false;
+                if ("+-0123456789.,".IndexOf(textBox.Text) == -1)
+                {
+                    textBox.Text = tb_Up_oldvalue;
+                    textBox.SelectionStart = textBox.Text.Length;
+                    return;
+                }
+            }
+            if (textBox.Text.Split(new char[] { '.', ',' }).Length -1 > 1)
+            {
+                textBox.Text = tb_Up_oldvalue;
+                textBox.SelectionStart = textBox.Text.Length;
                 return;
             }
-            //string text = ((System.Windows.Forms.TextBox)sender).Text;
-            //text += e.KeyChar;
-            //Regex reg = new Regex(@"^([+-.,]|\d)+");
-            //if (reg.IsMatch(text))
-            //{
-            //    e.Handled = false;
-            //}
-            //else
-            //{
-            //    e.Handled= true;
-            //}
-
-            System.Windows.Forms.TextBox textBox = (System.Windows.Forms.TextBox)sender;
-            switch (textBox.Text.Length)
+            for (int i = 1; i < textBox.TextLength; i++)
             {
-                case 0:
-                    if ("+-0123456789.,".IndexOf(e.KeyChar) != -1)
-                    {
-                        e.Handled = false;
-                        return;
-                    }
-                    break;
-                default:
-                    if (char.IsNumber(e.KeyChar))
-                    {
-                        e.Handled = false;
-                        return;
-                    }
-                    if (".,".IndexOf(e.KeyChar) != -1)
-                    {
-                        if (textBox.SelectedText.Length != 0)
-                        {
-                            if (textBox.Text.IndexOf('.') == -1 && textBox.Text.IndexOf(',') == -1)
-                            {
-                                e.Handled = false;
-                                return;
-                            }
-                            else if (textBox.SelectedText.IndexOf('.') != -1 || textBox.SelectedText.IndexOf(',') != -1)
-                            {
-                                e.Handled = false;
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            if (textBox.Text.IndexOf('.') == -1 && textBox.Text.IndexOf(',') == -1)
-                            {
-                                e.Handled = false;
-                                return;
-                            }
-                        }
-                    }
-                    break;
+                if (!char.IsNumber(textBox.Text[i]) && textBox.Text[i] != '.' && textBox.Text[i] != ',')
+                {
+                    textBox.Text = tb_Up_oldvalue;
+                    textBox.SelectionStart = textBox.Text.Length;
+                    return;
+                }
             }
-            e.Handled = true;
+            tb_Up_oldvalue = textBox.Text;
+        }
+
+        private void tb_Down_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (textBox.Text.Length == 1)
+            {
+                if ("+-0123456789.,".IndexOf(textBox.Text) == -1)
+                {
+                    textBox.Text = tb_Down_oldvalue;
+                    textBox.SelectionStart = textBox.Text.Length;
+                    return;
+                }
+            }
+            if (textBox.Text.Split(new char[] { '.', ',' }).Length - 1 > 1)
+            {
+                textBox.Text = tb_Down_oldvalue;
+                textBox.SelectionStart = textBox.Text.Length;
+                return;
+            }
+            for (int i = 1; i < textBox.TextLength; i++)
+            {
+                if (!char.IsNumber(textBox.Text[i]) && textBox.Text[i] != '.' && textBox.Text[i] != ',')
+                {
+                    textBox.Text = tb_Down_oldvalue;
+                    textBox.SelectionStart = textBox.Text.Length;
+                    return;
+                }
+            }
+            tb_Down_oldvalue = textBox.Text;
+        }
+
+        private void tb_Up_Enter(object sender, EventArgs e)
+        {
+            tb_Up.BeginInvoke(new Action(tb_Up.SelectAll));
+        }
+
+        private void tb_Down_Enter(object sender, EventArgs e)
+        {
+            tb_Down.BeginInvoke(new Action(tb_Down.SelectAll));
         }
     }
 }

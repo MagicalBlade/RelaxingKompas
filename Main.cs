@@ -945,7 +945,7 @@ namespace RelaxingKompas
             }
             if (formTolerance.historyisclear) setToleranceHistory.Clear();
             if (setToleranceHistory.IndexOf($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}") == -1 
-                && !formTolerance.autotolerance && !formTolerance.historyisclear)
+                && !formTolerance.autotolerance && !formTolerance.historyisclear && !formTolerance.toleranceclear)
             {
                 setToleranceHistory.Add($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}");
             }

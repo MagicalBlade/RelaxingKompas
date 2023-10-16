@@ -42,9 +42,10 @@
             this.b_clear_history = new System.Windows.Forms.Button();
             this.b_auto = new System.Windows.Forms.Button();
             this.b_clear_tolerance = new System.Windows.Forms.Button();
+            this.lb_tolerance_default = new System.Windows.Forms.ListBox();
+            this.l_tolerance_default = new System.Windows.Forms.Label();
             this.mainBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.mainBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.lb_tolerance_default = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource1)).BeginInit();
@@ -53,7 +54,7 @@
             // b_ok
             // 
             this.b_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.b_ok.Location = new System.Drawing.Point(151, 128);
+            this.b_ok.Location = new System.Drawing.Point(148, 100);
             this.b_ok.Name = "b_ok";
             this.b_ok.Size = new System.Drawing.Size(75, 23);
             this.b_ok.TabIndex = 3;
@@ -63,7 +64,7 @@
             // b_cancel
             // 
             this.b_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.b_cancel.Location = new System.Drawing.Point(232, 128);
+            this.b_cancel.Location = new System.Drawing.Point(229, 100);
             this.b_cancel.Name = "b_cancel";
             this.b_cancel.Size = new System.Drawing.Size(75, 23);
             this.b_cancel.TabIndex = 4;
@@ -72,7 +73,7 @@
             // 
             // tb_Up
             // 
-            this.tb_Up.Location = new System.Drawing.Point(218, 76);
+            this.tb_Up.Location = new System.Drawing.Point(198, 48);
             this.tb_Up.Name = "tb_Up";
             this.tb_Up.Size = new System.Drawing.Size(100, 20);
             this.tb_Up.TabIndex = 0;
@@ -81,7 +82,7 @@
             // 
             // tb_Down
             // 
-            this.tb_Down.Location = new System.Drawing.Point(218, 102);
+            this.tb_Down.Location = new System.Drawing.Point(198, 74);
             this.tb_Down.Name = "tb_Down";
             this.tb_Down.Size = new System.Drawing.Size(100, 20);
             this.tb_Down.TabIndex = 1;
@@ -91,24 +92,24 @@
             // l_Up
             // 
             this.l_Up.AutoSize = true;
-            this.l_Up.Location = new System.Drawing.Point(98, 79);
+            this.l_Up.Location = new System.Drawing.Point(143, 51);
             this.l_Up.Name = "l_Up";
-            this.l_Up.Size = new System.Drawing.Size(114, 13);
+            this.l_Up.Size = new System.Drawing.Size(49, 13);
             this.l_Up.TabIndex = 5;
-            this.l_Up.Text = "Верхнее отклонение:";
+            this.l_Up.Text = "Верхнее";
             // 
             // l_Down
             // 
             this.l_Down.AutoSize = true;
-            this.l_Down.Location = new System.Drawing.Point(100, 105);
+            this.l_Down.Location = new System.Drawing.Point(145, 77);
             this.l_Down.Name = "l_Down";
-            this.l_Down.Size = new System.Drawing.Size(112, 13);
+            this.l_Down.Size = new System.Drawing.Size(47, 13);
             this.l_Down.TabIndex = 5;
-            this.l_Down.Text = "Нижнее отклонение:";
+            this.l_Down.Text = "Нижнее";
             // 
             // b_plusminus
             // 
-            this.b_plusminus.Location = new System.Drawing.Point(333, 86);
+            this.b_plusminus.Location = new System.Drawing.Point(313, 58);
             this.b_plusminus.Name = "b_plusminus";
             this.b_plusminus.Size = new System.Drawing.Size(32, 32);
             this.b_plusminus.TabIndex = 6;
@@ -123,7 +124,7 @@
             // l_history
             // 
             this.l_history.AutoSize = true;
-            this.l_history.Location = new System.Drawing.Point(408, 37);
+            this.l_history.Location = new System.Drawing.Point(378, 9);
             this.l_history.Name = "l_history";
             this.l_history.Size = new System.Drawing.Size(50, 13);
             this.l_history.TabIndex = 10;
@@ -132,15 +133,15 @@
             // lb_history
             // 
             this.lb_history.FormattingEnabled = true;
-            this.lb_history.Location = new System.Drawing.Point(371, 53);
+            this.lb_history.Location = new System.Drawing.Point(351, 25);
             this.lb_history.Name = "lb_history";
-            this.lb_history.Size = new System.Drawing.Size(120, 95);
+            this.lb_history.Size = new System.Drawing.Size(95, 95);
             this.lb_history.TabIndex = 11;
             this.lb_history.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lb_history_MouseDoubleClick);
             // 
             // b_clear_history
             // 
-            this.b_clear_history.Location = new System.Drawing.Point(392, 154);
+            this.b_clear_history.Location = new System.Drawing.Point(353, 126);
             this.b_clear_history.Name = "b_clear_history";
             this.b_clear_history.Size = new System.Drawing.Size(75, 23);
             this.b_clear_history.TabIndex = 12;
@@ -150,7 +151,7 @@
             // 
             // b_auto
             // 
-            this.b_auto.Location = new System.Drawing.Point(232, 183);
+            this.b_auto.Location = new System.Drawing.Point(146, 12);
             this.b_auto.Name = "b_auto";
             this.b_auto.Size = new System.Drawing.Size(75, 23);
             this.b_auto.TabIndex = 13;
@@ -160,13 +161,31 @@
             // 
             // b_clear_tolerance
             // 
-            this.b_clear_tolerance.Location = new System.Drawing.Point(128, 183);
+            this.b_clear_tolerance.Location = new System.Drawing.Point(255, 12);
             this.b_clear_tolerance.Name = "b_clear_tolerance";
             this.b_clear_tolerance.Size = new System.Drawing.Size(75, 23);
             this.b_clear_tolerance.TabIndex = 14;
             this.b_clear_tolerance.Text = "Очистить допуск";
             this.b_clear_tolerance.UseVisualStyleBackColor = true;
             this.b_clear_tolerance.Click += new System.EventHandler(this.b_clear_tolerance_Click);
+            // 
+            // lb_tolerance_default
+            // 
+            this.lb_tolerance_default.FormattingEnabled = true;
+            this.lb_tolerance_default.Location = new System.Drawing.Point(12, 28);
+            this.lb_tolerance_default.Name = "lb_tolerance_default";
+            this.lb_tolerance_default.Size = new System.Drawing.Size(84, 147);
+            this.lb_tolerance_default.TabIndex = 15;
+            this.lb_tolerance_default.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lb_tolerance_default_MouseDoubleClick);
+            // 
+            // l_tolerance_default
+            // 
+            this.l_tolerance_default.AutoSize = true;
+            this.l_tolerance_default.Location = new System.Drawing.Point(22, 9);
+            this.l_tolerance_default.Name = "l_tolerance_default";
+            this.l_tolerance_default.Size = new System.Drawing.Size(74, 13);
+            this.l_tolerance_default.TabIndex = 10;
+            this.l_tolerance_default.Text = "Стандартные";
             // 
             // mainBindingSource
             // 
@@ -176,27 +195,19 @@
             // 
             this.mainBindingSource1.DataSource = typeof(RelaxingKompas.Main);
             // 
-            // lb_tolerance_default
-            // 
-            this.lb_tolerance_default.FormattingEnabled = true;
-            this.lb_tolerance_default.Location = new System.Drawing.Point(-1, 56);
-            this.lb_tolerance_default.Name = "lb_tolerance_default";
-            this.lb_tolerance_default.Size = new System.Drawing.Size(95, 95);
-            this.lb_tolerance_default.TabIndex = 15;
-            this.lb_tolerance_default.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lb_tolerance_default_MouseDoubleClick);
-            // 
             // FormTolerance
             // 
             this.AcceptButton = this.b_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_cancel;
-            this.ClientSize = new System.Drawing.Size(510, 268);
+            this.ClientSize = new System.Drawing.Size(485, 184);
             this.Controls.Add(this.lb_tolerance_default);
             this.Controls.Add(this.b_clear_tolerance);
             this.Controls.Add(this.b_auto);
             this.Controls.Add(this.b_clear_history);
             this.Controls.Add(this.lb_history);
+            this.Controls.Add(this.l_tolerance_default);
             this.Controls.Add(this.l_history);
             this.Controls.Add(this.b_ok);
             this.Controls.Add(this.b_plusminus);
@@ -235,5 +246,6 @@
         private System.Windows.Forms.Button b_auto;
         private System.Windows.Forms.Button b_clear_tolerance;
         internal System.Windows.Forms.ListBox lb_tolerance_default;
+        private System.Windows.Forms.Label l_tolerance_default;
     }
 }

@@ -41,9 +41,10 @@
             this.lb_history = new System.Windows.Forms.ListBox();
             this.b_clear_history = new System.Windows.Forms.Button();
             this.b_auto = new System.Windows.Forms.Button();
+            this.b_clear_tolerance = new System.Windows.Forms.Button();
             this.mainBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.mainBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.b_clear_tolerance = new System.Windows.Forms.Button();
+            this.lb_tolerance_default = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource1)).BeginInit();
@@ -157,14 +158,6 @@
             this.b_auto.UseVisualStyleBackColor = true;
             this.b_auto.Click += new System.EventHandler(this.b_auto_Click);
             // 
-            // mainBindingSource
-            // 
-            this.mainBindingSource.DataSource = typeof(RelaxingKompas.Main);
-            // 
-            // mainBindingSource1
-            // 
-            this.mainBindingSource1.DataSource = typeof(RelaxingKompas.Main);
-            // 
             // b_clear_tolerance
             // 
             this.b_clear_tolerance.Location = new System.Drawing.Point(128, 183);
@@ -175,6 +168,23 @@
             this.b_clear_tolerance.UseVisualStyleBackColor = true;
             this.b_clear_tolerance.Click += new System.EventHandler(this.b_clear_tolerance_Click);
             // 
+            // mainBindingSource
+            // 
+            this.mainBindingSource.DataSource = typeof(RelaxingKompas.Main);
+            // 
+            // mainBindingSource1
+            // 
+            this.mainBindingSource1.DataSource = typeof(RelaxingKompas.Main);
+            // 
+            // lb_tolerance_default
+            // 
+            this.lb_tolerance_default.FormattingEnabled = true;
+            this.lb_tolerance_default.Location = new System.Drawing.Point(-1, 56);
+            this.lb_tolerance_default.Name = "lb_tolerance_default";
+            this.lb_tolerance_default.Size = new System.Drawing.Size(95, 95);
+            this.lb_tolerance_default.TabIndex = 15;
+            this.lb_tolerance_default.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lb_tolerance_default_MouseDoubleClick);
+            // 
             // FormTolerance
             // 
             this.AcceptButton = this.b_ok;
@@ -182,6 +192,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_cancel;
             this.ClientSize = new System.Drawing.Size(510, 268);
+            this.Controls.Add(this.lb_tolerance_default);
             this.Controls.Add(this.b_clear_tolerance);
             this.Controls.Add(this.b_auto);
             this.Controls.Add(this.b_clear_history);
@@ -223,5 +234,6 @@
         private System.Windows.Forms.Button b_clear_history;
         private System.Windows.Forms.Button b_auto;
         private System.Windows.Forms.Button b_clear_tolerance;
+        internal System.Windows.Forms.ListBox lb_tolerance_default;
     }
 }

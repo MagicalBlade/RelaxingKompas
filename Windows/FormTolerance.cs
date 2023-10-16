@@ -110,6 +110,19 @@ namespace RelaxingKompas.Windows
             }
         }
 
+        private void lb_tolerance_default_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = this.lb_tolerance_default.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
+            {
+                string text = lb_tolerance_default.SelectedItem as string;
+                string[] toleranse = text.Split('/');
+                tb_Up.Text = toleranse[0];
+                tb_Down.Text = toleranse[1];
+                DialogResult = DialogResult.OK;
+            }
+        }
+
         private void b_clear_history_Click(object sender, EventArgs e)
         {
             lb_history.Items.Clear();
@@ -127,5 +140,7 @@ namespace RelaxingKompas.Windows
             toleranceclear = true;
             DialogResult = DialogResult.OK;
         }
+
+
     }
 }

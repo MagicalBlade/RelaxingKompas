@@ -858,18 +858,21 @@ namespace RelaxingKompas
         {
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
-            string pathtolerance = $"{pathlibrary}\\Resources\\ToleranceAuto.txt";
-            List<double[]> toleranceData = new List<double[]>();
-            if (File.Exists(pathtolerance))
+            string pathToleranceAuto = $"{pathlibrary}\\Resources\\ToleranceAuto.txt";
+            string pathToleranceDefault = $"{pathlibrary}\\Resources\\ToleranceDefault.txt";
+            List<double[]> toleranceAuto = new List<double[]>();
+            List<string> toleranceDefault= new List<string>();
+
+            if (File.Exists(pathToleranceAuto))
             {
-                using (StreamReader sr = File.OpenText(pathtolerance))
+                using (StreamReader sr = File.OpenText(pathToleranceAuto))
                 {
                     while (!sr.EndOfStream)
                     {
                         string[] temp = sr.ReadLine().Split(' ');
                         try
                         {
-                            toleranceData.Add(
+                            toleranceAuto.Add(
                             new double[]
                             {
                                 double.Parse(temp[0], CultureInfo.DefaultThreadCurrentCulture),
@@ -885,6 +888,17 @@ namespace RelaxingKompas
                 }
             }
 
+            if (File.Exists(pathToleranceDefault))
+            {
+                using (StreamReader sr = File.OpenText(pathToleranceDefault))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        toleranceDefault.Add(sr.ReadLine());
+                    }
+                }
+            }
+
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
@@ -895,6 +909,7 @@ namespace RelaxingKompas
             dynamic selectedobjects = selectionManager.SelectedObjects;
             if (selectedobjects == null) return;
             FormTolerance formTolerance = new FormTolerance();
+            formTolerance.lb_tolerance_default.Items.AddRange(toleranceDefault.ToArray());
             formTolerance.lb_history.Items.AddRange(setToleranceHistory.ToArray());
             if (selectedobjects is object)
             {
@@ -929,7 +944,8 @@ namespace RelaxingKompas
                 }
             }
             if (formTolerance.historyisclear) setToleranceHistory.Clear();
-            if (setToleranceHistory.IndexOf($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}") == -1 && !formTolerance.autotolerance)
+            if (setToleranceHistory.IndexOf($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}") == -1 
+                && !formTolerance.autotolerance && !formTolerance.historyisclear)
             {
                 setToleranceHistory.Add($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}");
             }
@@ -954,7 +970,7 @@ namespace RelaxingKompas
                 {
                     //if (tolerance == null) return;
 
-                    foreach (var item in toleranceData)
+                    foreach (var item in toleranceAuto)
                     {
                         if (item.Length != 3) continue;
                         if (dimensionText.NominalValue >= item[1] && dimensionText.NominalValue < item[2])

@@ -152,7 +152,7 @@
     <Content Include="RelaxingKompas.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ToleranceData.txt">
+    <Content Include="Resources\ToleranceAuto.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

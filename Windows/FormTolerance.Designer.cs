@@ -40,9 +40,10 @@
             this.l_history = new System.Windows.Forms.Label();
             this.lb_history = new System.Windows.Forms.ListBox();
             this.b_clear_history = new System.Windows.Forms.Button();
+            this.b_auto = new System.Windows.Forms.Button();
             this.mainBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.mainBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.b_auto = new System.Windows.Forms.Button();
+            this.b_clear_tolerance = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource1)).BeginInit();
@@ -146,14 +147,6 @@
             this.b_clear_history.UseVisualStyleBackColor = true;
             this.b_clear_history.Click += new System.EventHandler(this.b_clear_history_Click);
             // 
-            // mainBindingSource
-            // 
-            this.mainBindingSource.DataSource = typeof(RelaxingKompas.Main);
-            // 
-            // mainBindingSource1
-            // 
-            this.mainBindingSource1.DataSource = typeof(RelaxingKompas.Main);
-            // 
             // b_auto
             // 
             this.b_auto.Location = new System.Drawing.Point(232, 183);
@@ -164,6 +157,24 @@
             this.b_auto.UseVisualStyleBackColor = true;
             this.b_auto.Click += new System.EventHandler(this.b_auto_Click);
             // 
+            // mainBindingSource
+            // 
+            this.mainBindingSource.DataSource = typeof(RelaxingKompas.Main);
+            // 
+            // mainBindingSource1
+            // 
+            this.mainBindingSource1.DataSource = typeof(RelaxingKompas.Main);
+            // 
+            // b_clear_tolerance
+            // 
+            this.b_clear_tolerance.Location = new System.Drawing.Point(128, 183);
+            this.b_clear_tolerance.Name = "b_clear_tolerance";
+            this.b_clear_tolerance.Size = new System.Drawing.Size(75, 23);
+            this.b_clear_tolerance.TabIndex = 14;
+            this.b_clear_tolerance.Text = "Очистить допуск";
+            this.b_clear_tolerance.UseVisualStyleBackColor = true;
+            this.b_clear_tolerance.Click += new System.EventHandler(this.b_clear_tolerance_Click);
+            // 
             // FormTolerance
             // 
             this.AcceptButton = this.b_ok;
@@ -171,6 +182,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_cancel;
             this.ClientSize = new System.Drawing.Size(510, 268);
+            this.Controls.Add(this.b_clear_tolerance);
             this.Controls.Add(this.b_auto);
             this.Controls.Add(this.b_clear_history);
             this.Controls.Add(this.lb_history);
@@ -210,5 +222,6 @@
         internal System.Windows.Forms.ListBox lb_history;
         private System.Windows.Forms.Button b_clear_history;
         private System.Windows.Forms.Button b_auto;
+        private System.Windows.Forms.Button b_clear_tolerance;
     }
 }

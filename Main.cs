@@ -858,7 +858,7 @@ namespace RelaxingKompas
         {
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
-            string pathtolerance = $"{pathlibrary}\\Resources\\ToleranceData.txt";
+            string pathtolerance = $"{pathlibrary}\\Resources\\ToleranceAuto.txt";
             List<double[]> toleranceData = new List<double[]>();
             if (File.Exists(pathtolerance))
             {
@@ -884,6 +884,7 @@ namespace RelaxingKompas
                     }
                 }
             }
+
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
@@ -939,6 +940,16 @@ namespace RelaxingKompas
 
             void SetDimensionText(IDimensionText dimensionText, bool auto)
             {
+                if (formTolerance.toleranceclear)
+                {
+                    dimensionText.HighDeviation.Str = $"";
+                    dimensionText.LowDeviation.Str = $"";
+                    dimensionText.DeviationOn = false;
+                    dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
+                    ((IDrawingObject)dimensionText).Update();
+                    return;
+
+                }
                 if (auto)
                 {
                     //if (tolerance == null) return;

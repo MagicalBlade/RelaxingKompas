@@ -44,9 +44,9 @@
             this.b_clear_tolerance = new System.Windows.Forms.Button();
             this.lb_tolerance_default = new System.Windows.Forms.ListBox();
             this.l_tolerance_default = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.mainBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.mainBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainBindingSource1)).BeginInit();
@@ -125,7 +125,7 @@
             // l_history
             // 
             this.l_history.AutoSize = true;
-            this.l_history.Location = new System.Drawing.Point(371, 12);
+            this.l_history.Location = new System.Drawing.Point(371, 9);
             this.l_history.Name = "l_history";
             this.l_history.Size = new System.Drawing.Size(50, 13);
             this.l_history.TabIndex = 10;

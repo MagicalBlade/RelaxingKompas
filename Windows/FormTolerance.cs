@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
+using System;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -12,6 +13,7 @@ namespace RelaxingKompas.Windows
         public bool historyisclear = false;
         public bool toleranceclear = false;
         public bool autotolerance = false;
+        public bool tolerancedefault = false;
 
         public FormTolerance()
         {
@@ -25,7 +27,7 @@ namespace RelaxingKompas.Windows
                 string cleartext = tb_Up.Text.Trim(new char[] {' ', '+', '-'});
                 tb_Up.Text = $"+{cleartext}";
                 tb_Down.Text = $"-{cleartext}";
-
+                DialogResult = DialogResult.OK;
             }
         }
 
@@ -93,10 +95,12 @@ namespace RelaxingKompas.Windows
         {
             tb_Up.BeginInvoke(new Action(tb_Up.SelectAll));
         }
+
         private void tb_Down_Enter(object sender, EventArgs e)
         {
             tb_Down.BeginInvoke(new Action(tb_Down.SelectAll));
         }
+
         private void lb_history_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int index = this.lb_history.IndexFromPoint(e.Location);
@@ -119,6 +123,7 @@ namespace RelaxingKompas.Windows
                 string[] toleranse = text.Split('/');
                 tb_Up.Text = toleranse[0];
                 tb_Down.Text = toleranse[1];
+                tolerancedefault = true;
                 DialogResult = DialogResult.OK;
             }
         }
@@ -141,6 +146,23 @@ namespace RelaxingKompas.Windows
             DialogResult = DialogResult.OK;
         }
 
-
+        private void FormTolerance_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case 'f':
+                    b_auto.PerformClick();
+                    break;
+                case 'а':
+                    b_auto.PerformClick();
+                    break;
+                case 'j':
+                    b_clear_tolerance.PerformClick();
+                    break;
+                case 'о':
+                    b_clear_tolerance.PerformClick();
+                    break;
+            }
+        }
     }
 }

@@ -901,8 +901,8 @@ namespace RelaxingKompas
 
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
-            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+           
             document2DAPI5.ksUndoContainer(true);
 
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
@@ -915,6 +915,7 @@ namespace RelaxingKompas
             {
                 if (selectedobjects is IDimensionText dimensionText)
                 {
+                    //Подставляю в форму данные допусков из выбранного размера
                     formTolerance.tb_Up.Text = dimensionText.HighDeviation.Str;
                     formTolerance.tb_Down.Text = dimensionText.LowDeviation.Str;
                     formTolerance.ShowDialog();
@@ -945,17 +946,18 @@ namespace RelaxingKompas
             }
             if (formTolerance.historyisclear) setToleranceHistory.Clear();
             if (setToleranceHistory.IndexOf($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}") == -1 
-                && !formTolerance.autotolerance && !formTolerance.historyisclear && !formTolerance.toleranceclear)
+                && !formTolerance.autotolerance && !formTolerance.historyisclear && !formTolerance.toleranceclear
+                && !formTolerance.tolerancedefault && (formTolerance.tb_Up.Text != "" || formTolerance.tb_Down.Text != ""))
             {
                 setToleranceHistory.Add($"{formTolerance.tb_Up.Text}/{formTolerance.tb_Down.Text}");
             }
 
             document2DAPI5.ksUndoContainer(false);
 
-            Application.MessageBoxEx("Выполнено", "Заголовок", 64);
-
+            //Метод простановки допусков/припусков
             void SetDimensionText(IDimensionText dimensionText, bool auto)
             {
+                //Если выбрана очистка допуска
                 if (formTolerance.toleranceclear)
                 {
                     dimensionText.HighDeviation.Str = $"";
@@ -964,12 +966,10 @@ namespace RelaxingKompas
                     dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
                     ((IDrawingObject)dimensionText).Update();
                     return;
-
                 }
+                //Если выбрана автоматическая простановка допуска
                 if (auto)
                 {
-                    //if (tolerance == null) return;
-
                     foreach (var item in toleranceAuto)
                     {
                         if (item.Length != 3) continue;
@@ -985,7 +985,7 @@ namespace RelaxingKompas
                     }
                     Application.MessageBoxEx("Не у далось автоматически проставить допуски. Проверьте файл с допусками.", "Ошибка", 64);
                 }
-                else
+                else if (formTolerance.tb_Up.Text != "" || formTolerance.tb_Down.Text != "")
                 {
                     dimensionText.HighDeviation.Str = formTolerance.tb_Up.Text;
                     dimensionText.LowDeviation.Str= formTolerance.tb_Down.Text;

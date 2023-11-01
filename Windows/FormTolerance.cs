@@ -162,6 +162,25 @@ namespace RelaxingKompas.Windows
                 case 'о':
                     b_clear_tolerance.PerformClick();
                     break;
+                case (Char)Keys.Enter:
+                    e.Handled = true;
+                    break;
+            }
+        }
+        private void tb_Up_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (Char)Keys.Enter)
+            {
+                tb_Down.Focus();
+                e.Handled = true;
+            }
+        }
+
+        private void tb_Down_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (Char)Keys.Enter)
+            {
+                DialogResult = DialogResult.OK;
             }
         }
     }

@@ -80,6 +80,7 @@
             this.tb_Up.TabIndex = 0;
             this.tb_Up.TextChanged += new System.EventHandler(this.tb_Up_TextChanged);
             this.tb_Up.Enter += new System.EventHandler(this.tb_Up_Enter);
+            this.tb_Up.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_Up_KeyDown);
             // 
             // tb_Down
             // 
@@ -89,6 +90,7 @@
             this.tb_Down.TabIndex = 1;
             this.tb_Down.TextChanged += new System.EventHandler(this.tb_Down_TextChanged);
             this.tb_Down.Enter += new System.EventHandler(this.tb_Down_Enter);
+            this.tb_Down.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_Down_KeyDown);
             // 
             // l_Up
             // 
@@ -203,7 +205,6 @@
             // 
             // FormTolerance
             // 
-            this.AcceptButton = this.b_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_cancel;

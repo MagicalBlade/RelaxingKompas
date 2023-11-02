@@ -162,11 +162,14 @@ namespace RelaxingKompas.Windows
                 case 'о':
                     b_clear_tolerance.PerformClick();
                     break;
+                case (Char)Keys.Enter:
+                    e.Handled = true;
+                    break;
             }
         }
         private void tb_Up_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == (Char)Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 tb_Down.Focus();
                 e.Handled = true;
@@ -175,14 +178,15 @@ namespace RelaxingKompas.Windows
 
         private void tb_Down_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == (Char)Keys.Enter)
-            {
-                DialogResult = DialogResult.OK;
-            }
-            if (e.KeyValue == (Char)Keys.Enter && e.Shift)
+            if (e.KeyCode == Keys.Enter && e.Shift)
             {
                 tb_Up.Focus();
                 e.Handled = true;
+                return;
+            }
+            if (e.KeyCode == Keys.Enter)
+            {
+                DialogResult = DialogResult.OK;
             }
         }
     }

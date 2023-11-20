@@ -126,6 +126,10 @@ namespace RelaxingKompas
                     command = 12;
                     break;
                 case 13:
+                    result = "Замена макроэлемента";
+                    command = 12;
+                    break;
+                case 14:
                     command = -1;
                     itemType = 13; // "ENDMENU"
                     break;
@@ -459,6 +463,7 @@ namespace RelaxingKompas
         /// </summary>
         private void PlaceSymbolHole()
         {
+
             ICircles circles;
             Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
@@ -548,6 +553,8 @@ namespace RelaxingKompas
                 IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
                 IDrawingGroup drawingGroup = drawingGroups.Add(true, $"D{diameter}");
                 drawingGroup.ReadFragment(pathHole,true,0,0,1,0,true);
+                IMacroObject macro = drawingGroup.Objects[27];
+                macro.Name = $"D{diameter}";
                 drawingGroup.Store();
 
                 ICopyObjectParam copyObjectParam = (ICopyObjectParam)kompasDocument1.GetInterface(KompasAPIObjectTypeEnum.ksObjectCopyObjectParam);
@@ -995,6 +1002,57 @@ namespace RelaxingKompas
                 }
             }
         }
+
+        private void MacroObjectsReplacement()
+        {
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            ViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            IDrawingContainer dcview = (IDrawingContainer)view;
+            ICircles circles = dcview.Circles;
+
+            document2DAPI5.ksUndoContainer(true);
+
+
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            Object[] drawingObject = selectionManager.SelectedObjects;
+            foreach (var item in drawingObject)
+            {
+                if (item is IMacroObject macro)
+                {
+                    double x = 0;
+                    double y = 0;
+                    double a = 0;
+                    bool b = false;
+                    macro.GetPlacement(out x,out y,out a,out b);
+
+                    IDrawingContainer drawingContainer = (IDrawingContainer)macro;
+                    
+                    foreach (var item1 in drawingContainer.Objects[0])
+                    {
+                        if (item1 is ICircle circle)
+                        {
+                            ICircle circle2 =  circles.Add();
+                            circle2.Xc = circle.Xc;
+                            circle2.Yc = circle.Yc;
+                            circle2.Radius = circle.Radius;
+                            circle2.Update();
+
+                        }
+                    }
+                    
+                }
+
+            }
+
+
+            document2DAPI5.ksUndoContainer(false);
+            Application.MessageBoxEx("", "Готово", 64);
+        }
         #endregion
 
 
@@ -1033,6 +1091,7 @@ namespace RelaxingKompas
                 case 10: LibrarySettings(); break;
                 case 11: CopyDataFromStamp(); break;
                 case 12: SetTolerance(); break;
+                case 13: MacroObjectsReplacement(); break;
             }
         }
 

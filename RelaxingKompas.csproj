@@ -114,6 +114,12 @@
       <DependentUpon>FormRegistration.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\JsonUtils.cs" />
+    <Compile Include="Windows\FormPlaceSymbolHole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\FormPlaceSymbolHole.Designer.cs">
+      <DependentUpon>FormPlaceSymbolHole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\FormTolerance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,6 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRegistration.resx">
       <DependentUpon>FormRegistration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\FormPlaceSymbolHole.resx">
+      <DependentUpon>FormPlaceSymbolHole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\FormTolerance.resx">
       <DependentUpon>FormTolerance.cs</DependentUpon>

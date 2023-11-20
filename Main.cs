@@ -463,8 +463,9 @@ namespace RelaxingKompas
         /// </summary>
         private void PlaceSymbolHole()
         {
-
-            ICircles circles;
+            FormPlaceSymbolHole formPlaceSymbolHole = new FormPlaceSymbolHole();
+            formPlaceSymbolHole.ShowDialog();
+            if (formPlaceSymbolHole.DialogResult == DialogResult.Cancel) return;
             Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
@@ -482,25 +483,54 @@ namespace RelaxingKompas
                 IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
                 IViews views = viewsAndLayersManager.Views;
                 IView view = views.ActiveView;
-                IDrawingContainer drawingContainer = (IDrawingContainer)view;
-                circles = drawingContainer.Circles;
                 //Заполняем словарь
-                foreach (ICircle circle in circles)
+                switch (formPlaceSymbolHole.typeElement)
                 {
-                    if (circleList.ContainsKey(circle.Radius * 2))
-                    {
-                        circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
-                    }
-                    else
-                    {
-                        circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
-                    }
+                    case "circle":
+                        IDrawingContainer drawingContainer = (IDrawingContainer)view;
+                        ICircles circles = drawingContainer.Circles;
+                        foreach (ICircle circle in circles)
+                        {
+                            if (circleList.ContainsKey(circle.Radius * 2))
+                            {
+                                circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                            }
+                            else
+                            {
+                                circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                            }
+                        }
+                        break;
+                    case "center":
+                        ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+                        ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
+
+                        foreach (ICentreMarker centreMarker in centreMarkers)
+                        {
+                            if (circleList.ContainsKey(25))
+                            {
+                                circleList[25].Add(new double[] { centreMarker.X, centreMarker.Y });
+                            }
+                            else
+                            {
+                                circleList.Add(25, new List<double[]> { new double[] { centreMarker.X, centreMarker.Y } });
+                            }
+                        }
+                        break;
                 }
+
             }
             else if (selected is object[]) //Если выбраны объекты чертежа поиск окружностей по выбранным объектам
             {
                 selectedObjects.AddRange(selected);
                 //Заполняем словарь
+                switch (formPlaceSymbolHole.typeElement)
+                {
+                    case "circle":
+                        break;
+                    case "center":
+                        break;
+                }
                 foreach (object item in selectedObjects)
                 {
                     if (item is ICircle)
@@ -521,6 +551,13 @@ namespace RelaxingKompas
             {
                 selectedObjects.Add(selected);
                 //Заполняем словарь
+                switch (formPlaceSymbolHole.typeElement)
+                {
+                    case "circle":
+                        break;
+                    case "center":
+                        break;
+                }
                 foreach (object item in selectedObjects)
                 {
                     if (item is ICircle)

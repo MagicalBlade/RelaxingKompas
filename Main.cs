@@ -527,24 +527,48 @@ namespace RelaxingKompas
                 switch (formPlaceSymbolHole.typeElement)
                 {
                     case "circle":
+                        foreach (object item in selectedObjects)
+                        {
+                            if (item is ICircle)
+                            {
+                                ICircle circle = (ICircle)item;
+                                if (circleList.ContainsKey(circle.Radius * 2))
+                                {
+                                    circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                                }
+                                else
+                                {
+                                    circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                                }
+                            }
+                        }
                         break;
                     case "center":
+                        IMacroObject macroObject = null;
+                        ICopyObjectParam copyObjectParam = (ICopyObjectParam)kompasDocument1.GetInterface(KompasAPIObjectTypeEnum.ksObjectCopyObjectParam);
+                        double x = 0; double y = 0; double a = 0; bool mirror = false;
+
+                        foreach (var item in selected)
+                        {
+                            if (item is IMacroObject)
+                            {
+                                macroObject = (IMacroObject)item;
+                                macroObject.GetPlacement(out x, out y, out a, out mirror);
+                            }
+                        }
+                        if (macroObject == null) return;
+                        foreach (object item in selected)
+                        {
+                            if (item is ICentreMarker centreMarker)
+                            {
+                                copyObjectParam.XOld = x;
+                                copyObjectParam.YOld = y;
+                                copyObjectParam.XNew = centreMarker.X;
+                                copyObjectParam.YNew = centreMarker.Y;
+                                kompasDocument2D1.CopyObjects(macroObject, copyObjectParam);
+                            }
+                        }
                         break;
-                }
-                foreach (object item in selectedObjects)
-                {
-                    if (item is ICircle)
-                    {
-                        ICircle circle = (ICircle)item;
-                        if (circleList.ContainsKey(circle.Radius * 2))
-                        {
-                            circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
-                        }
-                        else
-                        {
-                            circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
-                        }
-                    }
                 }
             }
             else //Если выбран только один объект чертежа

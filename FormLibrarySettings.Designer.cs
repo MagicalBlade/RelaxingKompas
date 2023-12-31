@@ -39,6 +39,8 @@
             this.cb_Close3Ddetail = new System.Windows.Forms.CheckBox();
             this.b_save = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmb_plane = new System.Windows.Forms.ComboBox();
             this.b_FolderDialog = new System.Windows.Forms.Button();
             this.tb_PathExcelFile = new System.Windows.Forms.TextBox();
             this.rb_onDirectory = new System.Windows.Forms.RadioButton();
@@ -46,8 +48,6 @@
             this.tb_NameExcelFile = new System.Windows.Forms.TextBox();
             this.l_NameExcelFile = new System.Windows.Forms.Label();
             this.cb_Excel = new System.Windows.Forms.CheckBox();
-            this.cmb_plane = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -180,6 +180,39 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Посчитать массу";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 85);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(139, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Плоскость выдавливания";
+            // 
+            // cmb_plane
+            // 
+            this.cmb_plane.AutoCompleteCustomSource.AddRange(new string[] {
+            "Сверху",
+            "Снизу",
+            "Спереди",
+            "Сзади",
+            "Слева",
+            "Справа"});
+            this.cmb_plane.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_plane.FormattingEnabled = true;
+            this.cmb_plane.Items.AddRange(new object[] {
+            "Сверху",
+            "Снизу",
+            "Спереди",
+            "Сзади",
+            "Слева",
+            "Справа"});
+            this.cmb_plane.Location = new System.Drawing.Point(8, 103);
+            this.cmb_plane.Margin = new System.Windows.Forms.Padding(5);
+            this.cmb_plane.Name = "cmb_plane";
+            this.cmb_plane.Size = new System.Drawing.Size(121, 21);
+            this.cmb_plane.TabIndex = 9;
+            // 
             // b_FolderDialog
             // 
             this.b_FolderDialog.Location = new System.Drawing.Point(265, 114);
@@ -245,39 +278,6 @@
             this.cb_Excel.TabIndex = 2;
             this.cb_Excel.Text = "Записать в Excel файл";
             this.cb_Excel.UseVisualStyleBackColor = true;
-            // 
-            // cmb_plane
-            // 
-            this.cmb_plane.AutoCompleteCustomSource.AddRange(new string[] {
-            "Сверху",
-            "Снизу",
-            "Спереди",
-            "Сзади",
-            "Слева",
-            "Справа"});
-            this.cmb_plane.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_plane.FormattingEnabled = true;
-            this.cmb_plane.Items.AddRange(new object[] {
-            "Сверху",
-            "Снизу",
-            "Спереди",
-            "Сзади",
-            "Слева",
-            "Справа"});
-            this.cmb_plane.Location = new System.Drawing.Point(8, 103);
-            this.cmb_plane.Margin = new System.Windows.Forms.Padding(5);
-            this.cmb_plane.Name = "cmb_plane";
-            this.cmb_plane.Size = new System.Drawing.Size(121, 21);
-            this.cmb_plane.TabIndex = 9;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 85);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(139, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Плоскость выдавливания";
             // 
             // FormLibrarySettings
             // 

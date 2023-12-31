@@ -40,12 +40,13 @@ namespace RelaxingKompas
         public ksDocument2D activedocument2D { get => _activedocument2D; set => _activedocument2D = value; }
 
         #region Данные формы
-        private FormWeightAndSize _windowWeightAndSize = new FormWeightAndSize();
-        public FormWeightAndSize WindowWeightAndSize { get => _windowWeightAndSize; set => _windowWeightAndSize = value; }
 
         public FormLibrarySettings WindowLibrarySettings { get => _windowLibrarySettings; set => _windowLibrarySettings = value; }
 
         private FormLibrarySettings _windowLibrarySettings = new FormLibrarySettings();
+
+        private FormWeightAndSize _windowWeightAndSize = new FormWeightAndSize();
+        public FormWeightAndSize WindowWeightAndSize { get => _windowWeightAndSize; set => _windowWeightAndSize = value; }
 
         public System.Windows.Forms.IWin32Window Win32 { get => _win32; set => _win32 = value; }
 
@@ -355,8 +356,11 @@ namespace RelaxingKompas
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
             DataWeightAndSize.Application = application;
             DataWeightAndSize.KompasDocument = kompasDocument;
-            DataWeightAndSize.FormWeightAndSize = WindowWeightAndSize;
-            DataWeightAndSize.WindowLibrarySettings = WindowLibrarySettings;
+
+
+            WindowWeightAndSize.cb_savefragment.Checked = WindowLibrarySettings.cb_SaveFragment.Checked;
+            WindowWeightAndSize.cb_savedxf.Checked = WindowLibrarySettings.cb_SaveDxf.Checked;
+
             WindowWeightAndSize.tb_thickness.Text = "";
             DataWeightAndSize.Thickness = 0;
             WindowWeightAndSize.tb_steel.Text = "";
@@ -752,6 +756,9 @@ namespace RelaxingKompas
             DataWeightAndSize.Kompas = kompas;
             Application = (IApplication)kompas.ksGetApplication7();
             DataWeightAndSize.Application = Application;
+            DataWeightAndSize.WindowLibrarySettings = WindowLibrarySettings;
+            DataWeightAndSize.FormWeightAndSize = WindowWeightAndSize;
+
             //Вызываем команды
             switch (command)
             {

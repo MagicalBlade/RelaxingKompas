@@ -58,6 +58,8 @@ namespace RelaxingKompas
             this.b_Cancel = new System.Windows.Forms.Button();
             this.b_insertText = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.cb_savefragment = new System.Windows.Forms.CheckBox();
+            this.cb_savedxf = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // b_ok
@@ -324,6 +326,28 @@ namespace RelaxingKompas
             this.b_insertText.UseVisualStyleBackColor = true;
             this.b_insertText.Click += new System.EventHandler(this.b_insertText_Click);
             // 
+            // cb_savefragment
+            // 
+            this.cb_savefragment.AutoSize = true;
+            this.cb_savefragment.Location = new System.Drawing.Point(20, 13);
+            this.cb_savefragment.Name = "cb_savefragment";
+            this.cb_savefragment.Size = new System.Drawing.Size(132, 17);
+            this.cb_savefragment.TabIndex = 20;
+            this.cb_savefragment.Text = "Сохранять фрагмент";
+            this.cb_savefragment.UseVisualStyleBackColor = true;
+            this.cb_savefragment.CheckedChanged += new System.EventHandler(this.cb_savefragment_CheckedChanged);
+            // 
+            // cb_savedxf
+            // 
+            this.cb_savedxf.AutoSize = true;
+            this.cb_savedxf.Location = new System.Drawing.Point(20, 36);
+            this.cb_savedxf.Name = "cb_savedxf";
+            this.cb_savedxf.Size = new System.Drawing.Size(96, 17);
+            this.cb_savedxf.TabIndex = 20;
+            this.cb_savedxf.Text = "Сохранять dxf";
+            this.cb_savedxf.UseVisualStyleBackColor = true;
+            this.cb_savedxf.CheckedChanged += new System.EventHandler(this.cb_savedxf_CheckedChanged);
+            // 
             // FormWeightAndSize
             // 
             this.AcceptButton = this.b_ok;
@@ -331,6 +355,8 @@ namespace RelaxingKompas
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_Cancel;
             this.ClientSize = new System.Drawing.Size(496, 213);
+            this.Controls.Add(this.cb_savedxf);
+            this.Controls.Add(this.cb_savefragment);
             this.Controls.Add(this.b_insertText);
             this.Controls.Add(this.b_settings);
             this.Controls.Add(this.tb_pos);
@@ -397,5 +423,7 @@ namespace RelaxingKompas
         internal System.Windows.Forms.Button b_Cancel;
         private System.Windows.Forms.Button b_insertText;
         private ToolTip toolTip;
+        internal CheckBox cb_savefragment;
+        internal CheckBox cb_savedxf;
     }
 }

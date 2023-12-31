@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RelaxingKompas.Data;
+using System;
 using System.Windows.Forms;
 
 namespace RelaxingKompas
@@ -48,6 +49,10 @@ namespace RelaxingKompas
             Properties.Settings.Default.cmb_plane = cmb_plane.SelectedIndex;
             Properties.Settings.Default.Save();
             #endregion
+
+            DataWeightAndSize.FormWeightAndSize.cb_savefragment.Checked = cb_SaveFragment.Checked;
+            DataWeightAndSize.FormWeightAndSize.cb_savedxf.Checked = cb_SaveDxf.Checked;
+
         }
 
         private void cb_Creat3Ddetail_CheckedChanged(object sender, EventArgs e)

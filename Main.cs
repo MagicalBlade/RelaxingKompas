@@ -130,6 +130,10 @@ namespace RelaxingKompas
                     command = 12;
                     break;
                 case 14:
+                    result = "Запись шага отверстий и т.п.";
+                    command = 12;
+                    break;
+                case 15:
                     command = -1;
                     itemType = 13; // "ENDMENU"
                     break;
@@ -639,6 +643,9 @@ namespace RelaxingKompas
 
         }
 
+        /// <summary>
+        /// Убрать илипоказать разрыв вида
+        /// </summary>
         private void BreakView()
         {
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
@@ -907,12 +914,18 @@ namespace RelaxingKompas
 
         }
 
+        /// <summary>
+        /// Настройки библиотеки
+        /// </summary>
         private void LibrarySettings()
         {
             Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowLibrarySettings.ShowDialog(Win32);
         }
 
+        /// <summary>
+        /// Копирование данных из штампа: нименование, масса, номер листа
+        /// </summary>
         private void CopyDataFromStamp()
         {
             DataWeightAndSize.KompasDocument = Application.ActiveDocument;
@@ -922,6 +935,9 @@ namespace RelaxingKompas
             Excel.CopyToExcel(plainText, htmlText);
         }
 
+        /// <summary>
+        /// Простановка допусков на размеры
+        /// </summary>
         private void SetTolerance()
         {
             ILibraryManager libraryManager = Application.LibraryManager;
@@ -1114,6 +1130,65 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("", "Готово", 64);
         }
+
+        /// <summary>
+        /// Запись шага отверстий и т.п. типа 10х80=800
+        /// </summary>
+        private void StepDimension()
+        {
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (selectionManager.SelectedObjects is object[] selected)
+            {
+                if (selected.Length > 2)
+                {
+                    Application.MessageBoxEx("Выбрано больше двух элементов", "Ошибка", 64);
+                    return;
+                }
+            }
+            else
+            {
+                Application.MessageBoxEx("Выберите два размер", "Ошибка", 64);
+                return;
+            }
+            IDimensionText dimensionText1;
+            IDimensionText dimensionText2;
+            if (selected[0] is IDimensionText && selected[1] is IDimensionText)
+                {
+                    dimensionText1 = (IDimensionText)selected[0];
+                    dimensionText2 = (IDimensionText)selected[1];
+                }
+            else
+            {
+                Application.MessageBoxEx("Выберите два размер", "Ошибка", 64);
+                return;
+            }
+
+            if (dimensionText1.NominalValue > dimensionText2.NominalValue)
+            {
+                if ((Math.Round(dimensionText1.NominalValue) / Math.Round(dimensionText2.NominalValue)) % 1 != 0)
+                {
+                    return;
+                }
+                dimensionText1.Prefix.Str = $"{Math.Round(dimensionText1.NominalValue / dimensionText2.NominalValue)}х{Math.Round(dimensionText2.NominalValue)}=";
+                ((ILineDimension)dimensionText1).Update();
+            }
+            else
+            {
+                if ((Math.Round(dimensionText2.NominalValue) / Math.Round(dimensionText1.NominalValue)) % 1 != 0)
+                {
+                    return;
+                }
+                dimensionText2.Prefix.Str = $"{Math.Round(dimensionText2.NominalValue / dimensionText1.NominalValue)}х{Math.Round(dimensionText1.NominalValue)}=";
+                ((ILineDimension)dimensionText2).Update();
+            }
+
+            document2DAPI5.ksUndoContainer(false);
+        }
         #endregion
 
 
@@ -1153,6 +1228,7 @@ namespace RelaxingKompas
                 case 11: CopyDataFromStamp(); break;
                 case 12: SetTolerance(); break;
                 case 13: MacroObjectsReplacement(); break;
+                case 14: StepDimension(); break;
             }
         }
 

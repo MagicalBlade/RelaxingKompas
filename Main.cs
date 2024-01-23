@@ -459,7 +459,60 @@ namespace RelaxingKompas
         /// </summary>
         private void CopyText()
         {
-            Clipboard.SetText(DataWeightAndSize.CopyText());
+            List<string> copytext = new List<string>();
+            
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            object selectObject = selectionManager.SelectedObjects;
+            if (selectObject == null)
+            {
+                Application.MessageBoxEx("Выберите элемент!", "Внимание", 64);
+                return;
+            }
+            if (selectObject is object[] selectObjects)
+            {
+                foreach (var selectObjectItem in selectObjects)
+                {
+                    if (selectObjectItem is IDrawingObject)
+                    {
+                        copytext.Add(GetText((IDrawingObject)selectObjectItem));
+                    }
+                }
+            }
+            if (selectObject is IDrawingObject drawingObject)
+            {
+                copytext.Add(GetText(drawingObject));
+            }
+            document2DAPI5.ksUndoContainer(false);
+            if (copytext.Count != 0)
+            {
+                Clipboard.SetText(string.Join("\t" ,copytext));
+                Application.MessageBoxEx("Скопировано.", "Готово.", 64);
+            }
+            else
+            {
+                Application.MessageBoxEx("Не получилось скопировать.", "Ошибка.", 64);
+            }
+
+
+
+            string GetText(IDrawingObject drawingObject1)
+            {
+                switch (drawingObject1.Type)
+                {
+                    case KompasAPIObjectTypeEnum.ksObjectDrawingText:
+                        return ((IText)drawingObject1).Str;
+                    case KompasAPIObjectTypeEnum.ksObjectMarkLeader:
+                        IMarkLeader markLeader = (IMarkLeader)drawingObject1;
+                        return markLeader.Designation.Str;
+                    default:
+                        return "";
+                }
+            }
         }
 
         /// <summary>
@@ -1172,6 +1225,7 @@ namespace RelaxingKompas
             {
                 if ((Math.Round(dimensionText1.NominalValue) / Math.Round(dimensionText2.NominalValue)) % 1 != 0)
                 {
+                    Application.MessageBoxEx("Не верный шаг", "Ошибка", 64);
                     return;
                 }
                 dimensionText1.Prefix.Str = $"{Math.Round(dimensionText1.NominalValue / dimensionText2.NominalValue)}х{Math.Round(dimensionText2.NominalValue)}=";
@@ -1181,11 +1235,13 @@ namespace RelaxingKompas
             {
                 if ((Math.Round(dimensionText2.NominalValue) / Math.Round(dimensionText1.NominalValue)) % 1 != 0)
                 {
+                    Application.MessageBoxEx("Не верный шаг", "Ошибка", 64);
                     return;
                 }
                 dimensionText2.Prefix.Str = $"{Math.Round(dimensionText2.NominalValue / dimensionText1.NominalValue)}х{Math.Round(dimensionText1.NominalValue)}=";
                 ((ILineDimension)dimensionText2).Update();
             }
+            Application.MessageBoxEx("Шаги записаны", "Готово", 64);
 
             document2DAPI5.ksUndoContainer(false);
         }

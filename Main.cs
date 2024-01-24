@@ -509,6 +509,9 @@ namespace RelaxingKompas
                     case KompasAPIObjectTypeEnum.ksObjectMarkLeader:
                         IMarkLeader markLeader = (IMarkLeader)drawingObject1;
                         return markLeader.Designation.Str;
+                    case KompasAPIObjectTypeEnum.ksObjectLineDimension:
+                        IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                        return dimensionText.NominalText.Str;
                     default:
                         return "";
                 }

@@ -26,6 +26,7 @@ using Newtonsoft.Json;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Windows.Navigation;
 using System.Globalization;
+using System.Xml;
 
 namespace RelaxingKompas
 {
@@ -492,15 +493,14 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
             if (copytext.Count != 0)
             {
-                Clipboard.SetText(string.Join("\t" ,copytext));
+
+                Excel.CopyToExcel(string.Join("\r\n", copytext), $"<table><tr><td>{string.Join("</td></tr><tr><td>", copytext)}</td></tr></table>");
                 Application.MessageBoxEx("Скопировано.", "Готово.", 64);
             }
             else
             {
                 Application.MessageBoxEx("Не получилось скопировать.", "Ошибка.", 64);
             }
-
-
 
             string GetText(IDrawingObject drawingObject1)
             {

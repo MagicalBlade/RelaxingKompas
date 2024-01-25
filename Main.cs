@@ -479,13 +479,15 @@ namespace RelaxingKompas
                 {
                     if (selectObjectItem is IDrawingObject)
                     {
-                        copytext.Add(GetText((IDrawingObject)selectObjectItem));
+                        string gettextresult = GetText((IDrawingObject)selectObjectItem);
+                        if (gettextresult != "") copytext.Add(gettextresult);
                     }
                 }
             }
             if (selectObject is IDrawingObject drawingObject)
             {
-                copytext.Add(GetText(drawingObject));
+                string gettextresult = GetText(drawingObject);
+                if(gettextresult != "") copytext.Add(gettextresult);
             }
             document2DAPI5.ksUndoContainer(false);
             if (copytext.Count != 0)
@@ -504,14 +506,93 @@ namespace RelaxingKompas
             {
                 switch (drawingObject1.Type)
                 {
-                    case KompasAPIObjectTypeEnum.ksObjectDrawingText:
-                        return ((IText)drawingObject1).Str;
-                    case KompasAPIObjectTypeEnum.ksObjectMarkLeader:
-                        IMarkLeader markLeader = (IMarkLeader)drawingObject1;
-                        return markLeader.Designation.Str;
-                    case KompasAPIObjectTypeEnum.ksObjectLineDimension:
-                        IDimensionText dimensionText = (IDimensionText)drawingObject1;
-                        return dimensionText.NominalText.Str;
+                    case KompasAPIObjectTypeEnum.ksObjectDrawingText: // Текст на чертеже
+                        {
+                            return ((IText)drawingObject1).Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectLeader: // Линия выноска
+                        {
+                            string leaderresult = "";
+                            ILeader leader = (ILeader)drawingObject1;
+                            if (leader.TextOnShelf.Str != "") leaderresult += leader.TextOnShelf.Str;
+                            if (leader.TextUnderShelf.Str != "") leaderresult += $" {leader.TextUnderShelf.Str}";
+                            if (leader.TextOnBranch.Str != "") leaderresult += $" {leader.TextOnBranch.Str}";
+                            if (leader.TextUnderBranch.Str != "") leaderresult += $" {leader.TextUnderBranch.Str}";
+                            if (leader.TextAfterShelf.Str != "") leaderresult += $" {leader.TextAfterShelf.Str}";
+                            return leaderresult.Trim();
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectMarkLeader: // Обозначения маркироваки - позиция
+                        {
+                            IMarkLeader markLeader = (IMarkLeader)drawingObject1;
+                            return markLeader.Designation.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectPositionLeader: // Обозначение позиции - мы не используем
+                        {
+                            IPositionLeader positionLeader = (IPositionLeader)drawingObject1;
+                            return positionLeader.Positions.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectCutLine: // Линия разреза машиностроения
+                        {
+                            ICutLine cutLine = (ICutLine)drawingObject1;
+                            return cutLine.Text.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectBuildingCutLine: // Линия разреза строительная
+                        {
+                            ICutLine cutLine = (ICutLine)drawingObject1;
+                            return cutLine.Text.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectUnitMarking: // Обозначение узла - узел
+                        {
+                            IUnitMarking unitMarking = (IUnitMarking)drawingObject1;
+                            return $"{unitMarking.TextUp.Str} {unitMarking.TextDown.Str}".Trim();
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectRemoteElement: // Выносной элемент - узел
+                        {
+                            IRemoteElement remoteElement = (IRemoteElement)drawingObject1;
+                            return $"{remoteElement.TextUp.Str} {remoteElement.TextDown.Str}".Trim();
+                        }
+                    #region Размеры
+                    case KompasAPIObjectTypeEnum.ksObjectAngleDimension: // Угловой размер
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str.Replace("@1~", "°");
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectArcDimension: // Размер дуги окружности
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectBreakLineDimension: // Линейрый размер с обрывом
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectDiametralDimension: // Диаметральный размер
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectHeightDimension: // Размер высоты
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectLineDimension: // Линейный размер
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectRadialDimension: // Радиальный размер
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str;
+                        }
+                    case KompasAPIObjectTypeEnum.ksObjectBreakRadialDimension: // Редиальный размер с изломом
+                        {
+                            IDimensionText dimensionText = (IDimensionText)drawingObject1;
+                            return dimensionText.NominalText.Str;
+                        }
+                    #endregion
                     default:
                         return "";
                 }

@@ -161,6 +161,7 @@
     <Content Include="RelaxingKompas.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Steel.txt" />
     <Content Include="Resources\ToleranceAuto.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

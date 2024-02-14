@@ -58,6 +58,7 @@ namespace RelaxingKompas
             this.b_Cancel = new System.Windows.Forms.Button();
             this.b_insertText = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.lb_steel = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // b_ok
@@ -81,7 +82,7 @@ namespace RelaxingKompas
             // 
             // tb_density
             // 
-            this.tb_density.Location = new System.Drawing.Point(171, 105);
+            this.tb_density.Location = new System.Drawing.Point(380, 95);
             this.tb_density.Margin = new System.Windows.Forms.Padding(5);
             this.tb_density.Name = "tb_density";
             this.tb_density.Size = new System.Drawing.Size(77, 20);
@@ -112,7 +113,7 @@ namespace RelaxingKompas
             // l_density
             // 
             this.l_density.AutoSize = true;
-            this.l_density.Location = new System.Drawing.Point(181, 81);
+            this.l_density.Location = new System.Drawing.Point(385, 70);
             this.l_density.Name = "l_density";
             this.l_density.Padding = new System.Windows.Forms.Padding(3);
             this.l_density.Size = new System.Drawing.Size(67, 19);
@@ -132,7 +133,7 @@ namespace RelaxingKompas
             // l_yardage
             // 
             this.l_yardage.AutoSize = true;
-            this.l_yardage.Location = new System.Drawing.Point(405, 80);
+            this.l_yardage.Location = new System.Drawing.Point(32, 56);
             this.l_yardage.Name = "l_yardage";
             this.l_yardage.Padding = new System.Windows.Forms.Padding(3);
             this.l_yardage.Size = new System.Drawing.Size(60, 19);
@@ -141,7 +142,7 @@ namespace RelaxingKompas
             // 
             // tb_yardage
             // 
-            this.tb_yardage.Location = new System.Drawing.Point(387, 104);
+            this.tb_yardage.Location = new System.Drawing.Point(12, 80);
             this.tb_yardage.Margin = new System.Windows.Forms.Padding(5);
             this.tb_yardage.Name = "tb_yardage";
             this.tb_yardage.ReadOnly = true;
@@ -183,17 +184,17 @@ namespace RelaxingKompas
             "0,0001",
             "0,00001",
             "0,000001"});
-            this.comb_round.Location = new System.Drawing.Point(258, 104);
+            this.comb_round.Location = new System.Drawing.Point(7, 30);
             this.comb_round.Margin = new System.Windows.Forms.Padding(5);
             this.comb_round.Name = "comb_round";
-            this.comb_round.Size = new System.Drawing.Size(119, 21);
+            this.comb_round.Size = new System.Drawing.Size(110, 21);
             this.comb_round.TabIndex = 11;
             this.comb_round.TextChanged += new System.EventHandler(this.comb_round_TextChanged);
             // 
             // l_round
             // 
             this.l_round.AutoSize = true;
-            this.l_round.Location = new System.Drawing.Point(263, 80);
+            this.l_round.Location = new System.Drawing.Point(7, 6);
             this.l_round.Name = "l_round";
             this.l_round.Padding = new System.Windows.Forms.Padding(3);
             this.l_round.Size = new System.Drawing.Size(110, 19);
@@ -324,6 +325,15 @@ namespace RelaxingKompas
             this.b_insertText.UseVisualStyleBackColor = true;
             this.b_insertText.Click += new System.EventHandler(this.b_insertText_Click);
             // 
+            // lb_steel
+            // 
+            this.lb_steel.FormattingEnabled = true;
+            this.lb_steel.Location = new System.Drawing.Point(296, 70);
+            this.lb_steel.Name = "lb_steel";
+            this.lb_steel.Size = new System.Drawing.Size(83, 56);
+            this.lb_steel.TabIndex = 20;
+            this.lb_steel.Click += new System.EventHandler(this.lb_steel_Click);
+            // 
             // FormWeightAndSize
             // 
             this.AcceptButton = this.b_ok;
@@ -331,6 +341,7 @@ namespace RelaxingKompas
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_Cancel;
             this.ClientSize = new System.Drawing.Size(496, 213);
+            this.Controls.Add(this.lb_steel);
             this.Controls.Add(this.b_insertText);
             this.Controls.Add(this.b_settings);
             this.Controls.Add(this.tb_pos);
@@ -397,5 +408,6 @@ namespace RelaxingKompas
         internal System.Windows.Forms.Button b_Cancel;
         private System.Windows.Forms.Button b_insertText;
         private ToolTip toolTip;
+        internal ListBox lb_steel;
     }
 }

@@ -185,5 +185,11 @@ namespace RelaxingKompas
                 Clipboard.SetText(tb_weight.Text);
             }
         }
+
+        private void lb_steel_Click(object sender, EventArgs e)
+        {
+            ListBox lb = sender as ListBox;
+            tb_steel.Text = lb.SelectedItem as string;
+        }
     }
 }

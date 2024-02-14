@@ -82,7 +82,7 @@ namespace RelaxingKompas
             // 
             // tb_density
             // 
-            this.tb_density.Location = new System.Drawing.Point(380, 95);
+            this.tb_density.Location = new System.Drawing.Point(387, 104);
             this.tb_density.Margin = new System.Windows.Forms.Padding(5);
             this.tb_density.Name = "tb_density";
             this.tb_density.Size = new System.Drawing.Size(77, 20);
@@ -102,7 +102,7 @@ namespace RelaxingKompas
             // l_thickness
             // 
             this.l_thickness.AutoSize = true;
-            this.l_thickness.Location = new System.Drawing.Point(100, 129);
+            this.l_thickness.Location = new System.Drawing.Point(102, 129);
             this.l_thickness.Name = "l_thickness";
             this.l_thickness.Padding = new System.Windows.Forms.Padding(3);
             this.l_thickness.Size = new System.Drawing.Size(59, 19);
@@ -113,7 +113,7 @@ namespace RelaxingKompas
             // l_density
             // 
             this.l_density.AutoSize = true;
-            this.l_density.Location = new System.Drawing.Point(385, 70);
+            this.l_density.Location = new System.Drawing.Point(392, 79);
             this.l_density.Name = "l_density";
             this.l_density.Padding = new System.Windows.Forms.Padding(3);
             this.l_density.Size = new System.Drawing.Size(67, 19);
@@ -220,7 +220,7 @@ namespace RelaxingKompas
             // l_width
             // 
             this.l_width.AutoSize = true;
-            this.l_width.Location = new System.Drawing.Point(166, 129);
+            this.l_width.Location = new System.Drawing.Point(167, 129);
             this.l_width.Name = "l_width";
             this.l_width.Padding = new System.Windows.Forms.Padding(3);
             this.l_width.Size = new System.Drawing.Size(52, 19);
@@ -230,7 +230,7 @@ namespace RelaxingKompas
             // l_length
             // 
             this.l_length.AutoSize = true;
-            this.l_length.Location = new System.Drawing.Point(240, 129);
+            this.l_length.Location = new System.Drawing.Point(234, 129);
             this.l_length.Name = "l_length";
             this.l_length.Padding = new System.Windows.Forms.Padding(3);
             this.l_length.Size = new System.Drawing.Size(46, 19);
@@ -247,7 +247,7 @@ namespace RelaxingKompas
             // l_pos
             // 
             this.l_pos.AutoSize = true;
-            this.l_pos.Location = new System.Drawing.Point(26, 129);
+            this.l_pos.Location = new System.Drawing.Point(25, 129);
             this.l_pos.Name = "l_pos";
             this.l_pos.Padding = new System.Windows.Forms.Padding(3);
             this.l_pos.Size = new System.Drawing.Size(57, 19);
@@ -266,7 +266,7 @@ namespace RelaxingKompas
             // l_sheet
             // 
             this.l_sheet.AutoSize = true;
-            this.l_sheet.Location = new System.Drawing.Point(434, 129);
+            this.l_sheet.Location = new System.Drawing.Point(432, 129);
             this.l_sheet.Name = "l_sheet";
             this.l_sheet.Padding = new System.Windows.Forms.Padding(3);
             this.l_sheet.Size = new System.Drawing.Size(56, 19);
@@ -284,7 +284,7 @@ namespace RelaxingKompas
             // l_steel
             // 
             this.l_steel.AutoSize = true;
-            this.l_steel.Location = new System.Drawing.Point(310, 129);
+            this.l_steel.Location = new System.Drawing.Point(311, 129);
             this.l_steel.Name = "l_steel";
             this.l_steel.Padding = new System.Windows.Forms.Padding(3);
             this.l_steel.Size = new System.Drawing.Size(43, 19);
@@ -315,7 +315,7 @@ namespace RelaxingKompas
             // b_insertText
             // 
             this.b_insertText.AccessibleDescription = "";
-            this.b_insertText.Location = new System.Drawing.Point(20, 179);
+            this.b_insertText.Location = new System.Drawing.Point(16, 179);
             this.b_insertText.Name = "b_insertText";
             this.b_insertText.Size = new System.Drawing.Size(75, 23);
             this.b_insertText.TabIndex = 19;

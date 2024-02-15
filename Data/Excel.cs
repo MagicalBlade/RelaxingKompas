@@ -88,9 +88,9 @@ namespace RelaxingKompas.Data
                     DataWeightAndSize.Application.MessageBoxEx($"Путь не найден. Excel файл сохранен: {PathExcelFile}", "Ошибка", 0);
                 }
             }
+            
             int rowcount = 0;
-            string[][] newFileExport = new string[2][];
-            newFileExport[0] = new string[]
+            string[] header = new string[]
             {
                 "Позиция",
                 "Кол. т.",
@@ -103,21 +103,7 @@ namespace RelaxingKompas.Data
                 "Номер листа",
                 "Площадь"
             };
-            newFileExport[1] = new string[]
-            {
-                DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
-                "",
-                "",
-                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
-                DataWeightAndSize.FormWeightAndSize.tb_length.Text,
-                DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
-                DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
-                "",
-                DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
-                DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
-            };
-            string[][] existsFileExport = new string[1][];
-            existsFileExport[0] = new string[]
+            string[] dataexport = new string[]
             {
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 "",
@@ -137,12 +123,12 @@ namespace RelaxingKompas.Data
                 IXLWorksheet worksheet = workbook.Worksheet(1);
                 if (worksheet.LastRowUsed() != null)
                 {
-                    rowcount = worksheet.LastRowUsed().RowNumber();
-                    InsertInformation(worksheet, existsFileExport);
+                    rowcount = worksheet.LastRowUsed().RowNumber() + 1;
+                    InsertInformation(worksheet, dataexport);
                 }
                 else
                 {
-                    InsertInformation(worksheet, newFileExport);
+                    InsertInformation(worksheet, dataexport);
                 }
                 workbook.Save();
             }
@@ -150,58 +136,90 @@ namespace RelaxingKompas.Data
             {
                 XLWorkbook workbook = new XLWorkbook();
                 IXLWorksheet worksheet = workbook.Worksheets.Add("Позиции");
-                InsertInformation(worksheet, newFileExport);
+
+                #region Пишем шапку
+                if (worksheet != null)
+                {
+                    worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                    worksheet.Cell(1, 1).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 2).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 3).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 4).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 5).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 6).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 7).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 8).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 9).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(1, 10).Style.NumberFormat.Format = "General";
+
+                    worksheet.Cell(1, 1).SetValue<string>(header[0]);
+                    worksheet.Cell(1, 2).SetValue<string>(header[1]);
+                    worksheet.Cell(1, 3).SetValue<string>(header[2]);
+                    worksheet.Cell(1, 4).SetValue<string>(header[3]);
+                    worksheet.Cell(1, 5).SetValue<string>(header[4]);
+                    worksheet.Cell(1, 6).SetValue<string>(header[5]);
+                    worksheet.Cell(1, 7).SetValue<string>(header[6]);
+                    worksheet.Cell(1, 8).SetValue<string>(header[7]);
+                    worksheet.Cell(1, 9).SetValue<string>(header[8]);
+                    worksheet.Cell(1, 10).SetValue<string>(header[9]);
+                }
+                //Ширина колонки по содержимому
+                worksheet.Columns(1, header.Length).AdjustToContents();
+                #endregion
+                rowcount = 2;
+                InsertInformation(worksheet, dataexport);
+
+
+
                 workbook.SaveAs($"{PathExcelFile}{NameExcelFile}.xlsx");
             }
 
-            void InsertInformation(IXLWorksheet worksheet, string[][] export)
+            void InsertInformation(IXLWorksheet worksheet, string[] export)
             {
                 if (worksheet != null)
                 {
                     worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    for (int i = 0; i < export.Length; i++)
+                    worksheet.Cell(rowcount, 1).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 2).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 3).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 4).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 5).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 6).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 7).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 8).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 9).Style.NumberFormat.Format = "General";
+                    worksheet.Cell(rowcount, 10).Style.NumberFormat.Format = "General";
+
+                    worksheet.Cell(rowcount, 1).SetValue<string>(export[0]);
+                    worksheet.Cell(rowcount, 2).SetValue<string>(export[1]);
+                    worksheet.Cell(rowcount, 3).SetValue<string>(export[2]);
+                    worksheet.Cell(rowcount, 4).SetValue<string>(export[3]);
+                    worksheet.Cell(rowcount, 5).SetValue<string>(export[4]);
+                    worksheet.Cell(rowcount, 6).SetValue<string>(export[5]);
+                    try
                     {
-                        worksheet.Cell(rowcount + i + 1, 1).Style.NumberFormat.Format = "@";
-                        worksheet.Cell(rowcount + i + 1, 2).Style.NumberFormat.Format = "General";
-                        worksheet.Cell(rowcount + i + 1, 3).Style.NumberFormat.Format = "General";
-                        worksheet.Cell(rowcount + i + 1, 4).Style.NumberFormat.Format = "@";
-                        worksheet.Cell(rowcount + i + 1, 5).Style.NumberFormat.Format = "@";
-                        worksheet.Cell(rowcount + i + 1, 6).Style.NumberFormat.Format = "@";
-                        worksheet.Cell(rowcount + i + 1, 7).Style.NumberFormat.Format = "General";
-                        worksheet.Cell(rowcount + i + 1, 8).Style.NumberFormat.Format = "General";
-                        worksheet.Cell(rowcount + i + 1, 9).Style.NumberFormat.Format = "@";
-                        worksheet.Cell(rowcount + i + 1, 10).Style.NumberFormat.Format = "General";
-                        
-                        worksheet.Cell(rowcount + i + 1, 1).SetValue<string>(export[i][0]);
-                        worksheet.Cell(rowcount + i + 1, 2).SetValue<string>(export[i][1]);
-                        worksheet.Cell(rowcount + i + 1, 3).SetValue<string>(export[i][2]);
-                        worksheet.Cell(rowcount + i + 1, 4).SetValue<string>(export[i][3]);
-                        worksheet.Cell(rowcount + i + 1, 5).SetValue<string>(export[i][4]);
-                        worksheet.Cell(rowcount + i + 1, 6).SetValue<string>(export[i][5]);
-                        try
-                        {
-                            worksheet.Cell(rowcount + i + 1, 7).SetValue<double>(Convert.ToDouble((export[i][6]), CultureInfo.DefaultThreadCurrentCulture));
-                        }
-                        catch (Exception)
-                        {
-                            worksheet.Cell(rowcount + i + 1, 7).Style.NumberFormat.Format = "@";
-                            worksheet.Cell(rowcount + i + 1, 7).SetValue<string>(export[i][6]);
-                        }
-                        try
-                        {
-                            worksheet.Cell(rowcount + i + 1, 10).SetValue<double>(Convert.ToDouble((export[i][9]), CultureInfo.DefaultThreadCurrentCulture));
-                        }
-                        catch (Exception)
-                        {
-                            worksheet.Cell(rowcount + i + 1, 10).Style.NumberFormat.Format = "@";
-                            worksheet.Cell(rowcount + i + 1, 10).SetValue<string>(export[i][6]);
-                        }
-                        worksheet.Cell(rowcount + i + 1, 8).SetValue<string>(export[i][7]);
-                        worksheet.Cell(rowcount + i + 1, 9).SetValue<string>(export[i][8]);
+                        worksheet.Cell(rowcount, 7).SetValue<double>(Convert.ToDouble((export[6]), CultureInfo.DefaultThreadCurrentCulture));
                     }
+                    catch (Exception)
+                    {
+                        worksheet.Cell(rowcount, 7).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount, 7).SetValue<string>(export[6]);
+                    }
+                    try
+                    {
+                        worksheet.Cell(rowcount, 10).SetValue<double>(Convert.ToDouble((export[9]), CultureInfo.DefaultThreadCurrentCulture));
+                    }
+                    catch (Exception)
+                    {
+                        worksheet.Cell(rowcount, 10).Style.NumberFormat.Format = "@";
+                        worksheet.Cell(rowcount, 10).SetValue<string>(export[6]);
+                    }
+                    worksheet.Cell(rowcount, 8).SetValue<string>(export[7]);
+                    worksheet.Cell(rowcount, 9).SetValue<string>(export[8]);
                 }
                 //Ширина колонки по содержимому
-                worksheet.Columns(1, export[0].Length).AdjustToContents(); 
+                worksheet.Columns(1, export.Length).AdjustToContents(); 
             }
             return;
         }

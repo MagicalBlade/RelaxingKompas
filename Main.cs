@@ -436,6 +436,29 @@ namespace RelaxingKompas
             double length = Math.Round(RightX - LeftX, MidpointRounding.AwayFromZero);
             #endregion
 
+            #region Поиск обозначения маркировки в области контура и запись значения в ячейку позиции
+            dynamic insideContur = kompasDocument2D1.SelectObjects(ksRegionTypeEnum.ksRTCutFrame, LeftX, LeftY, RightX, RightY);
+            if (insideContur is object[] selected)
+            {
+                List<IMarkLeader> insideConturMarkLeader = new List<IMarkLeader>();
+                foreach (var item in insideContur)
+                {
+                    if (item is IMarkLeader)
+                    {
+                        insideConturMarkLeader.Add(item);
+                    }
+                }
+                if (insideConturMarkLeader.Count == 1)
+                {
+                    WindowWeightAndSize.tb_pos.Text = insideConturMarkLeader[0].Designation.Str;
+                }
+            }
+            else if (insideContur is IMarkLeader insideConturMarkLeader)
+            {
+                WindowWeightAndSize.tb_pos.Text = insideConturMarkLeader.Designation.Str;
+            } 
+            #endregion
+
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
             string pathToleranceAuto = $"{pathlibrary}\\Resources\\Steel.txt";

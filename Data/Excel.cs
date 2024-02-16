@@ -153,16 +153,16 @@ namespace RelaxingKompas.Data
                     worksheet.Cell(1, 9).Style.NumberFormat.Format = "General";
                     worksheet.Cell(1, 10).Style.NumberFormat.Format = "General";
 
-                    worksheet.Cell(1, 1).SetValue<string>(header[0]);
-                    worksheet.Cell(1, 2).SetValue<string>(header[1]);
-                    worksheet.Cell(1, 3).SetValue<string>(header[2]);
-                    worksheet.Cell(1, 4).SetValue<string>(header[3]);
-                    worksheet.Cell(1, 5).SetValue<string>(header[4]);
-                    worksheet.Cell(1, 6).SetValue<string>(header[5]);
-                    worksheet.Cell(1, 7).SetValue<string>(header[6]);
-                    worksheet.Cell(1, 8).SetValue<string>(header[7]);
-                    worksheet.Cell(1, 9).SetValue<string>(header[8]);
-                    worksheet.Cell(1, 10).SetValue<string>(header[9]);
+                    worksheet.Cell(1, 1).SetValue(header[0]);
+                    worksheet.Cell(1, 2).SetValue(header[1]);
+                    worksheet.Cell(1, 3).SetValue(header[2]);
+                    worksheet.Cell(1, 4).SetValue(header[3]);
+                    worksheet.Cell(1, 5).SetValue(header[4]);
+                    worksheet.Cell(1, 6).SetValue(header[5]);
+                    worksheet.Cell(1, 7).SetValue(header[6]);
+                    worksheet.Cell(1, 8).SetValue(header[7]);
+                    worksheet.Cell(1, 9).SetValue(header[8]);
+                    worksheet.Cell(1, 10).SetValue(header[9]);
                 }
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, header.Length).AdjustToContents();
@@ -191,32 +191,34 @@ namespace RelaxingKompas.Data
                     worksheet.Cell(rowcount, 9).Style.NumberFormat.Format = "General";
                     worksheet.Cell(rowcount, 10).Style.NumberFormat.Format = "General";
 
-                    worksheet.Cell(rowcount, 1).SetValue<string>(export[0]);
-                    worksheet.Cell(rowcount, 2).SetValue<string>(export[1]);
-                    worksheet.Cell(rowcount, 3).SetValue<string>(export[2]);
-                    worksheet.Cell(rowcount, 4).SetValue<string>(export[3]);
-                    worksheet.Cell(rowcount, 5).SetValue<string>(export[4]);
-                    worksheet.Cell(rowcount, 6).SetValue<string>(export[5]);
-                    try
-                    {
-                        worksheet.Cell(rowcount, 7).SetValue<double>(Convert.ToDouble((export[6]), CultureInfo.DefaultThreadCurrentCulture));
-                    }
-                    catch (Exception)
-                    {
-                        worksheet.Cell(rowcount, 7).Style.NumberFormat.Format = "@";
-                        worksheet.Cell(rowcount, 7).SetValue<string>(export[6]);
-                    }
-                    try
-                    {
-                        worksheet.Cell(rowcount, 10).SetValue<double>(Convert.ToDouble((export[9]), CultureInfo.DefaultThreadCurrentCulture));
-                    }
-                    catch (Exception)
-                    {
-                        worksheet.Cell(rowcount, 10).Style.NumberFormat.Format = "@";
-                        worksheet.Cell(rowcount, 10).SetValue<string>(export[6]);
-                    }
-                    worksheet.Cell(rowcount, 8).SetValue<string>(export[7]);
-                    worksheet.Cell(rowcount, 9).SetValue<string>(export[8]);
+                    worksheet.Cell(rowcount, 1).SetValue(export[0]);
+                    worksheet.Cell(rowcount, 2).SetValue(export[1]);
+                    worksheet.Cell(rowcount, 3).SetValue(export[2]);
+                    worksheet.Cell(rowcount, 4).SetValue(export[3]);
+                    worksheet.Cell(rowcount, 5).SetValue(export[4]);
+                    worksheet.Cell(rowcount, 6).SetValue(export[5]);
+                    worksheet.Cell(rowcount, 7).SetValue(export[6]);
+                    //try
+                    //{
+                    //    worksheet.Cell(rowcount, 7).SetValue<double>(Convert.ToDouble((export[6]), CultureInfo.DefaultThreadCurrentCulture));
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    worksheet.Cell(rowcount, 7).Style.NumberFormat.Format = "@";
+                    //    worksheet.Cell(rowcount, 7).SetValue<string>(export[6]);
+                    //}
+                    //try
+                    //{
+                    //    worksheet.Cell(rowcount, 10).SetValue<double>(Convert.ToDouble((export[9]), CultureInfo.DefaultThreadCurrentCulture));
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    worksheet.Cell(rowcount, 10).Style.NumberFormat.Format = "@";
+                    //    worksheet.Cell(rowcount, 10).SetValue<string>(export[9]);
+                    //}
+                    worksheet.Cell(rowcount, 8).SetValue(export[7]);
+                    worksheet.Cell(rowcount, 9).SetValue(export[8]);
+                    worksheet.Cell(rowcount, 10).SetValue(export[9]);
                 }
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, export.Length).AdjustToContents(); 

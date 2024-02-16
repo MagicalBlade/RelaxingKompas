@@ -421,6 +421,7 @@ namespace RelaxingKompas
             }
             ksMathematic2D mathematic2D = kompas.GetMathematic2D();
             mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
+
             #region Получение габаритного прямоугольника
             ksRectParam rectParam = kompas.GetParamStruct(15); //Параметры прямоугольника
             ksdocument2D.ksGetObjGabaritRect(group, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
@@ -485,7 +486,7 @@ namespace RelaxingKompas
                 WindowWeightAndSize.tb_length.Text = $"{width}"; //Передаем длину в форму
             }
 
-            WindowWeightAndSize.tb_yardage.Text = $"{ksinertiaParam.F}"; //Передаем площадь в форму
+            WindowWeightAndSize.tb_yardage.Text = $"{Math.Round(ksinertiaParam.F)}"; //Передаем площадь в форму
             WindowWeightAndSize.Weight(); //Вызываю вычисление массы
             ksdocument2D.ksWriteGroupToClip(group, true); //Копируем группу в буфер обмена
             
@@ -1116,7 +1117,7 @@ namespace RelaxingKompas
         private void SetTolerance()
         {
             ILibraryManager libraryManager = Application.LibraryManager;
-            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
+            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папке библиотеки
             string pathToleranceAuto = $"{pathlibrary}\\Resources\\ToleranceAuto.txt";
             string pathToleranceDefault = $"{pathlibrary}\\Resources\\ToleranceDefault.txt";
             List<double[]> toleranceAuto = new List<double[]>();
@@ -1216,6 +1217,7 @@ namespace RelaxingKompas
             //Метод простановки допусков/припусков
             void SetDimensionText(IDimensionText dimensionText, bool auto)
             {
+                dimensionText.HasTolerance = true;
                 //Если выбрана очистка допуска
                 if (formTolerance.toleranceclear)
                 {
@@ -1242,7 +1244,7 @@ namespace RelaxingKompas
                             return;
                         }
                     }
-                    Application.MessageBoxEx("Не у далось автоматически проставить допуски. Проверьте файл с допусками.", "Ошибка", 64);
+                    Application.MessageBoxEx("Не удалось автоматически проставить допуски. Проверьте файл с допусками.", "Ошибка", 64);
                 }
                 else if (formTolerance.tb_Up.Text != "" || formTolerance.tb_Down.Text != "")
                 {
@@ -1313,6 +1315,34 @@ namespace RelaxingKompas
                 ((ILineDimension)dimensionText2).Update();
             }
             Application.MessageBoxEx("Шаги записаны", "Готово", 64);
+
+            document2DAPI5.ksUndoContainer(false);
+        }
+
+        private void SetNameDocumentStamp()
+        {
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            if (layoutSheets == null) return;
+            if (layoutSheets.Count == 0) return;
+            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
+            if (layoutSheet == null)
+            {
+                foreach (ILayoutSheet item in layoutSheets)
+                {
+                    layoutSheet = item;
+                    break;
+                }
+            };
+            IStamp stamp = layoutSheet.Stamp;
+            if (stamp == null) return;
+            string namefile = kompasDocument.Name.Substring(0, kompasDocument.Name.LastIndexOf('.'));
+            stamp.Text[2].Str = namefile;
+            stamp.Update();
 
             document2DAPI5.ksUndoContainer(false);
         }
@@ -1407,7 +1437,8 @@ namespace RelaxingKompas
                 case 11: CopyDataFromStamp(); break;
                 case 12: SetTolerance(); break;
                 case 13: StepDimension(); break;
-                case 14: MacroObjectsReplacement(); break;
+                case 14: SetNameDocumentStamp(); break;
+                case 15: MacroObjectsReplacement(); break;
             }
         }
 

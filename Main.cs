@@ -27,6 +27,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Windows.Navigation;
 using System.Globalization;
 using System.Xml;
+using System.Windows.Controls;
 
 namespace RelaxingKompas
 {
@@ -1322,6 +1323,7 @@ namespace RelaxingKompas
         private void SetNameDocumentStamp()
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
 
             document2DAPI5.ksUndoContainer(true);
@@ -1341,8 +1343,28 @@ namespace RelaxingKompas
             IStamp stamp = layoutSheet.Stamp;
             if (stamp == null) return;
             string namefile = kompasDocument.Name.Substring(0, kompasDocument.Name.LastIndexOf('.'));
-            stamp.Text[2].Str = namefile;
-            stamp.Update();
+            IText text = stamp.Text[2];
+
+
+
+            //stamp.Text[2].Str = namefile;
+            //stamp.Update();
+
+
+            IPropertyMng propertyMng = (IPropertyMng)Application;
+            _Property property = propertyMng.GetProperty(kompasDocument, 0);
+            IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument2D;
+            bool temp;
+            Clipboard.SetText(propertyKeeper.GetComplexPropertyValue(property, out temp));
+
+            propertyKeeper.GetPropertyValue(property, out object printvalue, true, out temp);
+            propertyKeeper.SetComplexPropertyValue(property,
+                $"<?xml version=\"1.0\"?>\r\n<document direction=\"\" fromSource=\"false\" type=\"string\">\r\n\t<property id=\"base\" " +
+                $"value=\"{123}\" type=\"string\" />\r\n\t<property id=\"embodimentDelimiter\" value=\"\" type=\"string\" />\r\n\t<property id=\"embodimentNumber\" value=\"\" type=\"string\" />\r\n\t<property id=\"additionalDelimiter\" value=\"\" type=\"string\" />\r\n\t<property id=\"additionalNumber\" value=\"\" type=\"string\" />\r\n\t<property id=\"documentDelimiter\" value=\"\" type=\"string\" />\r\n\t<property id=\"documentNumber\" value=\"\" type=\"string\" />\r\n</document>\r\n"
+                );
+            //MessageBox.Show($"{property.Name} - {propertyKeeper.IsComplexPropertyValue(property)}");
+
+            property.Update();
 
             document2DAPI5.ksUndoContainer(false);
         }

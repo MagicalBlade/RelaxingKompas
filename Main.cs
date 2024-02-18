@@ -28,6 +28,8 @@ using System.Windows.Navigation;
 using System.Globalization;
 using System.Xml;
 using System.Windows.Controls;
+using System.Windows.Media.Media3D;
+using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 
 namespace RelaxingKompas
 {
@@ -1324,6 +1326,7 @@ namespace RelaxingKompas
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
+            IKompasDocument1 kompasDocument1 = (IKompasDocument1)Application.ActiveDocument;
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
 
             document2DAPI5.ksUndoContainer(true);
@@ -1340,31 +1343,44 @@ namespace RelaxingKompas
                     break;
                 }
             };
-            IStamp stamp = layoutSheet.Stamp;
-            if (stamp == null) return;
-            string namefile = kompasDocument.Name.Substring(0, kompasDocument.Name.LastIndexOf('.'));
-            IText text = stamp.Text[2];
 
 
 
-            //stamp.Text[2].Str = namefile;
-            //stamp.Update();
 
+            //IDocuments documents = Application.Documents;
+            //IKompasDocument2D kompasDocuments2D1 = (IKompasDocument2D)documents.Open("d:\\Temp\\7\\поз. 55_ред.13.03.cdw", false, false);
+
+            //ILayoutSheets layoutSheets1 = kompasDocuments2D1.LayoutSheets;
+            //foreach (ILayoutSheet layoutSheet1 in layoutSheets1)
+            //{
+            //    IStamp stamp = layoutSheet1.Stamp;
+            //    stamp.Text[2].Str = "123"; 
+            //    stamp.Update();
+            //    break;
+            //}
+            //kompasDocuments2D1.Close(DocumentCloseOptions.kdSaveChanges);
 
             IPropertyMng propertyMng = (IPropertyMng)Application;
-            _Property property = propertyMng.GetProperty(kompasDocument, 0);
+            _Property property = propertyMng.GetProperty(kompasDocument, "Обозначение");
             IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument2D;
-            bool temp;
-            Clipboard.SetText(propertyKeeper.GetComplexPropertyValue(property, out temp));
-
-            propertyKeeper.GetPropertyValue(property, out object printvalue, true, out temp);
             propertyKeeper.SetComplexPropertyValue(property,
-                $"<?xml version=\"1.0\"?>\r\n<document direction=\"\" fromSource=\"false\" type=\"string\">\r\n\t<property id=\"base\" " +
-                $"value=\"{123}\" type=\"string\" />\r\n\t<property id=\"embodimentDelimiter\" value=\"\" type=\"string\" />\r\n\t<property id=\"embodimentNumber\" value=\"\" type=\"string\" />\r\n\t<property id=\"additionalDelimiter\" value=\"\" type=\"string\" />\r\n\t<property id=\"additionalNumber\" value=\"\" type=\"string\" />\r\n\t<property id=\"documentDelimiter\" value=\"\" type=\"string\" />\r\n\t<property id=\"documentNumber\" value=\"\" type=\"string\" />\r\n</document>\r\n"
+                $@"<?xml version=""1.0""?>
+                    <document fromSource=""false"" expression="""" type=""string"">
+                     <property id=""base"" value=""qwe"" type=""string"" />
+                     <property id=""embodimentDelimiter"" value=""-"" type=""string"" />
+                     <property id=""embodimentNumber"" value="""" type=""string"" />
+                     <property id=""additionalDelimiter"" value=""."" type=""string"" />
+                     <property id=""additionalNumber"" value="""" type=""string"" />
+                     <property id=""documentDelimiter"" value="""" type=""string"" />
+                     <property id=""documentNumber"" value="""" type=""string"" />
+                    </document>"
                 );
-            //MessageBox.Show($"{property.Name} - {propertyKeeper.IsComplexPropertyValue(property)}");
-
             property.Update();
+
+            IStamp stamp = layoutSheet.Stamp;
+            if (stamp == null) return;
+            stamp.Text[2].Str = "123";
+            stamp.Update();
 
             document2DAPI5.ksUndoContainer(false);
         }

@@ -2,7 +2,9 @@
 using Kompas6Constants;
 using Kompas6Constants3D;
 using KompasAPI7;
+using RelaxingKompas.Classes;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 
@@ -442,6 +444,76 @@ namespace RelaxingKompas.Data
                     return text.Str;
                 default:
                     return "";
+            }
+        }
+
+        /// <summary>
+        /// Заполнение толщины и стали из таблицы.
+        /// </summary>
+        /// <param name="formWeightAndSize"></param>
+        static public  void SetThicknessandSteel(FormWeightAndSize formWeightAndSize)
+        {
+            List<TablePosDet> tablesFind = new List<TablePosDet>();
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            foreach (IView view in views)
+            {
+                ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
+                IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
+                foreach (IDrawingTable drawingTable in drawingTables)
+                {
+                    ITable table = drawingTable as ITable;
+                    TablePosDet tablePosDet = null;
+                    for (int i = 0; i < table.RowsCount; i++)
+                    {
+                        for (int j = 0; j < table.ColumnsCount; j++)
+                        {
+                            if ((table.Cell[i, j].Text as IText).Str.IndexOf("поз", StringComparison.CurrentCultureIgnoreCase) != -1)
+                            {
+                                tablePosDet = new TablePosDet(table, j);
+                            }
+                            if (tablePosDet != null)
+                            {
+                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("s", StringComparison.CurrentCultureIgnoreCase) != -1
+                                    || (table.Cell[i, j].Text as IText).Str.IndexOf("толщина", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                {
+                                    tablePosDet.IndexColumnThickness = j;
+                                }
+                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("материал", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                {
+                                    tablePosDet.IndexColumnSteel = j;
+                                }
+                            }
+                        }
+                    }
+                    if (tablePosDet != null) tablesFind.Add(tablePosDet);
+                }
+            }
+            if (tablesFind.Count == 1)
+            {
+                for (int i = 0; i < tablesFind[0].Table.RowsCount; i++)
+                {
+                    if ((tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnPos].Text as IText).Str.IndexOf(formWeightAndSize.tb_pos.Text, StringComparison.CurrentCultureIgnoreCase) != -1)
+                    {
+                        if (tablesFind[0].IndexColumnThickness != -1)
+                        {
+                            formWeightAndSize.tb_thickness.Text = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnThickness].Text as IText).Str;
+                        }
+                        if (tablesFind[0].IndexColumnSteel != -1)
+                        {
+                            formWeightAndSize.tb_steel.Text = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnSteel].Text as IText).Str;
+                        }
+                    }
+                }
+            }
+            if (tablesFind.Count > 1)
+            {
+                Application.MessageBoxEx("Найдено две таблицы с данными о позициях. Удалите одну.", "Ошибка", 64);
+            }
+            if (tablesFind.Count == 0)
+            {
+                Application.MessageBoxEx("Не найдена таблица с данными по позициям. Обратитесь к разработчику.", "Ошибка", 64);
             }
         }
     }

@@ -382,6 +382,7 @@ namespace RelaxingKompas
         {
             IApplication application = kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)application.ActiveDocument;
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
             DataWeightAndSize.Application = application;
             DataWeightAndSize.KompasDocument = kompasDocument;
@@ -397,7 +398,8 @@ namespace RelaxingKompas
             const string pattern = "[^\\d\\.,-]";
             string postext = DataWeightAndSize.GetCellStamp(2); //Ячейка позиции
             postext = Regex.Replace(postext, pattern, "");
-            WindowWeightAndSize.tb_pos.Text = postext.Trim('.');
+            postext = postext.Trim('.');
+            WindowWeightAndSize.tb_pos.Text = postext;
             WindowWeightAndSize.tb_sheet.Text = DataWeightAndSize.GetCellStamp(16001); //Ячейки номера листа
 
             string stampid3 = DataWeightAndSize.GetCellStamp(3);//Ячейка с толщиной, материалом и т.д.
@@ -460,8 +462,11 @@ namespace RelaxingKompas
             else if (insideContur is IMarkLeader insideConturMarkLeader)
             {
                 WindowWeightAndSize.tb_pos.Text = insideConturMarkLeader.Designation.Str;
-            } 
+            }
             #endregion
+            
+            //Заполнение толщины и стали из таблицы. Это для чертежей подсборок/стыковки
+            DataWeightAndSize.SetThicknessandSteel(WindowWeightAndSize);
 
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
@@ -591,7 +596,7 @@ namespace RelaxingKompas
                     case KompasAPIObjectTypeEnum.ksObjectRemoteElement: // Выносной элемент - узел
                         {
                             IRemoteElement remoteElement = (IRemoteElement)drawingObject1;
-                            return $"{remoteElement.TextUp.Str} {remoteElement.TextDown.Str}".Trim();
+                            return $"{remoteElement.TextUp.Str} {remoteElement.AdditionalText.Str}".Trim();
                         }
                     #region Размеры
                     case KompasAPIObjectTypeEnum.ksObjectAngleDimension: // Угловой размер

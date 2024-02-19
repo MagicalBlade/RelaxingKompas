@@ -191,5 +191,12 @@ namespace RelaxingKompas
             ListBox lb = sender as ListBox;
             tb_steel.Text = lb.SelectedItem as string;
         }
+
+        private void tb_pos_TextChanged(object sender, EventArgs e)
+        {
+            this.tb_thickness.Text = "";
+            this.tb_steel.Text = "";
+            DataWeightAndSize.SetThicknessandSteel(this);
+        }
     }
 }

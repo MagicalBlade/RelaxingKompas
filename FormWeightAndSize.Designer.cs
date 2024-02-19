@@ -243,6 +243,7 @@ namespace RelaxingKompas
             this.tb_pos.Name = "tb_pos";
             this.tb_pos.Size = new System.Drawing.Size(83, 20);
             this.tb_pos.TabIndex = 17;
+            this.tb_pos.TextChanged += new System.EventHandler(this.tb_pos_TextChanged);
             // 
             // l_pos
             // 

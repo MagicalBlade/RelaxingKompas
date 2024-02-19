@@ -494,7 +494,7 @@ namespace RelaxingKompas.Data
             {
                 for (int i = 0; i < tablesFind[0].Table.RowsCount; i++)
                 {
-                    if ((tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnPos].Text as IText).Str.IndexOf(formWeightAndSize.tb_pos.Text, StringComparison.CurrentCultureIgnoreCase) != -1)
+                    if ((tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnPos].Text as IText).Str.Trim() == formWeightAndSize.tb_pos.Text.Trim())
                     {
                         if (tablesFind[0].IndexColumnThickness != -1)
                         {

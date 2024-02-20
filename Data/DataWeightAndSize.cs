@@ -521,10 +521,6 @@ namespace RelaxingKompas.Data
             {
                 Application.MessageBoxEx("Найдено две таблицы с данными о позициях. Удалите одну.", "Ошибка", 64);
             }
-            if (tablesFind.Count == 0)
-            {
-                Application.MessageBoxEx("Не найдена таблица с данными по позициям. Обратитесь к разработчику.", "Ошибка", 64);
-            }
         }
     }
 }

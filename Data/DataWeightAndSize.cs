@@ -451,8 +451,10 @@ namespace RelaxingKompas.Data
         /// Заполнение толщины и стали из таблицы.
         /// </summary>
         /// <param name="formWeightAndSize"></param>
-        static public  void SetThicknessandSteel(FormWeightAndSize formWeightAndSize)
+        static public  void SetThicknessandSteel()
         {
+            string stampthickness = FormWeightAndSize.tb_thickness.Text;
+            string stampsteel = FormWeightAndSize.tb_steel.Text;
             List<TablePosDet> tablesFind = new List<TablePosDet>();
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
@@ -475,7 +477,7 @@ namespace RelaxingKompas.Data
                             }
                             if (tablePosDet != null)
                             {
-                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("s", StringComparison.CurrentCultureIgnoreCase) != -1
+                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("s", StringComparison.CurrentCultureIgnoreCase) != -1 //Если в сборке то может найти не только толщину но и сталь упора
                                     || (table.Cell[i, j].Text as IText).Str.IndexOf("толщина", StringComparison.CurrentCultureIgnoreCase) != -1)
                                 {
                                     tablePosDet.IndexColumnThickness = j;
@@ -494,15 +496,23 @@ namespace RelaxingKompas.Data
             {
                 for (int i = 0; i < tablesFind[0].Table.RowsCount; i++)
                 {
-                    if ((tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnPos].Text as IText).Str.Trim() == formWeightAndSize.tb_pos.Text.Trim())
+                    if ((tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnPos].Text as IText).Str.Trim() == FormWeightAndSize.tb_pos.Text.Trim())
                     {
                         if (tablesFind[0].IndexColumnThickness != -1)
                         {
-                            formWeightAndSize.tb_thickness.Text = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnThickness].Text as IText).Str;
+                            FormWeightAndSize.tb_thickness.Text = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnThickness].Text as IText).Str;
+                        }
+                        else
+                        {
+                            FormWeightAndSize.tb_thickness.Text = stampthickness;
                         }
                         if (tablesFind[0].IndexColumnSteel != -1)
                         {
-                            formWeightAndSize.tb_steel.Text = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnSteel].Text as IText).Str;
+                            FormWeightAndSize.tb_steel.Text = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnSteel].Text as IText).Str;
+                        }
+                        else
+                        {
+                            FormWeightAndSize.tb_steel.Text = stampsteel;
                         }
                     }
                 }

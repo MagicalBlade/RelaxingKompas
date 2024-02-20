@@ -466,7 +466,7 @@ namespace RelaxingKompas
             #endregion
             
             //Заполнение толщины и стали из таблицы. Это для чертежей подсборок/стыковки
-            DataWeightAndSize.SetThicknessandSteel(WindowWeightAndSize);
+            DataWeightAndSize.SetThicknessandSteel();
 
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки

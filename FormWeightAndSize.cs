@@ -194,9 +194,7 @@ namespace RelaxingKompas
 
         private void tb_pos_TextChanged(object sender, EventArgs e)
         {
-            this.tb_thickness.Text = "";
-            this.tb_steel.Text = "";
-            DataWeightAndSize.SetThicknessandSteel(this);
+            DataWeightAndSize.SetThicknessandSteel();
         }
     }
 }

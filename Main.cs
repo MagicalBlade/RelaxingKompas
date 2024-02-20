@@ -30,6 +30,7 @@ using System.Xml;
 using System.Windows.Controls;
 using System.Windows.Media.Media3D;
 using DocumentFormat.OpenXml.Office2016.Drawing.Command;
+using System.Security.AccessControl;
 
 namespace RelaxingKompas
 {
@@ -1326,7 +1327,9 @@ namespace RelaxingKompas
 
             document2DAPI5.ksUndoContainer(false);
         }
-
+        /// <summary>
+        /// Запись имени файла в ячейку "Обозначение" в штампе
+        /// </summary>
         private void SetNameDocumentStamp()
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
@@ -1365,27 +1368,68 @@ namespace RelaxingKompas
             //}
             //kompasDocuments2D1.Close(DocumentCloseOptions.kdSaveChanges);
 
-            IPropertyMng propertyMng = (IPropertyMng)Application;
-            _Property property = propertyMng.GetProperty(kompasDocument, "Обозначение");
-            IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument2D;
-            propertyKeeper.SetComplexPropertyValue(property,
-                $@"<?xml version=""1.0""?>
-                    <document fromSource=""false"" expression="""" type=""string"">
-                     <property id=""base"" value=""qwe"" type=""string"" />
-                     <property id=""embodimentDelimiter"" value=""-"" type=""string"" />
-                     <property id=""embodimentNumber"" value="""" type=""string"" />
-                     <property id=""additionalDelimiter"" value=""."" type=""string"" />
-                     <property id=""additionalNumber"" value="""" type=""string"" />
-                     <property id=""documentDelimiter"" value="""" type=""string"" />
-                     <property id=""documentNumber"" value="""" type=""string"" />
-                    </document>"
-                );
-            property.Update();
+            //IPropertyMng propertyMng = (IPropertyMng)Application;
+            //_Property property = propertyMng.GetProperty(kompasDocument, "Обозначение");
+            //IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument2D;
+            //propertyKeeper.SetComplexPropertyValue(property,
+            //    $@"<?xml version=""1.0""?>
+            //        <document fromSource=""false"" expression="""" type=""string"">
+            //         <property id=""base"" value=""qwe"" type=""string"" />
+            //         <property id=""embodimentDelimiter"" value=""-"" type=""string"" />
+            //         <property id=""embodimentNumber"" value="""" type=""string"" />
+            //         <property id=""additionalDelimiter"" value=""."" type=""string"" />
+            //         <property id=""additionalNumber"" value="""" type=""string"" />
+            //         <property id=""documentDelimiter"" value="""" type=""string"" />
+            //         <property id=""documentNumber"" value="""" type=""string"" />
+            //        </document>"
+            //    );
+            //property.Update();
 
             IStamp stamp = layoutSheet.Stamp;
             if (stamp == null) return;
             stamp.Text[2].Str = "123";
             stamp.Update();
+            document2DAPI5.ksEditViewObject(stamp.Reference);
+            document2DAPI5.ksUndoContainer(false);
+        }
+
+        private void InsertExcelintoTable()
+        {
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)Application.ActiveDocument;
+            IKompasDocument1 kompasDocument1 = (IKompasDocument1)Application.ActiveDocument;
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            object selecobjects = selectionManager.SelectedObjects;
+            if (selecobjects == null)
+            {
+                Application.MessageBoxEx("Не выбрана таблица", "Ошибка", 0);
+                return;
+            }
+            if (selecobjects.GetType().Name == "Object[]")
+            {
+                Application.MessageBoxEx("Выбрано элементов. Выберите одну таблицу.", "Ошибка", 0);
+                return;
+            }
+            IKompasAPIObject kompasAPIObject = (IKompasAPIObject)selecobjects;
+            //Application.MessageBoxEx($"{kompasAPIObject.Type}", "Ошибка", 64);
+
+
+
+            IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
+            IDrawingGroup drawingGroup = drawingGroups.Add(true, "test");
+            drawingGroup.Open();
+            //drawingGroup.ReadFromClip(false, false);
+            //drawingGroup.WriteToClip(false, false);
+            drawingGroup.Store();
+            drawingGroup.Close();
+            //drawingGroup.Clear(true);
+            //drawingGroup.Delete();
+
 
             document2DAPI5.ksUndoContainer(false);
         }
@@ -1481,7 +1525,8 @@ namespace RelaxingKompas
                 case 12: SetTolerance(); break;
                 case 13: StepDimension(); break;
                 case 14: SetNameDocumentStamp(); break;
-                case 15: MacroObjectsReplacement(); break;
+                case 15: InsertExcelintoTable(); break;
+                case 16: MacroObjectsReplacement(); break;
             }
         }
 

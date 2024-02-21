@@ -203,7 +203,7 @@ namespace RelaxingKompas.Data
                     //worksheet.Cell(rowcount, 10).SetValue(export[9]);
 
                     worksheet.Cell(rowcount, 1).Value = export[0];
-                    if (export[0].IndexOf('.') == -1)
+                    if (export[0].IndexOf('.') != -1)
                     {
                         worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
 

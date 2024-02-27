@@ -142,35 +142,32 @@ namespace RelaxingKompas.Data
                 {
                     worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                    worksheet.Cell(1, 1).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 2).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 3).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 4).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 5).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 6).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 7).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 8).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 9).Style.NumberFormat.Format = "General";
-                    worksheet.Cell(1, 10).Style.NumberFormat.Format = "General";
-
-                    worksheet.Cell(1, 1).SetValue(header[0]);
-                    worksheet.Cell(1, 2).SetValue(header[1]);
-                    worksheet.Cell(1, 3).SetValue(header[2]);
-                    worksheet.Cell(1, 4).SetValue(header[3]);
-                    worksheet.Cell(1, 5).SetValue(header[4]);
-                    worksheet.Cell(1, 6).SetValue(header[5]);
-                    worksheet.Cell(1, 7).SetValue(header[6]);
-                    worksheet.Cell(1, 8).SetValue(header[7]);
-                    worksheet.Cell(1, 9).SetValue(header[8]);
-                    worksheet.Cell(1, 10).SetValue(header[9]);
+                    worksheet.Cell(1, 1).Value = header[0];
+                    worksheet.Cell(1, 1).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 2).Value = header[1];
+                    worksheet.Cell(1, 2).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 3).Value = header[2];
+                    worksheet.Cell(1, 3).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 4).Value = header[3];
+                    worksheet.Cell(1, 4).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 5).Value = header[4];
+                    worksheet.Cell(1, 5).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 6).Value = header[5];
+                    worksheet.Cell(1, 6).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 7).Value = header[6];
+                    worksheet.Cell(1, 7).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 8).Value = header[7];
+                    worksheet.Cell(1, 8).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 9).Value = header[8];
+                    worksheet.Cell(1, 9).DataType = XLDataType.Text;
+                    worksheet.Cell(1, 10).Value = header[9];
+                    worksheet.Cell(1, 10).DataType = XLDataType.Text;
                 }
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, header.Length).AdjustToContents();
                 #endregion
                 rowcount = 2;
                 InsertInformation(worksheet, dataexport);
-
-
 
                 workbook.SaveAs($"{PathExcelFile}{NameExcelFile}.xlsx");
             }
@@ -180,27 +177,6 @@ namespace RelaxingKompas.Data
                 if (worksheet != null)
                 {
                     worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    //worksheet.Cell(rowcount, 1).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 2).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 3).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 4).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 5).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 6).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 7).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 8).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 9).Style.NumberFormat.Format = "General";
-                    //worksheet.Cell(rowcount, 10).Style.NumberFormat.Format = "General";
-
-                    //worksheet.Cell(rowcount, 1).SetValue(export[0]);
-                    //worksheet.Cell(rowcount, 2).SetValue(export[1]);
-                    //worksheet.Cell(rowcount, 3).SetValue(export[2]);
-                    //worksheet.Cell(rowcount, 4).SetValue(export[3]);
-                    //worksheet.Cell(rowcount, 5).SetValue(export[4]);
-                    //worksheet.Cell(rowcount, 6).SetValue(export[5]);
-                    //worksheet.Cell(rowcount, 7).SetValue(export[6]);
-                    //worksheet.Cell(rowcount, 8).SetValue(export[7]);
-                    //worksheet.Cell(rowcount, 9).SetValue(export[8]);
-                    //worksheet.Cell(rowcount, 10).SetValue(export[9]);
 
                     worksheet.Cell(rowcount, 1).Value = export[0];
                     if (export[0].IndexOf('.') != -1)
@@ -244,26 +220,6 @@ namespace RelaxingKompas.Data
                     }
                     worksheet.Cell(rowcount, 10).Value = export[9];
                     worksheet.Cell(rowcount, 10).DataType = XLDataType.Number;
-
-                    //try
-                    //{
-                    //    worksheet.Cell(rowcount, 7).SetValue<double>(Convert.ToDouble((export[6]), CultureInfo.DefaultThreadCurrentCulture));
-                    //}
-                    //catch (Exception)
-                    //{
-                    //    worksheet.Cell(rowcount, 7).Style.NumberFormat.Format = "@";
-                    //    worksheet.Cell(rowcount, 7).SetValue<string>(export[6]);
-                    //}
-                    //try
-                    //{
-                    //    worksheet.Cell(rowcount, 10).SetValue<double>(Convert.ToDouble((export[9]), CultureInfo.DefaultThreadCurrentCulture));
-                    //}
-                    //catch (Exception)
-                    //{
-                    //    worksheet.Cell(rowcount, 10).Style.NumberFormat.Format = "@";
-                    //    worksheet.Cell(rowcount, 10).SetValue<string>(export[9]);
-                    //}
-
                 }
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, export.Length).AdjustToContents(); 

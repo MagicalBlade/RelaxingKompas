@@ -31,6 +31,8 @@ using System.Windows.Controls;
 using System.Windows.Media.Media3D;
 using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 using System.Security.AccessControl;
+using System.Linq;
+using Microsoft.VisualBasic;
 
 namespace RelaxingKompas
 {
@@ -1327,6 +1329,7 @@ namespace RelaxingKompas
 
             document2DAPI5.ksUndoContainer(false);
         }
+
         /// <summary>
         /// Запись имени файла в ячейку "Обозначение" в штампе
         /// </summary>
@@ -1393,45 +1396,79 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
         }
 
-        private void InsertExcelintoTable()
+        /// <summary>
+        /// Сохранить PDF в папку Завершенные чертежи
+        /// </summary>
+        private void PrintPDF()
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
-            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
-            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)Application.ActiveDocument;
-            IKompasDocument1 kompasDocument1 = (IKompasDocument1)Application.ActiveDocument;
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            if (kompas.ksYesNo("Сохранить PDF в папку Завершенные чертежи?") != 1) return;
 
-            document2DAPI5.ksUndoContainer(true);
-
-            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            object selecobjects = selectionManager.SelectedObjects;
-            if (selecobjects == null)
+            #region Получание адреса папки Завершенные чертежи
+            ILibraryManager libraryManager = Application.LibraryManager;
+            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
+            string pathAdressesFolderBZMMK = $"{pathlibrary}\\Resources\\Адреса основных папок БЗММК.txt";
+            if (!File.Exists(pathAdressesFolderBZMMK))
             {
-                Application.MessageBoxEx("Не выбрана таблица", "Ошибка", 0);
+                MessageBox.Show("Не найден файл с адресом к папке \"Завершенные чертежи\" Обратитесь к разработчику.");
                 return;
             }
-            if (selecobjects.GetType().Name == "Object[]")
+            string readAdresses = "";
+            using (StreamReader sr = new StreamReader(pathAdressesFolderBZMMK))
             {
-                Application.MessageBoxEx("Выбрано элементов. Выберите одну таблицу.", "Ошибка", 0);
+                readAdresses = sr.ReadToEnd();
+            }
+            if (readAdresses == "")
+            {
+                MessageBox.Show($"Неудалось прочитать файл с адресами папок. Обратитесь к разработчику.");
                 return;
             }
-            IKompasAPIObject kompasAPIObject = (IKompasAPIObject)selecobjects;
-            //Application.MessageBoxEx($"{kompasAPIObject.Type}", "Ошибка", 64);
-
-
-
-            IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
-            IDrawingGroup drawingGroup = drawingGroups.Add(true, "test");
-            drawingGroup.Open();
-            //drawingGroup.ReadFromClip(false, false);
-            //drawingGroup.WriteToClip(false, false);
-            drawingGroup.Store();
-            drawingGroup.Close();
-            //drawingGroup.Clear(true);
-            //drawingGroup.Delete();
-
-
-            document2DAPI5.ksUndoContainer(false);
+            Dictionary<string, string> adresess = new Dictionary<string, string>();
+            foreach (string line in readAdresses.Split('\n'))
+            {
+                string[] temp = line.Split('-').Select(x => x.Trim()).ToArray();
+                if (temp.Length != 2) break;
+                adresess.Add(temp[0], temp[1]);
+            }
+            if (!adresess.ContainsKey("Завершенные чертежи"))
+            {
+                MessageBox.Show($"Не найден путь к папке \"Завершенные чертежи\". Обратитесь к разработчику.");
+                return;
+            }
+            #endregion
+            
+            string nameorder = "1"; //TODO распарсить название заказа
+            string pathFolderSavePDF = $"{adresess["Завершенные чертежи"]}{nameorder}";
+            if (!Directory.Exists(pathFolderSavePDF))
+            {
+                MessageBox.Show($"Не найдена папка заказа в Завершенных чертежах. PDF не сохранен.");
+                return;
+            }
+            string pathSavePDF = $"{pathFolderSavePDF}\\{kompasDocument.Name.Substring(0, kompasDocument.Name.Length - 3)}pdf";
+            //Проверка на существование файла и варианты что с этим делать
+            if (!File.Exists(pathSavePDF))
+            {
+                kompasDocument.SaveAs(pathSavePDF);
+                if (File.Exists(pathSavePDF))
+                {
+                    Application.MessageBoxEx("PDF сохранен.", "Успешно", 64);
+                }
+                else
+                {
+                    MessageBox.Show($"Не удалось сохранить PDF. Возможно не хватает прав на сохранение в этой папке.");
+                }
+                return;
+            }
+            else
+            {
+                if (kompas.ksYesNo("Файл существует. Хотите его заменить?") != 1) return;
+                DateTime olddata = File.GetLastWriteTime(pathSavePDF);
+                kompasDocument.SaveAs(pathSavePDF);
+                if (olddata == File.GetLastWriteTime(pathSavePDF))
+                {
+                    MessageBox.Show("Не удалось перезаписать файл. Возможно файл кем то открыт или нет прав на этот файл.");
+                }
+            }
         }
 
         private void MacroObjectsReplacement()
@@ -1525,7 +1562,7 @@ namespace RelaxingKompas
                 case 12: SetTolerance(); break;
                 case 13: StepDimension(); break;
                 case 14: SetNameDocumentStamp(); break;
-                case 15: InsertExcelintoTable(); break;
+                case 15: PrintPDF(); break;
                 case 16: MacroObjectsReplacement(); break;
             }
         }

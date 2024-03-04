@@ -1438,7 +1438,7 @@ namespace RelaxingKompas
             #endregion
             
             string nameorder = Array.Find(kompasDocument.PathName.Split('\\'), x => x.IndexOf("З.з.№") != -1);
-            string pathFolderSavePDF = $"{adresess["Завершенные чертежи\\Сборка"]}\\{nameorder}";
+            string pathFolderSavePDF = $"{adresess["Завершенные чертежи"]}\\{nameorder}";
             Process.Start(pathFolderSavePDF);
             return;
 

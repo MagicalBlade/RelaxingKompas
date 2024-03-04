@@ -1426,19 +1426,22 @@ namespace RelaxingKompas
             Dictionary<string, string> adresess = new Dictionary<string, string>();
             foreach (string line in readAdresses.Split('\n'))
             {
-                string[] temp = line.Split('-').Select(x => x.Trim()).ToArray();
+                string[] temp = line.Split(':').Select(x => x.Trim()).ToArray();
                 if (temp.Length != 2) break;
                 adresess.Add(temp[0], temp[1]);
             }
-            if (!adresess.ContainsKey("Завершенные чертежи"))
+            if (!adresess.ContainsKey("Завершенные чертежи\\Сборка"))
             {
                 MessageBox.Show($"Не найден путь к папке \"Завершенные чертежи\". Обратитесь к разработчику.");
                 return;
             }
             #endregion
             
-            string nameorder = "1"; //TODO распарсить название заказа
-            string pathFolderSavePDF = $"{adresess["Завершенные чертежи"]}{nameorder}";
+            string nameorder = Array.Find(kompasDocument.PathName.Split('\\'), x => x.IndexOf("З.з.№") != -1);
+            string pathFolderSavePDF = $"{adresess["Завершенные чертежи\\Сборка"]}\\{nameorder}";
+            Process.Start(pathFolderSavePDF);
+            return;
+
             if (!Directory.Exists(pathFolderSavePDF))
             {
                 MessageBox.Show($"Не найдена папка заказа в Завершенных чертежах. PDF не сохранен.");

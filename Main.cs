@@ -1430,17 +1430,16 @@ namespace RelaxingKompas
                 if (temp.Length != 2) break;
                 adresess.Add(temp[0], temp[1]);
             }
-            if (!adresess.ContainsKey("Завершенные чертежи\\Сборка"))
+            if (!adresess.ContainsKey("Завершенные чертежи"))
             {
                 MessageBox.Show($"Не найден путь к папке \"Завершенные чертежи\". Обратитесь к разработчику.");
                 return;
             }
             #endregion
             
-            string nameorder = Array.Find(kompasDocument.PathName.Split('\\'), x => x.IndexOf("З.з.№") != -1);
+            string nameorder = Array.Find(kompasDocument.PathName.Split('\\'), x => x.IndexOf("З.з.№", StringComparison.CurrentCultureIgnoreCase) != -1);
+            //string[] pathFolderSavePDF = Directory.GetDirectories(adresess["Завершенные чертежи"], nameorder, SearchOption.AllDirectories);
             string pathFolderSavePDF = $"{adresess["Завершенные чертежи"]}\\{nameorder}";
-            Process.Start(pathFolderSavePDF);
-            return;
 
             if (!Directory.Exists(pathFolderSavePDF))
             {
@@ -1451,6 +1450,8 @@ namespace RelaxingKompas
             //Проверка на существование файла и варианты что с этим делать
             if (!File.Exists(pathSavePDF))
             {
+                Process.Start(pathFolderSavePDF);
+
                 kompasDocument.SaveAs(pathSavePDF);
                 if (File.Exists(pathSavePDF))
                 {
@@ -1466,11 +1467,14 @@ namespace RelaxingKompas
             {
                 if (kompas.ksYesNo("Файл существует. Хотите его заменить?") != 1) return;
                 DateTime olddata = File.GetLastWriteTime(pathSavePDF);
+                Process.Start(pathFolderSavePDF);
+
                 kompasDocument.SaveAs(pathSavePDF);
                 if (olddata == File.GetLastWriteTime(pathSavePDF))
                 {
                     MessageBox.Show("Не удалось перезаписать файл. Возможно файл кем то открыт или нет прав на этот файл.");
                 }
+                Application.MessageBoxEx("PDF сохранен.", "Успешно", 64);
             }
         }
 

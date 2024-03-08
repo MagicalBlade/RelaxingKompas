@@ -33,6 +33,7 @@ using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 using System.Security.AccessControl;
 using System.Linq;
 using Microsoft.VisualBasic;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace RelaxingKompas
 {
@@ -1529,6 +1530,78 @@ namespace RelaxingKompas
             Application.MessageBoxEx("", "Готово", 64);
         }
 
+        private void CountHoles()
+        {
+            double tolerance = 1;
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (!(selectionManager.SelectedObjects is object[] selectobject))
+            {
+                Application.MessageBoxEx("Выберите несколько макроэлементов.", "Ошибка", 64);
+                return;
+            }
+            List<double[]> coordinats = new List<double[]>();
+            foreach (IKompasAPIObject kompasObject in selectobject.Cast<IKompasAPIObject>())
+            {
+                if (kompasObject is IMacroObject macroobject)
+                {
+                    if (!(macroobject is ISymbols2DContainer symbols2DContainer)) continue;
+                    ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
+                    if (centreMarkers.Count == 0) continue;
+                    macroobject.GetPlacement(out double macroX, out double macroY, out double a, out bool mir);
+                    if (centreMarkers.Count != 1)
+                    {
+                        //Переместить макроэлемент на другой слой пометив как ошибочный
+                        continue;
+                    }
+                    ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
+                    double centrX = macroX + centreMarker.X;
+                    double centrY = macroY + centreMarker.Y;
+                    bool isExists = false;
+                    foreach (double[] coordinat in coordinats)
+                    {
+                        if (Math.Abs(coordinat[0] - centrX) < tolerance && Math.Abs(coordinat[1] - centrY) < tolerance)
+                        {
+                            isExists = true;
+                        }
+                    }
+                    if (isExists)
+                    {
+                        if (macroobject.Parent is IView view)
+                        {
+                            ILayers layers = view.Layers;
+                            ILayer activLayer = layers[0] as ILayer;
+                            ILayer layer = null;
+                            foreach (ILayer item in layers)
+                            {
+                                if(item.Name == "Наложение отверстий") layer = item;
+                            }
+                            if(layer == null) layer = layers.Add();
+                            layer.Name = "Наложение отверстий";
+                            layer.Color = 255;
+                            layer.Update();
+                            macroobject.LayerNumber = layer.LayerNumber;
+                            macroobject.Update();
+                            activLayer.Current = true;
+                            activLayer.Update();
+                        }
+                    }
+                    else
+                    {
+                        coordinats.Add(new double[] { centrX, centrY });
+                    }
+                }
+            }
+            selectionManager.UnselectAll();
+            MessageBox.Show($"{coordinats.Count}");
+            document2DAPI5.ksUndoContainer(false);
+        }
+
         #endregion
 
 
@@ -1571,6 +1644,7 @@ namespace RelaxingKompas
                 case 14: SetNameDocumentStamp(); break;
                 case 15: PrintPDF(); break;
                 case 16: MacroObjectsReplacement(); break;
+                case 17: CountHoles(); break;
             }
         }
 

@@ -1332,6 +1332,134 @@ namespace RelaxingKompas
         }
 
         /// <summary>
+        /// Посчитать количество отверстий которые представлены в виде макроэлементов
+        /// </summary>
+        private void CountHoles()
+        {
+            double tolerance = 1;
+            bool overlayyError = false;
+            bool severalCentersError = false;
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (!(selectionManager.SelectedObjects is object[] selectobject))
+            {
+                Application.MessageBoxEx("Выберите несколько макроэлементов.", "Ошибка", 64);
+                return;
+            }
+            selectionManager.UnselectAll();
+            List<double[]> coordinats = new List<double[]>();
+            List<IDiametralDimension> diametralDimensions = new List<IDiametralDimension>();
+            foreach (IKompasAPIObject kompasObject in selectobject.Cast<IKompasAPIObject>())
+            {
+                if (kompasObject is IMacroObject macroobject)
+                {
+                    if (!(macroobject is ISymbols2DContainer symbols2DContainer)) continue;
+                    ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
+                    if (centreMarkers.Count == 0) continue;
+                    macroobject.GetPlacement(out double macroX, out double macroY, out double a, out bool mir);
+                    if (centreMarkers.Count != 1)
+                    {
+                        if (macroobject.Parent is IView view)
+                        {
+                            ILayers layers = view.Layers;
+                            ILayer activLayer = layers[0] as ILayer;
+                            ILayer layer = null;
+                            foreach (ILayer item in layers)
+                            {
+                                if (item.Name == "Несколько обозначений центров отверстий") layer = item;
+                            }
+                            if (layer == null) layer = layers.Add();
+                            layer.Name = "Несколько обозначений центров отверстий";
+                            layer.Color = 255;
+                            layer.Update();
+                            macroobject.LayerNumber = layer.LayerNumber;
+                            macroobject.Update();
+                            activLayer.Current = true;
+                            activLayer.Update();
+                            severalCentersError = true;
+                        }
+                        continue;
+                    }
+                    ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
+                    double centrX = macroX + centreMarker.X;
+                    double centrY = macroY + centreMarker.Y;
+                    bool isExists = false;
+                    foreach (double[] coordinat in coordinats)
+                    {
+                        if (Math.Abs(coordinat[0] - centrX) < tolerance && Math.Abs(coordinat[1] - centrY) < tolerance)
+                        {
+                            isExists = true;
+                        }
+                    }
+                    if (isExists)
+                    {
+                        if (macroobject.Parent is IView view)
+                        {
+                            ILayers layers = view.Layers;
+                            ILayer activLayer = layers[0] as ILayer;
+                            ILayer layer = null;
+                            foreach (ILayer item in layers)
+                            {
+                                if(item.Name == "Наложение отверстий") layer = item;
+                            }
+                            if(layer == null) layer = layers.Add();
+                            layer.Name = "Наложение отверстий";
+                            layer.Color = 255;
+                            layer.Update();
+                            macroobject.LayerNumber = layer.LayerNumber;
+                            macroobject.Update();
+                            activLayer.Current = true;
+                            activLayer.Update();
+                            overlayyError = true;
+                        }
+                    }
+                    else
+                    {
+                        selectionManager.Select(macroobject);
+                        coordinats.Add(new double[] { centrX, centrY });
+                    }
+                }
+
+                if (kompasObject is IDiametralDimension diametralDimension)
+                {
+                    diametralDimensions.Add(diametralDimension);
+                }
+            }
+
+            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение отверстий. Они вынесены в отдельный слой, проверьте.");
+            if (severalCentersError) MessageBox.Show("Ошибка. Есть макроэлементы в которых несколько обозначений центров отверстий." +
+                " Эти макроэлементы не учтены в количестве отверстий. Они вынесены в отдельный слой, проверьте.");
+
+            if (diametralDimensions.Count == 1)
+            {
+                IDimensionText dimensionText = diametralDimensions[0] as IDimensionText;
+                dimensionText.TextUnder.Str = $"{coordinats.Count}отв.";
+                diametralDimensions[0].Update();
+                Application.MessageBoxEx("Количество отверстий записано в диаметральный размер", "Готово", 64);
+            }
+            if (diametralDimensions.Count == 0 && coordinats.Count != 0)
+            {
+                MessageBox.Show($"Количество макроэлементов: {coordinats.Count}");
+            }
+            if (diametralDimensions.Count > 1)
+            {
+                MessageBox.Show($"Количество макроэлементов: {coordinats.Count}. Выбрано несколько диаметральных размеров, " +
+                    $"данные не записаны!");
+            }
+            if (coordinats.Count == 0)
+            {
+                Application.MessageBoxEx("Не найдены макроэлементы с обозначением центров отверстий", "Ошибка", 64);
+            }
+            document2DAPI5.ksUndoContainer(false);
+        }
+
+        /// <summary>
         /// Запись имени файла в ячейку "Обозначение" в штампе
         /// </summary>
         private void SetNameDocumentStamp()
@@ -1388,7 +1516,6 @@ namespace RelaxingKompas
             //        </document>"
             //    );
             //property.Update();
-
             IStamp stamp = layoutSheet.Stamp;
             if (stamp == null) return;
             stamp.Text[2].Str = "123";
@@ -1529,79 +1656,7 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("", "Готово", 64);
         }
-
-        private void CountHoles()
-        {
-            double tolerance = 1;
-            IKompasDocument kompasDocument = Application.ActiveDocument;
-            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
-
-            document2DAPI5.ksUndoContainer(true);
-
-            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            if (!(selectionManager.SelectedObjects is object[] selectobject))
-            {
-                Application.MessageBoxEx("Выберите несколько макроэлементов.", "Ошибка", 64);
-                return;
-            }
-            List<double[]> coordinats = new List<double[]>();
-            foreach (IKompasAPIObject kompasObject in selectobject.Cast<IKompasAPIObject>())
-            {
-                if (kompasObject is IMacroObject macroobject)
-                {
-                    if (!(macroobject is ISymbols2DContainer symbols2DContainer)) continue;
-                    ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
-                    if (centreMarkers.Count == 0) continue;
-                    macroobject.GetPlacement(out double macroX, out double macroY, out double a, out bool mir);
-                    if (centreMarkers.Count != 1)
-                    {
-                        //Переместить макроэлемент на другой слой пометив как ошибочный
-                        continue;
-                    }
-                    ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
-                    double centrX = macroX + centreMarker.X;
-                    double centrY = macroY + centreMarker.Y;
-                    bool isExists = false;
-                    foreach (double[] coordinat in coordinats)
-                    {
-                        if (Math.Abs(coordinat[0] - centrX) < tolerance && Math.Abs(coordinat[1] - centrY) < tolerance)
-                        {
-                            isExists = true;
-                        }
-                    }
-                    if (isExists)
-                    {
-                        if (macroobject.Parent is IView view)
-                        {
-                            ILayers layers = view.Layers;
-                            ILayer activLayer = layers[0] as ILayer;
-                            ILayer layer = null;
-                            foreach (ILayer item in layers)
-                            {
-                                if(item.Name == "Наложение отверстий") layer = item;
-                            }
-                            if(layer == null) layer = layers.Add();
-                            layer.Name = "Наложение отверстий";
-                            layer.Color = 255;
-                            layer.Update();
-                            macroobject.LayerNumber = layer.LayerNumber;
-                            macroobject.Update();
-                            activLayer.Current = true;
-                            activLayer.Update();
-                        }
-                    }
-                    else
-                    {
-                        coordinats.Add(new double[] { centrX, centrY });
-                    }
-                }
-            }
-            selectionManager.UnselectAll();
-            MessageBox.Show($"{coordinats.Count}");
-            document2DAPI5.ksUndoContainer(false);
-        }
-
+        
         #endregion
 
 
@@ -1641,10 +1696,10 @@ namespace RelaxingKompas
                 case 11: CopyDataFromStamp(); break;
                 case 12: SetTolerance(); break;
                 case 13: StepDimension(); break;
-                case 14: SetNameDocumentStamp(); break;
-                case 15: PrintPDF(); break;
-                case 16: MacroObjectsReplacement(); break;
-                case 17: CountHoles(); break;
+                case 14: CountHoles(); break;
+                case 15: SetNameDocumentStamp(); break;
+                case 16: PrintPDF(); break;
+                case 17: MacroObjectsReplacement(); break;
             }
         }
 

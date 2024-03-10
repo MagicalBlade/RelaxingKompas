@@ -1443,6 +1443,8 @@ namespace RelaxingKompas
                 diametralDimensions[0].Update();
                 Application.MessageBoxEx("Количество отверстий записано в диаметральный размер", "Готово", 64);
             }
+            //TODO скопировать количество макроэлементов в буфер обмена?
+            //TODO сделать более красивый вывод информации??
             if (diametralDimensions.Count == 0 && coordinats.Count != 0)
             {
                 MessageBox.Show($"Количество макроэлементов: {coordinats.Count}");

@@ -34,6 +34,7 @@ using System.Security.AccessControl;
 using System.Linq;
 using Microsoft.VisualBasic;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Office2021.DocumentTasks;
 
 namespace RelaxingKompas
 {
@@ -49,6 +50,7 @@ namespace RelaxingKompas
         public IApplication Application { get => _application; set => _application = value; }
 
         private IApplication _application;
+
 
 
         private ksDocument2D _activedocument2D;
@@ -1487,8 +1489,6 @@ namespace RelaxingKompas
             };
 
 
-
-
             //IDocuments documents = Application.Documents;
             //IKompasDocument2D kompasDocuments2D1 = (IKompasDocument2D)documents.Open("d:\\Temp\\7\\поз. 55_ред.13.03.cdw", false, false);
 
@@ -1520,10 +1520,19 @@ namespace RelaxingKompas
             //property.Update();
             IStamp stamp = layoutSheet.Stamp;
             if (stamp == null) return;
-            stamp.Text[2].Str = "123";
+            string namefile = kompasDocument.Name;
+            stamp.Text[2].Str = $"{namefile.Substring(0, namefile.Length-4)}";
             stamp.Update();
-            document2DAPI5.ksEditViewObject(stamp.Reference);
             document2DAPI5.ksUndoContainer(false);
+            
+        }
+        private void SetNameDocumentStamp1()
+        {
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            string namefile = kompasDocument.Name;
+            namefile = $"{namefile.Substring(0, namefile.Length - 4)}";
+            Clipboard.SetText(namefile);
+            Application.MessageBoxEx("Название файла документа скопировано в буфер обмена", "Готово", 64);
         }
 
         /// <summary>
@@ -1700,8 +1709,9 @@ namespace RelaxingKompas
                 case 13: StepDimension(); break;
                 case 14: CountHoles(); break;
                 case 15: SetNameDocumentStamp(); break;
-                case 16: PrintPDF(); break;
-                case 17: MacroObjectsReplacement(); break;
+                case 16: SetNameDocumentStamp1(); break;
+                case 17: PrintPDF(); break;
+                case 18: MacroObjectsReplacement(); break;
             }
         }
 

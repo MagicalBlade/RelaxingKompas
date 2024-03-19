@@ -409,8 +409,8 @@ namespace RelaxingKompas
             //Пересчет координат точек из системы координат(СК) листа в СК вида.
             ksdocument2D.ksSheetToView(LeftMathPointParam.x, LeftMathPointParam.y, out LeftX, out LeftY);
             ksdocument2D.ksSheetToView(RightMathPointParam.x, RightMathPointParam.y, out RightX, out RightY);
-            double width = Math.Round(RightY - LeftY, MidpointRounding.AwayFromZero);
-            double length = Math.Round(RightX - LeftX, MidpointRounding.AwayFromZero);
+            double width = Math.Abs(Math.Round(RightY - LeftY, MidpointRounding.AwayFromZero));
+            double length = Math.Abs(Math.Round(RightX - LeftX, MidpointRounding.AwayFromZero));
             #endregion
 
             if (width < length)

@@ -92,11 +92,13 @@ namespace RelaxingKompas
             // 
             // tb_weight
             // 
+            this.tb_weight.BackColor = System.Drawing.Color.Red;
             this.tb_weight.Location = new System.Drawing.Point(378, 153);
             this.tb_weight.Margin = new System.Windows.Forms.Padding(5);
             this.tb_weight.Name = "tb_weight";
             this.tb_weight.Size = new System.Drawing.Size(46, 20);
             this.tb_weight.TabIndex = 3;
+            this.tb_weight.TextChanged += new System.EventHandler(this.tb_WeightAndSize_TextChanged);
             this.tb_weight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tb_weight_MouseDown);
             // 
             // l_thickness
@@ -208,6 +210,7 @@ namespace RelaxingKompas
             this.tb_width.Name = "tb_width";
             this.tb_width.Size = new System.Drawing.Size(49, 20);
             this.tb_width.TabIndex = 13;
+            this.tb_width.TextChanged += new System.EventHandler(this.tb_WeightAndSize_TextChanged);
             // 
             // tb_length
             // 
@@ -216,6 +219,7 @@ namespace RelaxingKompas
             this.tb_length.Name = "tb_length";
             this.tb_length.Size = new System.Drawing.Size(58, 20);
             this.tb_length.TabIndex = 14;
+            this.tb_length.TextChanged += new System.EventHandler(this.tb_WeightAndSize_TextChanged);
             // 
             // l_width
             // 
@@ -263,6 +267,7 @@ namespace RelaxingKompas
             this.tb_sheet.Name = "tb_sheet";
             this.tb_sheet.Size = new System.Drawing.Size(53, 20);
             this.tb_sheet.TabIndex = 3;
+            this.tb_sheet.TextChanged += new System.EventHandler(this.tb_WeightAndSize_TextChanged);
             // 
             // l_sheet
             // 
@@ -276,11 +281,13 @@ namespace RelaxingKompas
             // 
             // tb_steel
             // 
+            this.tb_steel.BackColor = System.Drawing.Color.Red;
             this.tb_steel.Location = new System.Drawing.Point(296, 153);
             this.tb_steel.Margin = new System.Windows.Forms.Padding(5);
             this.tb_steel.Name = "tb_steel";
             this.tb_steel.Size = new System.Drawing.Size(72, 20);
             this.tb_steel.TabIndex = 13;
+            this.tb_steel.TextChanged += new System.EventHandler(this.tb_WeightAndSize_TextChanged);
             // 
             // l_steel
             // 

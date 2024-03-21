@@ -2,6 +2,7 @@
 using KompasAPI7;
 using RelaxingKompas.Data;
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
@@ -44,6 +45,15 @@ namespace RelaxingKompas
         private void tb_thickness_TextChanged(object sender, EventArgs e)
         {
             Weight();
+            TextBox textBox = sender as TextBox;
+            if (textBox.Text == "0" || textBox.Text == "" || textBox.Text.IndexOf("s", StringComparison.CurrentCultureIgnoreCase) != -1)
+            {
+                textBox.BackColor = Color.Red;
+            }
+            else
+            {
+                textBox.BackColor = SystemColors.Window;
+            }
         }
 
         private void tb_density_TextChanged(object sender, EventArgs e)
@@ -195,6 +205,28 @@ namespace RelaxingKompas
         private void tb_pos_TextChanged(object sender, EventArgs e)
         {
             DataWeightAndSize.SetThicknessandSteel();
+            TextBox textBox = sender as TextBox;
+            if (textBox.Text == "0" || textBox.Text == "")
+            {
+                textBox.BackColor = Color.Red;
+            }
+            else
+            {
+                textBox.BackColor = SystemColors.Window;
+            }
+        }
+
+        private void tb_WeightAndSize_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox.Text == "0" || textBox.Text == "")
+            {
+                textBox.BackColor = Color.Red;
+            }
+            else
+            {
+                textBox.BackColor = SystemColors.Window;
+            }
         }
     }
 }

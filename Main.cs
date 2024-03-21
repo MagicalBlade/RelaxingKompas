@@ -1667,7 +1667,24 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("", "Готово", 64);
         }
-        
+
+
+        /// <summary>
+        /// Открытие файла помощи
+        /// </summary>
+        private void OpenHelp()
+        {
+            ILibraryManager libraryManager = Application.LibraryManager;
+            string path = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}\\Help\\index.html"; //Получить путь к папке библиотеки
+            if (File.Exists(path))
+            {
+                Process.Start(path);
+            }
+            else
+            {
+                Application.MessageBoxEx("Файл помощи не найден. Обратитесь к разработчику", "Ошибка", 64);
+            }
+        }
         #endregion
 
 
@@ -1712,6 +1729,10 @@ namespace RelaxingKompas
                 case 16: SetNameDocumentStamp1(); break;
                 case 17: PrintPDF(); break;
                 case 18: MacroObjectsReplacement(); break;
+
+
+
+                case 999: OpenHelp(); break;
             }
         }
 

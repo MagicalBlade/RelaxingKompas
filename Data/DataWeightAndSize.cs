@@ -467,28 +467,60 @@ namespace RelaxingKompas.Data
                 {
                     ITable table = drawingTable as ITable;
                     TablePosDet tablePosDet = null;
-                    for (int i = 0; i < table.RowsCount; i++)
+                    //Если это чертеж сборки
+                    if ((table.Cell[0, 0].Text as IText).Str.IndexOf("спецификация металла", StringComparison.CurrentCultureIgnoreCase) != -1)
                     {
-                        for (int j = 0; j < table.ColumnsCount; j++)
+                        for (int i = 0; i < table.RowsCount; i++)
                         {
-                            if ((table.Cell[i, j].Text as IText).Str.IndexOf("поз", StringComparison.CurrentCultureIgnoreCase) != -1)
+                            for (int j = 0; j < table.ColumnsCount; j++)
                             {
-                                tablePosDet = new TablePosDet(table, j);
-                            }
-                            if (tablePosDet != null)
-                            {
-                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("s", StringComparison.CurrentCultureIgnoreCase) != -1 //Если в сборке то может найти не только толщину но и сталь упора
-                                    || (table.Cell[i, j].Text as IText).Str.IndexOf("толщина", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("поз", StringComparison.CurrentCultureIgnoreCase) != -1
+                                    || (table.Cell[i, j].Text as IText).Str.IndexOf("марка", StringComparison.CurrentCultureIgnoreCase) != -1)
                                 {
-                                    tablePosDet.IndexColumnThickness = j;
+                                    tablePosDet = new TablePosDet(table, j);
                                 }
-                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("материал", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                if (tablePosDet != null)
                                 {
-                                    tablePosDet.IndexColumnSteel = j;
+                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("сечение", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                    {
+                                        tablePosDet.IndexColumnThickness = j;
+                                    }
+                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("материал", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                    {
+                                        tablePosDet.IndexColumnSteel = j;
+                                    }
                                 }
                             }
                         }
                     }
+                    //Если это чертеж деталировки
+                    else
+                    {
+                        for (int i = 0; i < table.RowsCount; i++)
+                        {
+                            for (int j = 0; j < table.ColumnsCount; j++)
+                            {
+                                if ((table.Cell[i, j].Text as IText).Str.IndexOf("поз", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                {
+                                    tablePosDet = new TablePosDet(table, j);
+                                }
+                                if (tablePosDet != null)
+                                {
+                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("s", StringComparison.CurrentCultureIgnoreCase) != -1
+                                        || (table.Cell[i, j].Text as IText).Str.IndexOf("толщина", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                    {
+                                        tablePosDet.IndexColumnThickness = j;
+                                    }
+                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("материал", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                    {
+                                        tablePosDet.IndexColumnSteel = j;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    
                     if (tablePosDet != null) tablesFind.Add(tablePosDet);
                 }
             }
@@ -500,7 +532,15 @@ namespace RelaxingKompas.Data
                     {
                         if (tablesFind[0].IndexColumnThickness != -1)
                         {
-                            FormWeightAndSize.tb_thickness.Text = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnThickness].Text as IText).Str;
+                            string thicknes = (tablesFind[0].Table.Cell[i, tablesFind[0].IndexColumnThickness].Text as IText).Str;
+                            if (thicknes.IndexOf("х") != -1 || thicknes.IndexOf("x") != -1)
+                            {
+                                FormWeightAndSize.tb_thickness.Text = thicknes.Split(new char[] {'x', 'х' })[0].Trim();
+                            }
+                            else
+                            {
+                                FormWeightAndSize.tb_thickness.Text = thicknes;
+                            }
                         }
                         else
                         {

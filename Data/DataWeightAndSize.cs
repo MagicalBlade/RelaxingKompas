@@ -485,7 +485,7 @@ namespace RelaxingKompas.Data
                                     {
                                         tablePosDet.IndexColumnThickness = j;
                                     }
-                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("материал", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("матер", StringComparison.CurrentCultureIgnoreCase) != -1)
                                     {
                                         tablePosDet.IndexColumnSteel = j;
                                     }
@@ -511,7 +511,7 @@ namespace RelaxingKompas.Data
                                     {
                                         tablePosDet.IndexColumnThickness = j;
                                     }
-                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("материал", StringComparison.CurrentCultureIgnoreCase) != -1)
+                                    if ((table.Cell[i, j].Text as IText).Str.IndexOf("матер", StringComparison.CurrentCultureIgnoreCase) != -1)
                                     {
                                         tablePosDet.IndexColumnSteel = j;
                                     }

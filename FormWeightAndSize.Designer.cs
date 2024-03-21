@@ -73,6 +73,7 @@ namespace RelaxingKompas
             // 
             // tb_thickness
             // 
+            this.tb_thickness.BackColor = System.Drawing.Color.Red;
             this.tb_thickness.Location = new System.Drawing.Point(103, 153);
             this.tb_thickness.Margin = new System.Windows.Forms.Padding(5);
             this.tb_thickness.Name = "tb_thickness";
@@ -205,6 +206,7 @@ namespace RelaxingKompas
             // 
             // tb_width
             // 
+            this.tb_width.BackColor = System.Drawing.Color.Red;
             this.tb_width.Location = new System.Drawing.Point(169, 153);
             this.tb_width.Margin = new System.Windows.Forms.Padding(5);
             this.tb_width.Name = "tb_width";
@@ -214,6 +216,7 @@ namespace RelaxingKompas
             // 
             // tb_length
             // 
+            this.tb_length.BackColor = System.Drawing.Color.Red;
             this.tb_length.Location = new System.Drawing.Point(228, 153);
             this.tb_length.Margin = new System.Windows.Forms.Padding(5);
             this.tb_length.Name = "tb_length";
@@ -243,6 +246,7 @@ namespace RelaxingKompas
             // 
             // tb_pos
             // 
+            this.tb_pos.BackColor = System.Drawing.Color.Red;
             this.tb_pos.Location = new System.Drawing.Point(12, 153);
             this.tb_pos.Name = "tb_pos";
             this.tb_pos.Size = new System.Drawing.Size(83, 20);
@@ -262,6 +266,7 @@ namespace RelaxingKompas
             // 
             // tb_sheet
             // 
+            this.tb_sheet.BackColor = System.Drawing.Color.Red;
             this.tb_sheet.Location = new System.Drawing.Point(434, 153);
             this.tb_sheet.Margin = new System.Windows.Forms.Padding(5);
             this.tb_sheet.Name = "tb_sheet";

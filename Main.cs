@@ -1643,53 +1643,85 @@ namespace RelaxingKompas
 
         private void MacroObjectsReplacement()
         {
+            bool severalCentersError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
-            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
-            ViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-            IViews views = viewsAndLayersManager.Views;
-            IView view = views.ActiveView;
-            IDrawingContainer dcview = (IDrawingContainer)view;
-            ICircles circles = dcview.Circles;
 
             document2DAPI5.ksUndoContainer(true);
 
-
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            Object[] drawingObject = selectionManager.SelectedObjects;
-            foreach (var item in drawingObject)
+            if (!(selectionManager.SelectedObjects is object[] selectobject))
             {
-                if (item is IMacroObject macro)
+                Application.MessageBoxEx("Выберите несколько макроэлементов.", "Ошибка", 64);
+                return;
+            }
+            selectionManager.UnselectAll();
+            List<double[]> coordinats = new List<double[]>();
+            foreach (IKompasAPIObject kompasObject in selectobject.Cast<IKompasAPIObject>())
+            {
+                if (kompasObject is IMacroObject macroobject)
                 {
-                    double x = 0;
-                    double y = 0;
-                    double a = 0;
-                    bool b = false;
-                    macro.GetPlacement(out x,out y,out a,out b);
-
-                    IDrawingContainer drawingContainer = (IDrawingContainer)macro;
-                    
-                    foreach (var item1 in drawingContainer.Objects[0])
+                    if (!(macroobject is ISymbols2DContainer symbols2DContainer)) continue;
+                    ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
+                    if (centreMarkers.Count == 0) continue;
+                    macroobject.GetPlacement(out double macroX, out double macroY, out double a, out bool mir);
+                    if (centreMarkers.Count != 1)
                     {
-                        if (item1 is ICircle circle)
+                        if (macroobject.Parent is IView view)
                         {
-                            ICircle circle2 =  circles.Add();
-                            circle2.Xc = circle.Xc;
-                            circle2.Yc = circle.Yc;
-                            circle2.Radius = circle.Radius;
-                            circle2.Update();
-
+                            ILayers layers = view.Layers;
+                            ILayer activLayer = layers[0] as ILayer;
+                            ILayer layer = null;
+                            foreach (ILayer item in layers)
+                            {
+                                if (item.Name == "Несколько обозначений центров отверстий") layer = item;
+                            }
+                            if (layer == null) layer = layers.Add();
+                            layer.Name = "Несколько обозначений центров отверстий";
+                            layer.Color = 255;
+                            layer.Update();
+                            macroobject.LayerNumber = layer.LayerNumber;
+                            macroobject.Update();
+                            activLayer.Current = true;
+                            activLayer.Update();
+                            severalCentersError = true;
                         }
+                        continue;
                     }
-                    
-                }
+                    ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
+                    double cmX = centreMarker.X;
+                    double cmY = centreMarker.Y;
 
+
+                    double centrX = macroX + cmX;
+                    double centrY = macroY + cmY;
+                    coordinats.Add(new double[] { centrX, centrY });
+                }
+            }
+
+            if (severalCentersError) MessageBox.Show("Ошибка. Есть макроэлементы в которых несколько обозначений центров отверстий." +
+                " Эти макроэлементы не учтены в количестве отверстий. Они вынесены в отдельный слой, проверьте.");
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView activView = views.ActiveView;
+            IDrawingContainer drawingContainer = activView as IDrawingContainer;
+            IPoints points = drawingContainer.Points;
+            foreach (double[] coordinat in coordinats)
+            {
+                IPoint point = points.Add();
+                point.X = coordinat[0];
+                point.Y = coordinat[1];
+                point.Update();
             }
 
 
+            if (coordinats.Count == 0)
+            {
+                Application.MessageBoxEx("Не найдены макроэлементы с обозначением центров отверстий", "Ошибка", 64);
+            }
             document2DAPI5.ksUndoContainer(false);
-            Application.MessageBoxEx("", "Готово", 64);
         }
 
 

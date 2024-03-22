@@ -1338,7 +1338,7 @@ namespace RelaxingKompas
         /// </summary>
         private void CountHoles()
         {
-            double tolerance = 1;
+            double tolerance = 1; //Допуск 1мм
             bool overlayyError = false;
             bool severalCentersError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
@@ -1389,8 +1389,31 @@ namespace RelaxingKompas
                         continue;
                     }
                     ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
-                    double centrX = macroX + centreMarker.X;
-                    double centrY = macroY + centreMarker.Y;
+                    double cmX = centreMarker.X;
+                    double cmY = centreMarker.Y;
+
+                    #region Видимо из-за создания макроэлемента в развернутой системе коордиат, путаются знаки у координат центра окружности
+
+                    if (Math.Round(macroX, 10) > 0)
+                    {
+                        cmX = Math.Abs(cmX) * -1;
+                    }
+                    else
+                    {
+                        cmX = Math.Abs(cmX);
+                    }
+                    if (Math.Round(macroY, 10) > 0)
+                    {
+                        cmY = Math.Abs(cmY) * -1;
+                    }
+                    else
+                    {
+                        cmY = Math.Abs(cmY);
+                    } 
+                    #endregion
+
+                    double centrX = macroX + cmX;
+                    double centrY = macroY + cmY;
                     bool isExists = false;
                     foreach (double[] coordinat in coordinats)
                     {
@@ -1434,27 +1457,28 @@ namespace RelaxingKompas
                 }
             }
 
-            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение отверстий. Они вынесены в отдельный слой, проверьте.");
+            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение отверстий. Они вынесены в отдельный слой, проверьте. Эти макроэлементы не учтены в количестве отверстий.");
             if (severalCentersError) MessageBox.Show("Ошибка. Есть макроэлементы в которых несколько обозначений центров отверстий." +
                 " Эти макроэлементы не учтены в количестве отверстий. Они вынесены в отдельный слой, проверьте.");
 
             if (diametralDimensions.Count == 1)
             {
                 IDimensionText dimensionText = diametralDimensions[0] as IDimensionText;
-                dimensionText.TextUnder.Str = $"{coordinats.Count}отв.";
+                dimensionText.TextUnder.Str = $"{coordinats.Count} отв.";
                 diametralDimensions[0].Update();
                 Application.MessageBoxEx("Количество отверстий записано в диаметральный размер", "Готово", 64);
             }
-            //TODO скопировать количество макроэлементов в буфер обмена?
             //TODO сделать более красивый вывод информации??
             if (diametralDimensions.Count == 0 && coordinats.Count != 0)
             {
-                MessageBox.Show($"Количество макроэлементов: {coordinats.Count}");
+                Clipboard.SetText($"{coordinats.Count}");
+                MessageBox.Show($"Количество макроэлементов: {coordinats.Count}. Количество скопировано в буфер обмена.");
             }
             if (diametralDimensions.Count > 1)
             {
+                Clipboard.SetText($"{coordinats.Count}");
                 MessageBox.Show($"Количество макроэлементов: {coordinats.Count}. Выбрано несколько диаметральных размеров, " +
-                    $"данные не записаны!");
+                    $"данные не записаны! Количество скопировано в буфер обмена.");
             }
             if (coordinats.Count == 0)
             {

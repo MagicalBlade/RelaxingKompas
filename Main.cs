@@ -8,33 +8,15 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
-using System.Windows.Interop;
 using RelaxingKompas.Data;
-using System.Runtime.InteropServices.ComTypes;
-using RelaxingKompas.Event;
-using System.Security.Cryptography;
 using RelaxingKompas.Properties;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic.Logging;
 using RelaxingKompas.Classes;
 using RelaxingKompas.Windows;
 using RelaxingKompas.Utils;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using System.Windows.Navigation;
 using System.Globalization;
-using System.Xml;
-using System.Windows.Controls;
-using System.Windows.Media.Media3D;
-using DocumentFormat.OpenXml.Office2016.Drawing.Command;
-using System.Security.AccessControl;
 using System.Linq;
-using Microsoft.VisualBasic;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Office2021.DocumentTasks;
 
 namespace RelaxingKompas
 {
@@ -1389,31 +1371,9 @@ namespace RelaxingKompas
                         continue;
                     }
                     ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
-                    double cmX = centreMarker.X;
-                    double cmY = centreMarker.Y;
-
-                    #region Видимо из-за создания макроэлемента в развернутой системе коордиат, путаются знаки у координат центра окружности
-
-                    if (Math.Round(macroX, 10) > 0)
-                    {
-                        cmX = Math.Abs(cmX) * -1;
-                    }
-                    else
-                    {
-                        cmX = Math.Abs(cmX);
-                    }
-                    if (Math.Round(macroY, 10) > 0)
-                    {
-                        cmY = Math.Abs(cmY) * -1;
-                    }
-                    else
-                    {
-                        cmY = Math.Abs(cmY);
-                    } 
-                    #endregion
-
-                    double centrX = macroX + cmX;
-                    double centrY = macroY + cmY;
+                    double centrX = centreMarker.X;
+                    double centrY = centreMarker.Y;
+                    macroobject.TransformPointToView(ref centrX, ref centrY);
                     bool isExists = false;
                     foreach (double[] coordinat in coordinats)
                     {
@@ -1690,19 +1650,21 @@ namespace RelaxingKompas
                         }
                         continue;
                     }
+                    
                     ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
-                    double cmX = centreMarker.X;
-                    double cmY = centreMarker.Y;
-
-
-                    double centrX = macroX + cmX;
-                    double centrY = macroY + cmY;
+                    double centrX = centreMarker.X;
+                    double centrY = centreMarker.Y;
+                    macroobject.TransformPointToView(ref centrX, ref centrY);
                     coordinats.Add(new double[] { centrX, centrY });
                 }
             }
 
             if (severalCentersError) MessageBox.Show("Ошибка. Есть макроэлементы в которых несколько обозначений центров отверстий." +
                 " Эти макроэлементы не учтены в количестве отверстий. Они вынесены в отдельный слой, проверьте.");
+
+            //IProcess process = kompasDocument2D1.LibProcess[];
+            //Application.ExecuteKompasCommand((int)ProcessTypeEnum.prSelectWithRect, false);
+
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView activView = views.ActiveView;

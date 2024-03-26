@@ -1446,77 +1446,129 @@ namespace RelaxingKompas
             }
             document2DAPI5.ksUndoContainer(false);
         }
-
+        
         /// <summary>
-        /// Запись имени файла в ячейку "Обозначение" в штампе
+        /// Меняет выделенные макроэлементы на последний выдленный макроэлемент
         /// </summary>
-        private void SetNameDocumentStamp()
+        private void MacroObjectsReplacement()
         {
+            bool severalCentersError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
-            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
-            IKompasDocument1 kompasDocument1 = (IKompasDocument1)Application.ActiveDocument;
+            IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            if(kompas.ksYesNo("Заменить макроэлементы?") != 1) return;
 
             document2DAPI5.ksUndoContainer(true);
-            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
-            if (layoutSheets == null) return;
-            if (layoutSheets.Count == 0) return;
-            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
-            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
-            if (layoutSheet == null)
+
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (!(selectionManager.SelectedObjects is object[] selectobject))
             {
-                foreach (ILayoutSheet item in layoutSheets)
+                Application.MessageBoxEx("Выберите несколько макроэлементов.", "Ошибка", 64);
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
+            //Получаем последний выделенный макроэлемент. Им будем заменять остальные макроэлементы
+            if (!(selectobject[selectobject.Length - 1] is IMacroObject lastMacroObject))
+            {
+                Application.MessageBoxEx("Последний выделенный элемент не является макроэлементом", "Ошибка", 64);
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
+
+            #region Проверяем наличие центра отверстий в макроэлементе на который происходит замена
+            if (!(lastMacroObject is ISymbols2DContainer symbols2DContainer2))
+            {
+                Application.MessageBoxEx("В макроэлементе, на который происходит замена, не найдено обозначение центра отверстия", "Ошибка", 64);
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
+            ICentreMarkers centreMarkers2 = symbols2DContainer2.CentreMarkers;
+            if (centreMarkers2.Count == 0)
+            {
+                Application.MessageBoxEx("В макроэлементе, на который происходит замена, не найдено обозначение центра отверстия", "Ошибка", 64);
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
+            if (centreMarkers2.Count != 1)
+            {
+                Application.MessageBoxEx("В макроэлементе, на который происходит замена, найдено несколько обозначение центра отверстий. Уберите один из них", "Ошибка", 64);
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
+            #endregion
+
+            selectionManager.UnselectAll();
+            List<double[]> coordinats = new List<double[]>();
+            List<IMacroObject> macroObjects = new List<IMacroObject>();
+            foreach (IKompasAPIObject kompasObject in selectobject.Cast<IKompasAPIObject>())
+            {
+                if (kompasObject is IMacroObject macroobject)
                 {
-                    layoutSheet = item;
-                    break;
+                    if (!(macroobject is ISymbols2DContainer symbols2DContainer)) continue;
+                    ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
+                    if (centreMarkers.Count == 0) continue;
+                    macroobject.GetPlacement(out double macroX, out double macroY, out double a, out bool mir);
+                    if (centreMarkers.Count != 1)
+                    {
+                        if (macroobject.Parent is IView view)
+                        {
+                            ILayers layers = view.Layers;
+                            ILayer activLayer = layers[0] as ILayer;
+                            ILayer layer = null;
+                            foreach (ILayer item in layers)
+                            {
+                                if (item.Name == "Несколько обозначений центров отверстий") layer = item;
+                            }
+                            if (layer == null) layer = layers.Add();
+                            layer.Name = "Несколько обозначений центров отверстий";
+                            layer.Color = 255;
+                            layer.Update();
+                            macroobject.LayerNumber = layer.LayerNumber;
+                            macroobject.Update();
+                            activLayer.Current = true;
+                            activLayer.Update();
+                            severalCentersError = true;
+                        }
+                        continue;
+                    }
+                    
+                    ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
+                    double centrX = centreMarker.X;
+                    double centrY = centreMarker.Y;
+                    macroobject.TransformPointToView(ref centrX, ref centrY);
+                    coordinats.Add(new double[] { centrX, centrY });
+                    macroObjects.Add(macroobject);
                 }
-            };
+            }
+            if (coordinats.Count == 0)
+            {
+                Application.MessageBoxEx("Не найдены макроэлементы с обозначением центров отверстий", "Ошибка", 64);
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
+            //Получаем координаты центров отверстий последнего макроэлемента.
+            double xOld = coordinats[coordinats.Count - 1][0];
+            double yOld = coordinats[coordinats.Count - 1][1];
+            //Удаляем координаты последнего макроэлементы
+            coordinats.RemoveAt(coordinats.Count - 1);
+            //Копируем новый макроэлемент по координатам
+            foreach (double[] coordinat in coordinats)
+            {
+                ICopyObjectParam copyObjectParam = kompasDocument1.GetInterface(KompasAPIObjectTypeEnum.ksObjectCopyObjectParam) as ICopyObjectParam;
+                copyObjectParam.XNew = coordinat[0];
+                copyObjectParam.YNew = coordinat[1];
+                copyObjectParam.XOld = xOld;
+                copyObjectParam.YOld = yOld;
+                kompasDocument2D1.CopyObjects(lastMacroObject, copyObjectParam);
+            }
+            //Удаляем старые макроэлементы
+            kompasDocument1.Delete(macroObjects.ToArray());
 
-
-            //IDocuments documents = Application.Documents;
-            //IKompasDocument2D kompasDocuments2D1 = (IKompasDocument2D)documents.Open("d:\\Temp\\7\\поз. 55_ред.13.03.cdw", false, false);
-
-            //ILayoutSheets layoutSheets1 = kompasDocuments2D1.LayoutSheets;
-            //foreach (ILayoutSheet layoutSheet1 in layoutSheets1)
-            //{
-            //    IStamp stamp = layoutSheet1.Stamp;
-            //    stamp.Text[2].Str = "123"; 
-            //    stamp.Update();
-            //    break;
-            //}
-            //kompasDocuments2D1.Close(DocumentCloseOptions.kdSaveChanges);
-
-            //IPropertyMng propertyMng = (IPropertyMng)Application;
-            //_Property property = propertyMng.GetProperty(kompasDocument, "Обозначение");
-            //IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument2D;
-            //propertyKeeper.SetComplexPropertyValue(property,
-            //    $@"<?xml version=""1.0""?>
-            //        <document fromSource=""false"" expression="""" type=""string"">
-            //         <property id=""base"" value=""qwe"" type=""string"" />
-            //         <property id=""embodimentDelimiter"" value=""-"" type=""string"" />
-            //         <property id=""embodimentNumber"" value="""" type=""string"" />
-            //         <property id=""additionalDelimiter"" value=""."" type=""string"" />
-            //         <property id=""additionalNumber"" value="""" type=""string"" />
-            //         <property id=""documentDelimiter"" value="""" type=""string"" />
-            //         <property id=""documentNumber"" value="""" type=""string"" />
-            //        </document>"
-            //    );
-            //property.Update();
-            IStamp stamp = layoutSheet.Stamp;
-            if (stamp == null) return;
-            string namefile = kompasDocument.Name;
-            stamp.Text[2].Str = $"{namefile.Substring(0, namefile.Length-4)}";
-            stamp.Update();
             document2DAPI5.ksUndoContainer(false);
-            
-        }
-        private void SetNameDocumentStamp1()
-        {
-            IKompasDocument kompasDocument = Application.ActiveDocument;
-            string namefile = kompasDocument.Name;
-            namefile = $"{namefile.Substring(0, namefile.Length - 4)}";
-            Clipboard.SetText(namefile);
-            Application.MessageBoxEx("Название файла документа скопировано в буфер обмена", "Готово", 64);
+
+            if (severalCentersError) MessageBox.Show("Ошибка. Есть макроэлементы в которых несколько обозначений центров отверстий. Они не заменены и вынесены в отдельный слой, проверьте.");
+            Application.MessageBoxEx("Замена завершена", "Готово", 64);
         }
 
         /// <summary>
@@ -1601,92 +1653,78 @@ namespace RelaxingKompas
             }
         }
 
-        private void MacroObjectsReplacement()
+        /// <summary>
+        /// Запись имени файла в ячейку "Обозначение" в штампе
+        /// </summary>
+        private void SetNameDocumentStamp()
         {
-            bool severalCentersError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
-            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
-            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
+            IKompasDocument1 kompasDocument1 = (IKompasDocument1)Application.ActiveDocument;
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
 
             document2DAPI5.ksUndoContainer(true);
-
-            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            if (!(selectionManager.SelectedObjects is object[] selectobject))
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            if (layoutSheets == null) return;
+            if (layoutSheets.Count == 0) return;
+            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
+            if (layoutSheet == null)
             {
-                Application.MessageBoxEx("Выберите несколько макроэлементов.", "Ошибка", 64);
-                return;
-            }
-            selectionManager.UnselectAll();
-            List<double[]> coordinats = new List<double[]>();
-            foreach (IKompasAPIObject kompasObject in selectobject.Cast<IKompasAPIObject>())
-            {
-                if (kompasObject is IMacroObject macroobject)
+                foreach (ILayoutSheet item in layoutSheets)
                 {
-                    if (!(macroobject is ISymbols2DContainer symbols2DContainer)) continue;
-                    ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
-                    if (centreMarkers.Count == 0) continue;
-                    macroobject.GetPlacement(out double macroX, out double macroY, out double a, out bool mir);
-                    if (centreMarkers.Count != 1)
-                    {
-                        if (macroobject.Parent is IView view)
-                        {
-                            ILayers layers = view.Layers;
-                            ILayer activLayer = layers[0] as ILayer;
-                            ILayer layer = null;
-                            foreach (ILayer item in layers)
-                            {
-                                if (item.Name == "Несколько обозначений центров отверстий") layer = item;
-                            }
-                            if (layer == null) layer = layers.Add();
-                            layer.Name = "Несколько обозначений центров отверстий";
-                            layer.Color = 255;
-                            layer.Update();
-                            macroobject.LayerNumber = layer.LayerNumber;
-                            macroobject.Update();
-                            activLayer.Current = true;
-                            activLayer.Update();
-                            severalCentersError = true;
-                        }
-                        continue;
-                    }
-                    
-                    ICentreMarker centreMarker = centreMarkers[0] as ICentreMarker;
-                    double centrX = centreMarker.X;
-                    double centrY = centreMarker.Y;
-                    macroobject.TransformPointToView(ref centrX, ref centrY);
-                    coordinats.Add(new double[] { centrX, centrY });
+                    layoutSheet = item;
+                    break;
                 }
-            }
-
-            if (severalCentersError) MessageBox.Show("Ошибка. Есть макроэлементы в которых несколько обозначений центров отверстий." +
-                " Эти макроэлементы не учтены в количестве отверстий. Они вынесены в отдельный слой, проверьте.");
-
-            //IProcess process = kompasDocument2D1.LibProcess[];
-            //Application.ExecuteKompasCommand((int)ProcessTypeEnum.prSelectWithRect, false);
-
-            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-            IViews views = viewsAndLayersManager.Views;
-            IView activView = views.ActiveView;
-            IDrawingContainer drawingContainer = activView as IDrawingContainer;
-            IPoints points = drawingContainer.Points;
-            foreach (double[] coordinat in coordinats)
-            {
-                IPoint point = points.Add();
-                point.X = coordinat[0];
-                point.Y = coordinat[1];
-                point.Update();
-            }
+            };
 
 
-            if (coordinats.Count == 0)
-            {
-                Application.MessageBoxEx("Не найдены макроэлементы с обозначением центров отверстий", "Ошибка", 64);
-            }
+            //IDocuments documents = Application.Documents;
+            //IKompasDocument2D kompasDocuments2D1 = (IKompasDocument2D)documents.Open("d:\\Temp\\7\\поз. 55_ред.13.03.cdw", false, false);
+
+            //ILayoutSheets layoutSheets1 = kompasDocuments2D1.LayoutSheets;
+            //foreach (ILayoutSheet layoutSheet1 in layoutSheets1)
+            //{
+            //    IStamp stamp = layoutSheet1.Stamp;
+            //    stamp.Text[2].Str = "123"; 
+            //    stamp.Update();
+            //    break;
+            //}
+            //kompasDocuments2D1.Close(DocumentCloseOptions.kdSaveChanges);
+
+            //IPropertyMng propertyMng = (IPropertyMng)Application;
+            //_Property property = propertyMng.GetProperty(kompasDocument, "Обозначение");
+            //IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument2D;
+            //propertyKeeper.SetComplexPropertyValue(property,
+            //    $@"<?xml version=""1.0""?>
+            //        <document fromSource=""false"" expression="""" type=""string"">
+            //         <property id=""base"" value=""qwe"" type=""string"" />
+            //         <property id=""embodimentDelimiter"" value=""-"" type=""string"" />
+            //         <property id=""embodimentNumber"" value="""" type=""string"" />
+            //         <property id=""additionalDelimiter"" value=""."" type=""string"" />
+            //         <property id=""additionalNumber"" value="""" type=""string"" />
+            //         <property id=""documentDelimiter"" value="""" type=""string"" />
+            //         <property id=""documentNumber"" value="""" type=""string"" />
+            //        </document>"
+            //    );
+            //property.Update();
+            IStamp stamp = layoutSheet.Stamp;
+            if (stamp == null) return;
+            string namefile = kompasDocument.Name;
+            stamp.Text[2].Str = $"{namefile.Substring(0, namefile.Length-4)}";
+            stamp.Update();
             document2DAPI5.ksUndoContainer(false);
+            
         }
-
-
+        private void SetNameDocumentStamp1()
+        {
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            string namefile = kompasDocument.Name;
+            namefile = $"{namefile.Substring(0, namefile.Length - 4)}";
+            Clipboard.SetText(namefile);
+            Application.MessageBoxEx("Название файла документа скопировано в буфер обмена", "Готово", 64);
+        }
+       
         /// <summary>
         /// Открытие файла помощи
         /// </summary>
@@ -1743,10 +1781,10 @@ namespace RelaxingKompas
                 case 12: SetTolerance(); break;
                 case 13: StepDimension(); break;
                 case 14: CountHoles(); break;
-                case 15: SetNameDocumentStamp(); break;
-                case 16: SetNameDocumentStamp1(); break;
-                case 17: PrintPDF(); break;
-                case 18: MacroObjectsReplacement(); break;
+                case 15: MacroObjectsReplacement(); break;
+                case 16: PrintPDF(); break;
+                case 17: SetNameDocumentStamp(); break;
+                case 18: SetNameDocumentStamp1(); break;
 
 
 

@@ -99,12 +99,6 @@
       <DependentUpon>FormRegistration.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\JsonUtils.cs" />
-    <Compile Include="Windows\FormPlaceSymbolHole.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Windows\FormPlaceSymbolHole.Designer.cs">
-      <DependentUpon>FormPlaceSymbolHole.cs</DependentUpon>
-    </Compile>
     <Compile Include="Windows\FormTolerance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,9 +121,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRegistration.resx">
       <DependentUpon>FormRegistration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Windows\FormPlaceSymbolHole.resx">
-      <DependentUpon>FormPlaceSymbolHole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\FormTolerance.resx">
       <DependentUpon>FormTolerance.cs</DependentUpon>
@@ -170,8 +161,53 @@
     <None Include="AsconIconsSDK-Color3.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Hole\D14.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D16.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D18.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D19.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D21.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D23.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D24.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Hole\D25.frw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D27.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D28.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D30.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D32.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D36.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D38.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D50.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hole\D76.frw">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Main.datasource" />

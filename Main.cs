@@ -639,16 +639,14 @@ namespace RelaxingKompas
         /// </summary>
         private void PlaceSymbolHole()
         {
-            FormPlaceSymbolHole formPlaceSymbolHole = new FormPlaceSymbolHole();
-            formPlaceSymbolHole.ShowDialog();
-            if (formPlaceSymbolHole.DialogResult == DialogResult.Cancel) return;
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            if (kompas.ksYesNo("Заменить окружности на условные обозначения отверстий?") != 1) return;
             Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument2D;
             IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument2D;
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
-            ILibraryManager libraryManager = (ILibraryManager)Application.LibraryManager;
+            ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
             document2DAPI5.ksUndoContainer(true);
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
@@ -660,109 +658,27 @@ namespace RelaxingKompas
                 IViews views = viewsAndLayersManager.Views;
                 IView view = views.ActiveView;
                 //Заполняем словарь
-                switch (formPlaceSymbolHole.typeElement)
+                IDrawingContainer drawingContainer = (IDrawingContainer)view;
+                foreach (ICircle circle in drawingContainer.Circles)
                 {
-                    case "circle":
-                        IDrawingContainer drawingContainer = (IDrawingContainer)view;
-                        ICircles circles = drawingContainer.Circles;
-                        foreach (ICircle circle in circles)
-                        {
-                            if (circleList.ContainsKey(circle.Radius * 2))
-                            {
-                                circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
-                            }
-                            else
-                            {
-                                circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
-                            }
-                        }
-                        break;
-                    case "center":
-                        ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
-                        ICentreMarkers centreMarkers = symbols2DContainer.CentreMarkers;
-
-                        foreach (ICentreMarker centreMarker in centreMarkers)
-                        {
-                            if (circleList.ContainsKey(25))
-                            {
-                                circleList[25].Add(new double[] { centreMarker.X, centreMarker.Y });
-                            }
-                            else
-                            {
-                                circleList.Add(25, new List<double[]> { new double[] { centreMarker.X, centreMarker.Y } });
-                            }
-                        }
-                        break;
+                    if (circleList.ContainsKey(circle.Radius * 2))
+                    {
+                        circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                    }
+                    else
+                    {
+                        circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                    }
                 }
-
             }
             else if (selected is object[]) //Если выбраны объекты чертежа поиск окружностей по выбранным объектам
             {
                 selectedObjects.AddRange(selected);
                 //Заполняем словарь
-                switch (formPlaceSymbolHole.typeElement)
-                {
-                    case "circle":
-                        foreach (object item in selectedObjects)
-                        {
-                            if (item is ICircle)
-                            {
-                                ICircle circle = (ICircle)item;
-                                if (circleList.ContainsKey(circle.Radius * 2))
-                                {
-                                    circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
-                                }
-                                else
-                                {
-                                    circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
-                                }
-                            }
-                        }
-                        break;
-                    case "center":
-                        IMacroObject macroObject = null;
-                        ICopyObjectParam copyObjectParam = (ICopyObjectParam)kompasDocument1.GetInterface(KompasAPIObjectTypeEnum.ksObjectCopyObjectParam);
-                        double x = 0; double y = 0; double a = 0; bool mirror = false;
-
-                        foreach (var item in selected)
-                        {
-                            if (item is IMacroObject)
-                            {
-                                macroObject = (IMacroObject)item;
-                                macroObject.GetPlacement(out x, out y, out a, out mirror);
-                            }
-                        }
-                        if (macroObject == null) return;
-                        foreach (object item in selected)
-                        {
-                            if (item is ICentreMarker centreMarker)
-                            {
-                                copyObjectParam.XOld = x;
-                                copyObjectParam.YOld = y;
-                                copyObjectParam.XNew = centreMarker.X;
-                                copyObjectParam.YNew = centreMarker.Y;
-                                kompasDocument2D1.CopyObjects(macroObject, copyObjectParam);
-                            }
-                        }
-                        break;
-                }
-            }
-            else //Если выбран только один объект чертежа
-            {
-                selectedObjects.Add(selected);
-                //Заполняем словарь
-                switch (formPlaceSymbolHole.typeElement)
-                {
-                    case "circle":
-                        break;
-                    case "center":
-                        break;
-                }
                 foreach (object item in selectedObjects)
                 {
-                    if (item is ICircle)
+                    if (item is ICircle circle)
                     {
-                        ICircle circle = (ICircle)item;
                         if (circleList.ContainsKey(circle.Radius * 2))
                         {
                             circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
@@ -773,11 +689,26 @@ namespace RelaxingKompas
                         }
                     }
                 }
-
             }
-
-            
-
+            else //Если выбран только один объект чертежа
+            {
+                selectedObjects.Add(selected);
+                //Заполняем словарь
+                foreach (object item in selectedObjects)
+                {
+                    if (item is ICircle circle)
+                    {
+                        if (circleList.ContainsKey(circle.Radius * 2))
+                        {
+                            circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                        }
+                        else
+                        {
+                            circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                        }
+                    }
+                }
+            }
             foreach (var diameter in circleList.Keys)
             {
                 string pathHole = $@"{pathlibrary}\Hole\D{diameter}.frw";
@@ -811,8 +742,6 @@ namespace RelaxingKompas
             {
                 MessageBox.Show($"{lostHole}");
             }
-            
-
         }
 
         /// <summary>
@@ -1719,9 +1648,34 @@ namespace RelaxingKompas
         private void SetNameDocumentStamp1()
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
+            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            if (layoutSheets == null) return;
+            if (layoutSheets.Count == 0) return;
+            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
+            if (layoutSheet == null)
+            {
+                foreach (ILayoutSheet item in layoutSheets)
+                {
+                    layoutSheet = item;
+                    break;
+                }
+            };
+            IStamp stamp = layoutSheet.Stamp;
+            if (stamp == null) return;
+            stamp.Text[2].Clear();
+            stamp.Update();
+            document2DAPI5.ksUndoContainer(false);
+
+
             string namefile = kompasDocument.Name;
             namefile = $"{namefile.Substring(0, namefile.Length - 4)}";
             Clipboard.SetText(namefile);
+
+
             Application.MessageBoxEx("Название файла документа скопировано в буфер обмена", "Готово", 64);
         }
        

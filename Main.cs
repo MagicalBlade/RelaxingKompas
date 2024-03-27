@@ -641,7 +641,7 @@ namespace RelaxingKompas
         {
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
             if (kompas.ksYesNo("Заменить окружности на условные обозначения отверстий?") != 1) return;
-            Dictionary<double, List<double[]>> circleList = new Dictionary<double, List<double[]>>(); //Хранение диаметров окружностей и их координат
+            Dictionary<double, List<ICircle>> circleList = new Dictionary<double, List<ICircle>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument2D;
@@ -663,11 +663,11 @@ namespace RelaxingKompas
                 {
                     if (circleList.ContainsKey(circle.Radius * 2))
                     {
-                        circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                        circleList[circle.Radius * 2].Add(circle);
                     }
                     else
                     {
-                        circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                        circleList.Add(circle.Radius * 2, new List<ICircle> { circle });
                     }
                 }
             }
@@ -681,11 +681,11 @@ namespace RelaxingKompas
                     {
                         if (circleList.ContainsKey(circle.Radius * 2))
                         {
-                            circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                            circleList[circle.Radius * 2].Add(circle);
                         }
                         else
                         {
-                            circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                            circleList.Add(circle.Radius * 2, new List<ICircle> { circle });
                         }
                     }
                 }
@@ -700,11 +700,11 @@ namespace RelaxingKompas
                     {
                         if (circleList.ContainsKey(circle.Radius * 2))
                         {
-                            circleList[circle.Radius * 2].Add(new double[] { circle.Xc, circle.Yc });
+                            circleList[circle.Radius * 2].Add(circle);
                         }
                         else
                         {
-                            circleList.Add(circle.Radius * 2, new List<double[]> { new double[] { circle.Xc, circle.Yc } });
+                            circleList.Add(circle.Radius * 2, new List<ICircle> { circle });
                         }
                     }
                 }
@@ -729,11 +729,12 @@ namespace RelaxingKompas
                 copyObjectParam.XOld = 0;
                 copyObjectParam.YOld = 0;
                 //Копируем условное обозначание в центры нужных отверстий
-                foreach (var coordinates in circleList[diameter])
+                foreach (var circle in circleList[diameter])
                 {
-                    copyObjectParam.XNew = coordinates[0];
-                    copyObjectParam.YNew = coordinates[1];
+                    copyObjectParam.XNew = circle.Xc;
+                    copyObjectParam.YNew = circle.Yc;
                     kompasDocument2D1.CopyObjects(drawingGroup, copyObjectParam);
+                    kompasDocument1.Delete(circle);
                 }
                 drawingGroup.Delete();
             }
@@ -1509,6 +1510,7 @@ namespace RelaxingKompas
             if (kompas.ksYesNo("Сохранить PDF в папку Завершенные чертежи?") != 1) return;
 
             #region Получание адреса папки Завершенные чертежи
+
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папаке библиотеки
             string pathAdressesFolderBZMMK = $"{pathlibrary}\\Resources\\Адреса основных папок БЗММК.txt";
@@ -1542,10 +1544,16 @@ namespace RelaxingKompas
             #endregion
             
             string nameorder = Array.Find(kompasDocument.PathName.Split('\\'), x => x.IndexOf("З.з.№", StringComparison.CurrentCultureIgnoreCase) != -1);
-            //string[] pathFolderSavePDF = Directory.GetDirectories(adresess["Завершенные чертежи"], nameorder, SearchOption.AllDirectories);
-            string pathFolderSavePDF = $"{adresess["Завершенные чертежи"]}\\{nameorder}";
-
-            if (!Directory.Exists(pathFolderSavePDF))
+            string pathFolderSavePDF = "";
+            if (Directory.Exists($"{adresess["Завершенные чертежи"]}\\{nameorder}"))
+            {
+                pathFolderSavePDF = $"{adresess["Завершенные чертежи"]}\\{nameorder}";
+            }
+            else if(Directory.Exists($"{adresess["Завершенные чертежи архив"]}\\{nameorder}"))
+            {
+                pathFolderSavePDF = $"{adresess["Завершенные чертежи архив"]}\\{nameorder}";
+            }
+            else
             {
                 MessageBox.Show($"Не найдена папка заказа в Завершенных чертежах. PDF не сохранен.");
                 return;

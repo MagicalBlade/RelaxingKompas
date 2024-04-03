@@ -1040,7 +1040,7 @@ namespace RelaxingKompas
         /// <summary>
         /// Простановка допусков на размеры
         /// </summary>
-        private void SetTolerance()
+        private void SetTolerance(bool autoCommand)
         {
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папке библиотеки
@@ -1104,19 +1104,32 @@ namespace RelaxingKompas
                     //Подставляю в форму данные допусков из выбранного размера
                     formTolerance.tb_Up.Text = dimensionText.HighDeviation.Str;
                     formTolerance.tb_Down.Text = dimensionText.LowDeviation.Str;
-                    formTolerance.ShowDialog();
+                    if (!autoCommand)
+                    {
+                        formTolerance.ShowDialog();
+                    }
                     if (formTolerance.DialogResult == DialogResult.Cancel)
                     {
                         if (formTolerance.historyisclear) setToleranceHistory.Clear();
                         return;
                     }
-                    SetDimensionText(dimensionText, formTolerance.autotolerance);
+                    if (!autoCommand)
+                    {
+                        SetDimensionText(dimensionText, formTolerance.autotolerance);
+                    }
+                    else
+                    {
+                        SetDimensionText(dimensionText, true);
+                    }
                 }
             }
 
             if (selectedobjects is object[] objects)
             {
-                formTolerance.ShowDialog();
+                if (!autoCommand)
+                {
+                    formTolerance.ShowDialog();
+                }
                 if (formTolerance.DialogResult == DialogResult.Cancel)
                 {
                     if (formTolerance.historyisclear) setToleranceHistory.Clear();
@@ -1126,7 +1139,14 @@ namespace RelaxingKompas
                 {
                     if (item is IDimensionText dimensionText)
                     {
-                        SetDimensionText(dimensionText, formTolerance.autotolerance);
+                        if (!autoCommand)
+                        {
+                            SetDimensionText(dimensionText, formTolerance.autotolerance);
+                        }
+                        else
+                        {
+                            SetDimensionText(dimensionText, true);
+                        }
                     }
                 }
             }
@@ -1183,6 +1203,9 @@ namespace RelaxingKompas
             }
         }
         
+
+
+
         /// <summary>
         /// Запись шага отверстий и т.п. типа 10х80=800
         /// </summary>
@@ -1742,13 +1765,14 @@ namespace RelaxingKompas
                 case 9: InsertRough(); break;
                 case 10: LibrarySettings(); break;
                 case 11: CopyDataFromStamp(); break;
-                case 12: SetTolerance(); break;
-                case 13: StepDimension(); break;
-                case 14: CountHoles(); break;
-                case 15: MacroObjectsReplacement(); break;
-                case 16: PrintPDF(); break;
-                case 17: SetNameDocumentStamp(); break;
-                case 18: SetNameDocumentStamp1(); break;
+                case 12: SetTolerance(false); break;
+                case 13: SetTolerance(true); break;
+                case 14: StepDimension(); break;
+                case 15: CountHoles(); break;
+                case 16: MacroObjectsReplacement(); break;
+                case 17: PrintPDF(); break;
+                case 18: SetNameDocumentStamp(); break;
+                case 19: SetNameDocumentStamp1(); break;
 
 
 

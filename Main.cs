@@ -1680,6 +1680,7 @@ namespace RelaxingKompas
         }
         private void SetNameDocumentStamp1()
         {
+            if (kompas.ksYesNo("Скопировать имя файла и очисть ячейку названия чертежа в штампе?") != 1) return;
             IKompasDocument kompasDocument = Application.ActiveDocument;
             ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
 

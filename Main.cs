@@ -1573,7 +1573,6 @@ namespace RelaxingKompas
                 {
                     MessageBox.Show($"Не удалось сохранить PDF. Возможно не хватает прав на сохранение в этой папке.");
                 }
-                return;
             }
             else
             {
@@ -1586,7 +1585,10 @@ namespace RelaxingKompas
                 {
                     MessageBox.Show("Не удалось перезаписать файл. Возможно файл кем то открыт или нет прав на этот файл.");
                 }
-                Application.MessageBoxEx("PDF сохранен.", "Успешно", 64);
+                else
+                {
+                    Application.MessageBoxEx("PDF сохранен.", "Успешно", 64);
+                }
             }
         }
 

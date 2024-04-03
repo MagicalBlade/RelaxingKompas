@@ -133,9 +133,11 @@
     <Content Include="RelaxingKompas.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Steel.txt" />
+    <Content Include="Resources\Steel.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\ToleranceAuto.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ToleranceDefault.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -147,19 +149,22 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="AsconIconsSDK-Accent.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AsconIconsSDK-Base.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AsconIconsSDK-Color1.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AsconIconsSDK-Color2.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="AsconIconsSDK-Color3.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Font Awesome 6 Free-Solid-900.otf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Hole\D14.frw">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -27,16 +27,11 @@ namespace RelaxingKompas
         private static extern byte UnhookWindowsHookEx(IntPtr hHook);
 
         private KompasObject _kompas;
-        public KompasObject kompas { get => _kompas; set => _kompas = value; }
-
-        public IApplication Application { get => _application; set => _application = value; }
-
         private IApplication _application;
-
-
-
         private ksDocument2D _activedocument2D;
-        public ksDocument2D activedocument2D { get => _activedocument2D; set => _activedocument2D = value; }
+        public KompasObject Kompas { get => _kompas; set => _kompas = value; }
+        public IApplication Application { get => _application; set => _application = value; }
+        public ksDocument2D Activedocument2D { get => _activedocument2D; set => _activedocument2D = value; }
 
         #region Данные формы
         private FormWeightAndSize _windowWeightAndSize = new FormWeightAndSize();
@@ -141,25 +136,25 @@ namespace RelaxingKompas
 
         private void SaveContour()
         {
-            activedocument2D = (ksDocument2D)kompas.ActiveDocument2D();
+            Activedocument2D = (ksDocument2D)Kompas.ActiveDocument2D();
             IKompasDocument2D1 activekompasDocument2D1 = (IKompasDocument2D1)Application.ActiveDocument;
-            ksDocumentParam activedocumentParam = (ksDocumentParam)kompas.GetParamStruct(35);
-            activedocument2D.ksGetObjParam(activedocument2D.reference, activedocumentParam, -1); //Получаем параметры активного окна
+            ksDocumentParam activedocumentParam = (ksDocumentParam)Kompas.GetParamStruct(35);
+            Activedocument2D.ksGetObjParam(Activedocument2D.reference, activedocumentParam, -1); //Получаем параметры активного окна
             string namefile = activedocumentParam.fileName;
             if (namefile == "")
             {
-                kompas.ksMessage("Изначальный чертеж не сохранен. Нет возможности получить имя.");
+                Kompas.ksMessage("Изначальный чертеж не сохранен. Нет возможности получить имя.");
                 return;
             }
             string namedxf = namefile.Substring(0, namefile.Length - 3);
 
 
             //Создаем временную группу
-            int copygroup = activedocument2D.ksNewGroup(1);
-            activedocument2D.ksEndGroup();
+            int copygroup = Activedocument2D.ksNewGroup(1);
+            Activedocument2D.ksEndGroup();
 
 
-            ksIterator iterator = kompas.GetIterator();
+            ksIterator iterator = Kompas.GetIterator();
             int itemobject;
             int[] itemobjects = new int[] //Перечисляем элементы которые нужно перенести в новый документ
 			{
@@ -183,33 +178,33 @@ namespace RelaxingKompas
                 iterator.ksCreateIterator(item, 0);
                 while ((itemobject = iterator.ksMoveIterator("N")) != 0)
                 {
-                    if (activedocument2D.ksGetObjectStyle(itemobject) == 1) //Проверяем стиль линии. Если основная то добавляем в группу
+                    if (Activedocument2D.ksGetObjectStyle(itemobject) == 1) //Проверяем стиль линии. Если основная то добавляем в группу
                     {
-                        activedocument2D.ksAddObjGroup(copygroup, itemobject);
+                        Activedocument2D.ksAddObjGroup(copygroup, itemobject);
                     }
 
                 }
             }
-            activedocument2D.ksWriteGroupToClip(copygroup, true); //Копируем группу в буфер обмена
+            Activedocument2D.ksWriteGroupToClip(copygroup, true); //Копируем группу в буфер обмена
 
             #region Создаем новый документ типа "фрагмент"
-            ksDocument2D document2D = (ksDocument2D)kompas.Document2D();
-            ksDocumentParam documentParam = (ksDocumentParam)kompas.GetParamStruct(35);
+            ksDocument2D document2D = (ksDocument2D)Kompas.Document2D();
+            ksDocumentParam documentParam = (ksDocumentParam)Kompas.GetParamStruct(35);
             documentParam.type = 3;
             document2D.ksCreateDocument(documentParam);
             #endregion
 
-            ksDocument2D newactivedocument2D = (ksDocument2D)kompas.ActiveDocument2D();
+            ksDocument2D newactivedocument2D = (ksDocument2D)Kompas.ActiveDocument2D();
             int pastegroup = newactivedocument2D.ksReadGroupFromClip(); //Считываем буфер обмена во временную группу
             if (pastegroup == 0)
             {
-                kompas.ksMessage("Не получилось вставить элементы");
+                Kompas.ksMessage("Не получилось вставить элементы");
                 newactivedocument2D.ksCloseDocument();
                 return;
             }
 
             #region Получаем координаты нижней левой точки "габаритного прямоугольника" группы элементов
-            ksRectParam rectParam = kompas.GetParamStruct((short)StructType2DEnum.ko_RectParam);
+            ksRectParam rectParam = Kompas.GetParamStruct((short)StructType2DEnum.ko_RectParam);
             document2D.ksGetObjGabaritRect(pastegroup, rectParam);
             ksMathPointParam mathPointParam = rectParam.GetpBot();
             #endregion
@@ -240,7 +235,7 @@ namespace RelaxingKompas
 
 
             if (WindowLibrarySettings.cb_CloseFragment.Checked) newactivedocument2D.ksCloseDocument();
-            if (WindowLibrarySettings.cb_CloseDrawing.Checked) activedocument2D.ksCloseDocument();
+            if (WindowLibrarySettings.cb_CloseDrawing.Checked) Activedocument2D.ksCloseDocument();
             
             
             ///<summary> Проверка на возможность пересохранения файла ///</summary>
@@ -258,7 +253,7 @@ namespace RelaxingKompas
                     catch (IOException)
                     {
 
-                        kompas.ksMessage($"Не получается сохранить {TypeFile}. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
+                        Kompas.ksMessage($"Не получается сохранить {TypeFile}. Проверьте доступ к файлу. Возможно он открыт в другой программе.");
                         return;
                     }
                 }
@@ -272,7 +267,7 @@ namespace RelaxingKompas
         /// </summary>
         private void CopyTable()
         {
-            IApplication application = kompas.ksGetApplication7();
+            IApplication application = Kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             object selecobjects =  selectionManager.SelectedObjects;
@@ -320,7 +315,7 @@ namespace RelaxingKompas
         /// </summary>
         private void InsertTable()
         {
-            IApplication application = kompas.ksGetApplication7();
+            IApplication application = Kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             IKompasAPIObject selecobjects = selectionManager.SelectedObjects;
@@ -368,7 +363,7 @@ namespace RelaxingKompas
         /// </summary>
         private void WeightAndSize()
         {
-            IApplication application = kompas.ksGetApplication7();
+            IApplication application = Kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)application.ActiveDocument;
             IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
@@ -402,21 +397,21 @@ namespace RelaxingKompas
             }
             #endregion
 
-            ksDocument2D ksdocument2D = kompas.ActiveDocument2D();
+            ksDocument2D ksdocument2D = Kompas.ActiveDocument2D();
 
-            kompas.ksSetCriticalProcess();
+            Kompas.ksSetCriticalProcess();
 
-            ksInertiaParam ksinertiaParam = kompas.GetParamStruct(83); //Параметры МЦХ
+            ksInertiaParam ksinertiaParam = Kompas.GetParamStruct(83); //Параметры МЦХ
             int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади
             if (group == 0)
             {
                 return;
             }
-            ksMathematic2D mathematic2D = kompas.GetMathematic2D();
+            ksMathematic2D mathematic2D = Kompas.GetMathematic2D();
             mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
 
             #region Получение габаритного прямоугольника
-            ksRectParam rectParam = kompas.GetParamStruct(15); //Параметры прямоугольника
+            ksRectParam rectParam = Kompas.GetParamStruct(15); //Параметры прямоугольника
             ksdocument2D.ksGetObjGabaritRect(group, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
 
             ksMathPointParam LeftMathPointParam = rectParam.GetpBot(); //Левая нижняя точка прямоугольника
@@ -486,7 +481,7 @@ namespace RelaxingKompas
             WindowWeightAndSize.Weight(); //Вызываю вычисление массы
             ksdocument2D.ksWriteGroupToClip(group, true); //Копируем группу в буфер обмена
             
-            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
+            Win32 = NativeWindow.FromHandle((IntPtr)Kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
         }
 
@@ -499,7 +494,7 @@ namespace RelaxingKompas
             
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
 
             document2DAPI5.ksUndoContainer(true);
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
@@ -639,8 +634,8 @@ namespace RelaxingKompas
         /// </summary>
         private void PlaceSymbolHole()
         {
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
-            if (kompas.ksYesNo("Заменить окружности на условные обозначения отверстий?") != 1) return;
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
+            if (Kompas.ksYesNo("Заменить окружности на условные обозначения отверстий?") != 1) return;
             Dictionary<double, List<ICircle>> circleList = new Dictionary<double, List<ICircle>>(); //Хранение диаметров окружностей и их координат
             string lostHole = $"Нет условных обозначение для следующих диаметров:{Environment.NewLine}";
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
@@ -803,7 +798,7 @@ namespace RelaxingKompas
             }
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-            Document2D document2D = kompas.ActiveDocument2D();
+            Document2D document2D = Kompas.ActiveDocument2D();
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
@@ -982,7 +977,7 @@ namespace RelaxingKompas
             }
             catch (Exception)
             {
-                kompas.ksMessage("Ошибка в написании толщины");
+                Kompas.ksMessage("Ошибка в написании толщины");
                 return;
             }
 
@@ -992,7 +987,7 @@ namespace RelaxingKompas
                 roug = sto_012_2018.GetRough(roughWindow.RoughKat, thicknessInt);
                 if (roug == 0)
                 {
-                    kompas.ksMessage("Не найдена указанная толщина");
+                    Kompas.ksMessage("Не найдена указанная толщина");
                 }
             }
             else
@@ -1000,7 +995,7 @@ namespace RelaxingKompas
                 roug = sto_012_2007.GetRough(roughWindow.RoughKat, thicknessInt);
                 if (roug == 0)
                 {
-                    kompas.ksMessage("Не найдена указанная толщина");
+                    Kompas.ksMessage("Не найдена указанная толщина");
                 }
             }
             ISpecRough specRough = kompasDocument.SpecRough;
@@ -1021,7 +1016,7 @@ namespace RelaxingKompas
         /// </summary>
         private void LibrarySettings()
         {
-            Win32 = NativeWindow.FromHandle((IntPtr)kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
+            Win32 = NativeWindow.FromHandle((IntPtr)Kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowLibrarySettings.ShowDialog(Win32);
         }
 
@@ -1087,7 +1082,7 @@ namespace RelaxingKompas
 
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
            
             document2DAPI5.ksUndoContainer(true);
 
@@ -1202,9 +1197,6 @@ namespace RelaxingKompas
                 }
             }
         }
-        
-
-
 
         /// <summary>
         /// Запись шага отверстий и т.п. типа 10х80=800
@@ -1213,7 +1205,7 @@ namespace RelaxingKompas
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
 
             document2DAPI5.ksUndoContainer(true);
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
@@ -1279,7 +1271,7 @@ namespace RelaxingKompas
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
 
             document2DAPI5.ksUndoContainer(true);
 
@@ -1409,8 +1401,8 @@ namespace RelaxingKompas
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument;
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
-            if(kompas.ksYesNo("Заменить макроэлементы?") != 1) return;
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
+            if(Kompas.ksYesNo("Заменить макроэлементы?") != 1) return;
 
             document2DAPI5.ksUndoContainer(true);
 
@@ -1530,7 +1522,7 @@ namespace RelaxingKompas
         private void PrintPDF()
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
-            if (kompas.ksYesNo("Сохранить PDF в папку Завершенные чертежи?") != 1) return;
+            if (Kompas.ksYesNo("Сохранить PDF в папку Завершенные чертежи?") != 1) return;
 
             #region Получание адреса папки Завершенные чертежи
 
@@ -1599,7 +1591,7 @@ namespace RelaxingKompas
             }
             else
             {
-                if (kompas.ksYesNo("Файл существует. Хотите его заменить?") != 1) return;
+                if (Kompas.ksYesNo("Файл существует. Хотите его заменить?") != 1) return;
                 DateTime olddata = File.GetLastWriteTime(pathSavePDF);
                 Process.Start(pathFolderSavePDF);
 
@@ -1616,73 +1608,13 @@ namespace RelaxingKompas
         }
 
         /// <summary>
-        /// Запись имени файла в ячейку "Обозначение" в штампе
+        /// Скопировать название файла и очистить ячейку наименования чертежа
         /// </summary>
         private void SetNameDocumentStamp()
         {
+            if (Kompas.ksYesNo("Скопировать имя файла и очисть ячейку названия чертежа в штампе?") != 1) return;
             IKompasDocument kompasDocument = Application.ActiveDocument;
-            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)Application.ActiveDocument;
-            IKompasDocument1 kompasDocument1 = (IKompasDocument1)Application.ActiveDocument;
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
-
-            document2DAPI5.ksUndoContainer(true);
-            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
-            if (layoutSheets == null) return;
-            if (layoutSheets.Count == 0) return;
-            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
-            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
-            if (layoutSheet == null)
-            {
-                foreach (ILayoutSheet item in layoutSheets)
-                {
-                    layoutSheet = item;
-                    break;
-                }
-            };
-
-
-            //IDocuments documents = Application.Documents;
-            //IKompasDocument2D kompasDocuments2D1 = (IKompasDocument2D)documents.Open("d:\\Temp\\7\\поз. 55_ред.13.03.cdw", false, false);
-
-            //ILayoutSheets layoutSheets1 = kompasDocuments2D1.LayoutSheets;
-            //foreach (ILayoutSheet layoutSheet1 in layoutSheets1)
-            //{
-            //    IStamp stamp = layoutSheet1.Stamp;
-            //    stamp.Text[2].Str = "123"; 
-            //    stamp.Update();
-            //    break;
-            //}
-            //kompasDocuments2D1.Close(DocumentCloseOptions.kdSaveChanges);
-
-            //IPropertyMng propertyMng = (IPropertyMng)Application;
-            //_Property property = propertyMng.GetProperty(kompasDocument, "Обозначение");
-            //IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument2D;
-            //propertyKeeper.SetComplexPropertyValue(property,
-            //    $@"<?xml version=""1.0""?>
-            //        <document fromSource=""false"" expression="""" type=""string"">
-            //         <property id=""base"" value=""qwe"" type=""string"" />
-            //         <property id=""embodimentDelimiter"" value=""-"" type=""string"" />
-            //         <property id=""embodimentNumber"" value="""" type=""string"" />
-            //         <property id=""additionalDelimiter"" value=""."" type=""string"" />
-            //         <property id=""additionalNumber"" value="""" type=""string"" />
-            //         <property id=""documentDelimiter"" value="""" type=""string"" />
-            //         <property id=""documentNumber"" value="""" type=""string"" />
-            //        </document>"
-            //    );
-            //property.Update();
-            IStamp stamp = layoutSheet.Stamp;
-            if (stamp == null) return;
-            string namefile = kompasDocument.Name;
-            stamp.Text[2].Str = $"{namefile.Substring(0, namefile.Length-4)}";
-            stamp.Update();
-            document2DAPI5.ksUndoContainer(false);
-            
-        }
-        private void SetNameDocumentStamp1()
-        {
-            if (kompas.ksYesNo("Скопировать имя файла и очисть ячейку названия чертежа в штампе?") != 1) return;
-            IKompasDocument kompasDocument = Application.ActiveDocument;
-            ksDocument2D document2DAPI5 = kompas.ActiveDocument2D();
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
 
             document2DAPI5.ksUndoContainer(true);
             ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
@@ -1748,9 +1680,9 @@ namespace RelaxingKompas
                 return;
             }
             */
-            kompas = (KompasObject)kompas_;
-            DataWeightAndSize.Kompas = kompas;
-            Application = (IApplication)kompas.ksGetApplication7();
+            Kompas = (KompasObject)kompas_;
+            DataWeightAndSize.Kompas = Kompas;
+            Application = (IApplication)Kompas.ksGetApplication7();
             DataWeightAndSize.Application = Application;
             //Вызываем команды
             switch (command)
@@ -1773,7 +1705,6 @@ namespace RelaxingKompas
                 case 16: MacroObjectsReplacement(); break;
                 case 17: PrintPDF(); break;
                 case 18: SetNameDocumentStamp(); break;
-                case 19: SetNameDocumentStamp1(); break;
 
 
 
@@ -1786,9 +1717,9 @@ namespace RelaxingKompas
             bool result = true;
 
             // Захват интерфейса приложения КОМПАС
-            if (kompas == null && application != null)
+            if (Kompas == null && application != null)
             {
-                kompas = (KompasObject)application;
+                Kompas = (KompasObject)application;
 
             }
 

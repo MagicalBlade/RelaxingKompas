@@ -1435,7 +1435,7 @@ namespace RelaxingKompas
                 document2DAPI5.ksUndoContainer(false);
                 return;
             }
-            if (centreMarkers2.Count != 1)
+            if (centreMarkers2.Count > 1)
             {
                 Application.MessageBoxEx("В макроэлементе, на который происходит замена, найдено несколько обозначение центра отверстий. Уберите один из них", "Ошибка", 64);
                 document2DAPI5.ksUndoContainer(false);
@@ -1486,7 +1486,7 @@ namespace RelaxingKompas
                     macroObjects.Add(macroobject);
                 }
             }
-            if (coordinats.Count == 0)
+            if (coordinats.Count < 2)
             {
                 Application.MessageBoxEx("Не найдены макроэлементы с обозначением центров отверстий", "Ошибка", 64);
                 document2DAPI5.ksUndoContainer(false);
@@ -1495,8 +1495,8 @@ namespace RelaxingKompas
             //Получаем координаты центров отверстий последнего макроэлемента.
             double xOld = coordinats[coordinats.Count - 1][0];
             double yOld = coordinats[coordinats.Count - 1][1];
-            //Удаляем координаты последнего макроэлементы
             coordinats.RemoveAt(coordinats.Count - 1);
+            //Удаляем координаты последнего макроэлементы
             //Копируем новый макроэлемент по координатам
             foreach (double[] coordinat in coordinats)
             {

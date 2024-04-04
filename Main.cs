@@ -1556,8 +1556,13 @@ namespace RelaxingKompas
                 MessageBox.Show($"Не найден путь к папке \"Завершенные чертежи\". Обратитесь к разработчику.");
                 return;
             }
+            if (!adresess.ContainsKey("Завершенные чертежи архив"))
+            {
+                MessageBox.Show($"Не найден путь к папке \"Завершенные чертежи архив\". Обратитесь к разработчику.");
+                return;
+            }
             #endregion
-            
+
             string nameorder = Array.Find(kompasDocument.PathName.Split('\\'), x => x.IndexOf("З.з.№", StringComparison.CurrentCultureIgnoreCase) != -1);
             string pathFolderSavePDF = "";
             if (Directory.Exists($"{adresess["Завершенные чертежи"]}\\{nameorder}"))

@@ -1519,7 +1519,7 @@ namespace RelaxingKompas
         /// <summary>
         /// Сохранить PDF в папку Завершенные чертежи
         /// </summary>
-        private void PrintPDF()
+        private void SavePDF()
         {
             IKompasDocument kompasDocument = Application.ActiveDocument;
             if (Kompas.ksYesNo("Сохранить PDF в папку Завершенные чертежи?") != 1) return;
@@ -1703,7 +1703,7 @@ namespace RelaxingKompas
                 case 14: StepDimension(); break;
                 case 15: CountHoles(); break;
                 case 16: MacroObjectsReplacement(); break;
-                case 17: PrintPDF(); break;
+                case 17: SavePDF(); break;
                 case 18: SetNameDocumentStamp(); break;
 
 

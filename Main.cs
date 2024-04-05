@@ -1265,6 +1265,12 @@ namespace RelaxingKompas
         /// </summary>
         private void CountHoles()
         {
+            Kompas.ksGetSystemVersion(out int major, out int minor, out int release, out _);
+            if ($"{major}.{minor}.{release}" != "20.0.15")
+            {
+                MessageBox.Show("Эта команда работает только в компасе версии 20.0.15");
+                return;
+            }
             double tolerance = 1; //Допуск 1мм
             bool overlayyError = false;
             bool severalCentersError = false;
@@ -1397,6 +1403,13 @@ namespace RelaxingKompas
         /// </summary>
         private void MacroObjectsReplacement()
         {
+
+            Kompas.ksGetSystemVersion(out int major, out int minor, out int release, out _);
+            if ($"{major}.{minor}.{release}" != "20.0.15")
+            {
+                MessageBox.Show("Эта команда работает только в компасе версии 20.0.15");
+                return;
+            }
             bool severalCentersError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument1 kompasDocument1 = (IKompasDocument1)kompasDocument;

@@ -426,6 +426,7 @@ namespace RelaxingKompas
             #endregion
 
             #region Поиск обозначения маркировки в области контура и запись значения в ячейку позиции
+
             dynamic insideContur = kompasDocument2D1.SelectObjects(ksRegionTypeEnum.ksRTCutFrame, LeftX, LeftY, RightX, RightY);
             if (insideContur is object[] selected)
             {
@@ -482,6 +483,7 @@ namespace RelaxingKompas
             ksdocument2D.ksWriteGroupToClip(group, true); //Копируем группу в буфер обмена
             
             Win32 = NativeWindow.FromHandle((IntPtr)Kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
+            WindowWeightAndSize.Hide();
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
         }
 
@@ -1699,35 +1701,53 @@ namespace RelaxingKompas
             }
             */
             Kompas = (KompasObject)kompas_;
+            if (Kompas == null)
+            {
+                MessageBox.Show("Проблема с процессом компаса. Обратитесь к разработчику");
+                return;
+            }
             DataWeightAndSize.Kompas = Kompas;
             Application = (IApplication)Kompas.ksGetApplication7();
+            if (Application == null)
+            {
+                MessageBox.Show("Проблема с процессом компаса API7. Обратитесь к разработчику");
+                return;
+            }
             DataWeightAndSize.Application = Application;
             //Вызываем команды
-            switch (command)
+            try
             {
-                case 1: SaveContour(); break;
-                case 2: CopyTable(); break;
-                case 3: InsertTable(); break;
-                case 4: WeightAndSize(); break;
-                case 5: CopyText(); break;
-                case 6: PlaceSymbolHole(); break;
-                case 7: BreakView(); break;
-                case 8: InsertPointXY(); break;
-                case 9: InsertRough(); break;
-                case 10: LibrarySettings(); break;
-                case 11: CopyDataFromStamp(); break;
-                case 12: SetTolerance(false); break;
-                case 13: SetTolerance(true); break;
-                case 14: StepDimension(); break;
-                case 15: CountHoles(); break;
-                case 16: MacroObjectsReplacement(); break;
-                case 17: SavePDF(); break;
-                case 18: SetNameDocumentStamp(); break;
+                switch (command)
+                {
+                    case 1: SaveContour(); break;
+                    case 2: CopyTable(); break;
+                    case 3: InsertTable(); break;
+                    case 4: WeightAndSize(); break;
+                    case 5: CopyText(); break;
+                    case 6: PlaceSymbolHole(); break;
+                    case 7: BreakView(); break;
+                    case 8: InsertPointXY(); break;
+                    case 9: InsertRough(); break;
+                    case 10: LibrarySettings(); break;
+                    case 11: CopyDataFromStamp(); break;
+                    case 12: SetTolerance(false); break;
+                    case 13: SetTolerance(true); break;
+                    case 14: StepDimension(); break;
+                    case 15: CountHoles(); break;
+                    case 16: MacroObjectsReplacement(); break;
+                    case 17: SavePDF(); break;
+                    case 18: SetNameDocumentStamp(); break;
 
 
 
-                case 999: OpenHelp(); break;
+                    case 999: OpenHelp(); break;
+                }
             }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e}");
+            }
+            
         }
 
         public bool LibInterfaceNotifyEntry(object application)

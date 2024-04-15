@@ -1687,36 +1687,27 @@ namespace RelaxingKompas
         // Головная функция библиотеки
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)
         {
-            /*
-            if (Registration.IDKey == null)
-            {
-                Registration.GetIDKey();
-                Registration.EncryptKey = Registration.Encrypt(Registration.IDKey, "MagicalBlade-RelaxingKompas");
-            }
-            if (Registration.EncryptKey != Settings.Default.Key)
-            {
-                FormRegistration formRegistration = new FormRegistration();
-                formRegistration.ShowDialog();
-                return;
-            }
-            */
-            Kompas = (KompasObject)kompas_;
-            if (Kompas == null)
-            {
-                MessageBox.Show("Проблема с процессом компаса. Обратитесь к разработчику");
-                return;
-            }
-            DataWeightAndSize.Kompas = Kompas;
-            Application = (IApplication)Kompas.ksGetApplication7();
-            if (Application == null)
-            {
-                MessageBox.Show("Проблема с процессом компаса API7. Обратитесь к разработчику");
-                return;
-            }
-            DataWeightAndSize.Application = Application;
-            //Вызываем команды
+
             try
             {
+                if (kompas_ == null)
+                {
+                    MessageBox.Show("Не найден Компас");
+                    return;
+                }
+                Kompas = (KompasObject)kompas_;
+                DataWeightAndSize.Kompas = Kompas;
+                Application = (IApplication)Kompas.ksGetApplication7();
+                DataWeightAndSize.Application = Application;
+
+                IKompasDocument ActiveDocument = Application.ActiveDocument;
+                if (ActiveDocument == null || (ActiveDocument.DocumentType != DocumentTypeEnum.ksDocumentDrawing
+                    && ActiveDocument.DocumentType != DocumentTypeEnum.ksDocumentFragment))
+                {
+                    MessageBox.Show("Документ не активен либо не является чертежом/фрагментом. Возможно был перечитан другой чертеж. Переключитесь на любой другой чертеж и вернитесь назад, должно заработать.");
+                    return;
+                }
+                //Вызываем команды
                 switch (command)
                 {
                     case 1: SaveContour(); break;

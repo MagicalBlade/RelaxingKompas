@@ -235,7 +235,10 @@ namespace RelaxingKompas
             {
                 return;
             }
-            DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked = cb_savefragment.Checked;
+            if (!cb_savedxf.Checked)
+            {
+                DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked = cb_savefragment.Checked;
+            }
             DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked = cb_savefragment.Checked;
 
             Properties.Settings.Default.IsCreatFragment = cb_savefragment.Checked;
@@ -249,7 +252,10 @@ namespace RelaxingKompas
             {
                 return;
             }
-            DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked = cb_savedxf.Checked;
+            if (!cb_savefragment.Checked)
+            {
+                DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked = cb_savedxf.Checked;
+            }
             DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked = cb_savedxf.Checked;
 
             Properties.Settings.Default.IsCreatFragment = cb_savedxf.Checked;

@@ -22,7 +22,7 @@ namespace RelaxingKompas
             comb_round.SelectedIndex = Properties.Settings.Default.Round;
             this.Location = Properties.Settings.Default.Point;
             #endregion
-            
+
         }
 
         internal void Weight()
@@ -227,6 +227,34 @@ namespace RelaxingKompas
             {
                 textBox.BackColor = SystemColors.Window;
             }
+        }
+
+        private void cb_savefragment_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked == cb_savefragment.Checked)
+            {
+                return;
+            }
+            DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked = cb_savefragment.Checked;
+            DataWeightAndSize.WindowLibrarySettings.cb_SaveFragment.Checked = cb_savefragment.Checked;
+
+            Properties.Settings.Default.IsCreatFragment = cb_savefragment.Checked;
+            Properties.Settings.Default.SaveFragment = cb_savefragment.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void cb_savedxf_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked == cb_savedxf.Checked)
+            {
+                return;
+            }
+            DataWeightAndSize.WindowLibrarySettings.cb_CreatFragment.Checked = cb_savedxf.Checked;
+            DataWeightAndSize.WindowLibrarySettings.cb_SaveDxf.Checked = cb_savedxf.Checked;
+
+            Properties.Settings.Default.IsCreatFragment = cb_savedxf.Checked;
+            Properties.Settings.Default.SaveDxf = cb_savedxf.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }

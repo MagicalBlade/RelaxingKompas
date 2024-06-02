@@ -366,7 +366,7 @@ namespace RelaxingKompas
             IApplication application = Kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)application.ActiveDocument;
-            IKompasDocument kompasDocument = (IKompasDocument)application.ActiveDocument;
+            IKompasDocument kompasDocument = application.ActiveDocument;
             DataWeightAndSize.Application = application;
             DataWeightAndSize.KompasDocument = kompasDocument;
             DataWeightAndSize.FormWeightAndSize = WindowWeightAndSize;
@@ -376,6 +376,8 @@ namespace RelaxingKompas
             WindowWeightAndSize.tb_steel.Text = "";
             WindowWeightAndSize.tb_weight.Text = "";
 
+            WindowWeightAndSize.cb_savefragment.Checked = WindowLibrarySettings.cb_SaveFragment.Checked;
+            WindowWeightAndSize.cb_savedxf.Checked = WindowLibrarySettings.cb_SaveDxf.Checked;
 
             #region Получаем данные из штампа
             const string pattern = "[^\\d\\.,-]";

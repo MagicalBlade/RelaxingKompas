@@ -59,6 +59,8 @@ namespace RelaxingKompas
             this.b_insertText = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lb_steel = new System.Windows.Forms.ListBox();
+            this.cb_savefragment = new System.Windows.Forms.CheckBox();
+            this.cb_savedxf = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // b_ok
@@ -157,7 +159,7 @@ namespace RelaxingKompas
             this.cb_clipboard.AutoSize = true;
             this.cb_clipboard.Checked = true;
             this.cb_clipboard.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_clipboard.Location = new System.Drawing.Point(267, 12);
+            this.cb_clipboard.Location = new System.Drawing.Point(125, 12);
             this.cb_clipboard.Name = "cb_clipboard";
             this.cb_clipboard.Size = new System.Drawing.Size(217, 17);
             this.cb_clipboard.TabIndex = 9;
@@ -167,7 +169,7 @@ namespace RelaxingKompas
             // cb_weight
             // 
             this.cb_weight.AutoSize = true;
-            this.cb_weight.Location = new System.Drawing.Point(267, 35);
+            this.cb_weight.Location = new System.Drawing.Point(125, 35);
             this.cb_weight.Name = "cb_weight";
             this.cb_weight.Size = new System.Drawing.Size(153, 17);
             this.cb_weight.TabIndex = 10;
@@ -306,7 +308,7 @@ namespace RelaxingKompas
             // 
             // b_settings
             // 
-            this.b_settings.Location = new System.Drawing.Point(173, 6);
+            this.b_settings.Location = new System.Drawing.Point(409, 12);
             this.b_settings.Name = "b_settings";
             this.b_settings.Size = new System.Drawing.Size(75, 23);
             this.b_settings.TabIndex = 18;
@@ -347,6 +349,28 @@ namespace RelaxingKompas
             this.lb_steel.TabIndex = 20;
             this.lb_steel.Click += new System.EventHandler(this.lb_steel_Click);
             // 
+            // cb_savefragment
+            // 
+            this.cb_savefragment.AutoSize = true;
+            this.cb_savefragment.Location = new System.Drawing.Point(125, 58);
+            this.cb_savefragment.Name = "cb_savefragment";
+            this.cb_savefragment.Size = new System.Drawing.Size(132, 17);
+            this.cb_savefragment.TabIndex = 21;
+            this.cb_savefragment.Text = "Сохранять фрагмент";
+            this.cb_savefragment.UseVisualStyleBackColor = true;
+            this.cb_savefragment.CheckedChanged += new System.EventHandler(this.cb_savefragment_CheckedChanged);
+            // 
+            // cb_savedxf
+            // 
+            this.cb_savedxf.AutoSize = true;
+            this.cb_savedxf.Location = new System.Drawing.Point(125, 84);
+            this.cb_savedxf.Name = "cb_savedxf";
+            this.cb_savedxf.Size = new System.Drawing.Size(96, 17);
+            this.cb_savedxf.TabIndex = 21;
+            this.cb_savedxf.Text = "Сохранять dxf";
+            this.cb_savedxf.UseVisualStyleBackColor = true;
+            this.cb_savedxf.CheckedChanged += new System.EventHandler(this.cb_savedxf_CheckedChanged);
+            // 
             // FormWeightAndSize
             // 
             this.AcceptButton = this.b_ok;
@@ -354,6 +378,8 @@ namespace RelaxingKompas
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_Cancel;
             this.ClientSize = new System.Drawing.Size(496, 213);
+            this.Controls.Add(this.cb_savedxf);
+            this.Controls.Add(this.cb_savefragment);
             this.Controls.Add(this.lb_steel);
             this.Controls.Add(this.b_insertText);
             this.Controls.Add(this.b_settings);
@@ -422,5 +448,7 @@ namespace RelaxingKompas
         private System.Windows.Forms.Button b_insertText;
         private ToolTip toolTip;
         internal ListBox lb_steel;
+        internal CheckBox cb_savefragment;
+        internal CheckBox cb_savedxf;
     }
 }

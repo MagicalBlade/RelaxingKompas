@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RelaxingKompas.Data;
+using System;
 using System.Windows.Forms;
 
 namespace RelaxingKompas
@@ -31,6 +32,9 @@ namespace RelaxingKompas
 
         private void b_save_Click(object sender, EventArgs e)
         {
+            DataWeightAndSize.FormWeightAndSize.cb_savefragment.Checked = cb_SaveFragment.Checked;
+            DataWeightAndSize.FormWeightAndSize.cb_savedxf.Checked = cb_SaveDxf.Checked;
+
             #region Сохранение настроек
             Properties.Settings.Default.CloseDrawing = cb_CloseDrawing.Checked;
             Properties.Settings.Default.CloseFragment = cb_CloseFragment.Checked;

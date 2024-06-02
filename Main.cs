@@ -1666,7 +1666,73 @@ namespace RelaxingKompas
 
             Application.MessageBoxEx("Название файла документа скопировано в буфер обмена", "Готово", 64);
         }
-       
+
+        /// <summary>
+        /// Добавить рекдацию в штам чертежа
+        /// </summary>
+        private void AddRedaction()
+        {
+            string dataRedaction = DateTime.Now.ToString("dd.MM");
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            if (layoutSheets.Count == 0)
+            {
+                Application.MessageBoxEx("Проблема с наличием листов. Обратитесь к администратору.", "Ошибка", 1);
+                return;
+            }
+            ILayoutSheet layoutSheet = null;
+            foreach (ILayoutSheet item1 in layoutSheets)
+            {
+                layoutSheet = item1;
+                break;
+            }
+            if (layoutSheet == null)
+            {
+                Application.MessageBoxEx("Проблема с наличием листов. Обратитесь к администратору.", "Ошибка", 1);
+                return;
+            }
+            IStamp stamp = layoutSheet.Stamp;
+            List<string[]> redaction = new List<string[]>();
+            for (int i = 0; i < 4; i++)
+            {
+                if (stamp.Text[140 + i].Str != "")
+                {
+                    redaction.Add(new string[]
+                    {
+                            stamp.Text[140 + i].Str,
+                            stamp.Text[150 + i].Str,
+                            stamp.Text[180 + i].Str
+                    });
+                }
+            }
+            string numberRedaction;
+            if (redaction.Count == 0)
+            {
+                numberRedaction = "1";
+            }
+            else
+            {
+                int numberRedactionInt;
+                if (!int.TryParse(redaction[redaction.Count - 1][0], out numberRedactionInt))
+                {
+                    Application.MessageBoxEx("не корректный номер редакции", "Ошибка", 1);
+                }
+                numberRedactionInt += 1;
+                numberRedaction = numberRedactionInt.ToString();
+            }
+            redaction.Add(new string[] { numberRedaction, "ред.", dataRedaction });
+            int increment = 0;
+            if (redaction.Count == 5) { increment = 1; }
+            for (int i = 0; i < redaction.Count - increment; i++)
+            {
+                stamp.Text[140 + i].Str = redaction[i + increment][0];
+                stamp.Text[150 + i].Str = redaction[i + increment][1];
+                stamp.Text[180 + i].Str = redaction[i + increment][2];
+            }
+            stamp.Update();
+            layoutSheet.Update();
+        }
+
         /// <summary>
         /// Открытие файла помощи
         /// </summary>
@@ -1730,6 +1796,7 @@ namespace RelaxingKompas
                     case 16: MacroObjectsReplacement(); break;
                     case 17: SavePDF(); break;
                     case 18: SetNameDocumentStamp(); break;
+                    case 19: AddRedaction(); break;
 
 
 

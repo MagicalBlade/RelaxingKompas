@@ -1734,6 +1734,78 @@ namespace RelaxingKompas
         }
 
         /// <summary>
+        /// Выровнять размеры
+        /// </summary>
+        private void AlignDimensions()
+        {
+            if (!(Application.ActiveDocument is IKompasDocument2D1 kompasDocument2D1)) return;
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (!(selectionManager.SelectedObjects is object[] selectedobjects))
+            {
+                Application.MessageBoxEx("Выберите несколько размеров", "Ошибка", 64);
+                return;
+            }
+            Dictionary<double, List<ILineDimension>> lineDimensions = new Dictionary<double, List<ILineDimension>>();
+            double toleranceAlign = 5;
+            string display = "X";
+            foreach (var item in selectedobjects)
+            {
+                if (item is ILineDimension lineDimension)
+                {
+                    if (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDHorizontal ||
+                        (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDParallel && Math.Abs(lineDimension.Y1 - lineDimension.Y2) < 1))
+                    {
+                        if (lineDimensions.Keys.Count != 0)
+                        {
+                            foreach (double key in lineDimensions.Keys)
+                            {
+                                if (Math.Abs(lineDimension.Y3 - key) <= toleranceAlign)
+                                {
+                                    lineDimensions[key].Add(lineDimension);
+                                }
+                                // TODO только после того как не найдет во ВСЁМ словаре, добавлять в словарь
+                                else
+                                {
+                                    lineDimensions.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension });
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            lineDimensions.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension});
+                        }
+                    }
+                    else if (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDVertical ||
+                        (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDParallel && Math.Abs(lineDimension.X1 - lineDimension.X2) < 1))
+                    {
+                        if (lineDimensions.Keys.Count != 0)
+                        {
+                            foreach (double key in lineDimensions.Keys)
+                            {
+                                if (Math.Abs(lineDimension.X3 - key) <= toleranceAlign)
+                                {
+                                    lineDimensions[key].Add(lineDimension);
+                                }
+                                // TODO только после того как не найдет во ВСЁМ словаре, добавлять в словарь
+                                else
+                                {
+                                    lineDimensions.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            lineDimensions.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
+                        }
+                    }
+                }
+            }
+            MessageBox.Show($"{lineDimensions.Count}");
+        }
+
+        /// <summary>
         /// Открытие файла помощи
         /// </summary>
         private void OpenHelp()
@@ -1797,6 +1869,7 @@ namespace RelaxingKompas
                     case 17: SavePDF(); break;
                     case 18: SetNameDocumentStamp(); break;
                     case 19: AddRedaction(); break;
+                    case 20: AlignDimensions(); break;
 
 
 

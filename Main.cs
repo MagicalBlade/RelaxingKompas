@@ -1745,7 +1745,8 @@ namespace RelaxingKompas
                 Application.MessageBoxEx("Выберите несколько размеров", "Ошибка", 64);
                 return;
             }
-            Dictionary<double, List<ILineDimension>> lineDimensions = new Dictionary<double, List<ILineDimension>>();
+            Dictionary<double, List<ILineDimension>> lineDimensionsHorizontal = new Dictionary<double, List<ILineDimension>>();
+            Dictionary<double, List<ILineDimension>> lineDimensionsVertical= new Dictionary<double, List<ILineDimension>>();
             double toleranceAlign = 5;
             string display = "X";
             foreach (var item in selectedobjects)
@@ -1755,54 +1756,59 @@ namespace RelaxingKompas
                     if (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDHorizontal ||
                         (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDParallel && Math.Abs(lineDimension.Y1 - lineDimension.Y2) < 1))
                     {
-                        if (lineDimensions.Keys.Count != 0)
+                        if (lineDimensionsHorizontal.Keys.Count != 0)
                         {
-                            foreach (double key in lineDimensions.Keys)
+                            bool isFind = false;
+                            foreach (double key in lineDimensionsHorizontal.Keys)
                             {
                                 if (Math.Abs(lineDimension.Y3 - key) <= toleranceAlign)
                                 {
-                                    lineDimensions[key].Add(lineDimension);
+                                    lineDimensionsHorizontal[key].Add(lineDimension);
+                                    isFind = true;
                                 }
-                                // TODO только после того как не найдет во ВСЁМ словаре, добавлять в словарь
-                                else
-                                {
-                                    lineDimensions.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension });
-                                    break;
-                                }
+                            }
+                            if (!isFind)
+                            {
+                                lineDimensionsHorizontal.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension });
                             }
                         }
                         else
                         {
-                            lineDimensions.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension});
+                            lineDimensionsHorizontal.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension});
                         }
                     }
                     else if (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDVertical ||
                         (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDParallel && Math.Abs(lineDimension.X1 - lineDimension.X2) < 1))
                     {
-                        if (lineDimensions.Keys.Count != 0)
+                        if (lineDimensionsVertical.Keys.Count != 0)
                         {
-                            foreach (double key in lineDimensions.Keys)
+                            bool isFind = false;
+                            foreach (double key in lineDimensionsVertical.Keys)
                             {
                                 if (Math.Abs(lineDimension.X3 - key) <= toleranceAlign)
                                 {
-                                    lineDimensions[key].Add(lineDimension);
+                                    lineDimensionsVertical[key].Add(lineDimension);
+                                    isFind = true;
                                 }
-                                // TODO только после того как не найдет во ВСЁМ словаре, добавлять в словарь
-                                else
-                                {
-                                    lineDimensions.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
-                                    break;
-                                }
+                            }
+                            if (!isFind)
+                            {
+                                lineDimensionsVertical.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
                             }
                         }
                         else
                         {
-                            lineDimensions.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
+                            lineDimensionsVertical.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
                         }
                     }
                 }
             }
-            MessageBox.Show($"{lineDimensions.Count}");
+            MessageBox.Show($"{lineDimensionsHorizontal.Count} - {lineDimensionsVertical.Count}");
+            //Выравнивание размеров в цепочке
+            foreach (var item in lineDimensionsHorizontal)
+            {
+
+            }
         }
 
         /// <summary>

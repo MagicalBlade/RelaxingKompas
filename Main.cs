@@ -1747,8 +1747,7 @@ namespace RelaxingKompas
             }
             Dictionary<double, List<ILineDimension>> lineDimensionsHorizontal = new Dictionary<double, List<ILineDimension>>();
             Dictionary<double, List<ILineDimension>> lineDimensionsVertical= new Dictionary<double, List<ILineDimension>>();
-            double toleranceAlign = 5;
-            string display = "X";
+            double toleranceAlign = 10; //TODO Учитывать масштаб вида
             foreach (var item in selectedobjects)
             {
                 if (item is ILineDimension lineDimension)
@@ -1803,12 +1802,28 @@ namespace RelaxingKompas
                     }
                 }
             }
-            MessageBox.Show($"{lineDimensionsHorizontal.Count} - {lineDimensionsVertical.Count}");
             //Выравнивание размеров в цепочке
-            foreach (var item in lineDimensionsHorizontal)
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lineDimensionsHorizontal)
             {
-
+                if (item.Value.Count > 1)
+                {
+                    double mainY3 = item.Value[0].Y3;
+                    foreach (ILineDimension lineDimension in item.Value)
+                    {
+                        if (lineDimension.Y3 != mainY3)
+                        {
+                            lineDimension.Y3 = mainY3;
+                        }
+                        lineDimension.Update();
+                    }
+                }
             }
+
+
+            //Создание корректного расстояние между цепочками размеров
+            //TODO узнать куда напрвлен размер вверх/низ, лево/право. Это можно узнать соотнеся координату полки и координату точки размера
+
+            Application.MessageBoxEx("Готово", "Готово", 64);
         }
 
         /// <summary>

@@ -1407,7 +1407,6 @@ namespace RelaxingKompas
         /// </summary>
         private void MacroObjectsReplacement()
         {
-
             Kompas.ksGetSystemVersion(out int major, out int minor, out int release, out _);
             if ($"{major}.{minor}.{release}" != "20.0.12")
             {
@@ -1739,15 +1738,24 @@ namespace RelaxingKompas
         private void AlignDimensions()
         {
             if (!(Application.ActiveDocument is IKompasDocument2D1 kompasDocument2D1)) return;
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             if (!(selectionManager.SelectedObjects is object[] selectedobjects))
             {
                 Application.MessageBoxEx("Выберите несколько размеров", "Ошибка", 64);
                 return;
             }
-            Dictionary<double, List<ILineDimension>> lineDimensionsHorizontal = new Dictionary<double, List<ILineDimension>>();
-            Dictionary<double, List<ILineDimension>> lineDimensionsVertical= new Dictionary<double, List<ILineDimension>>();
-            double toleranceAlign = 10; //TODO Учитывать масштаб вида
+            IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            double toleranceAlign = 3.5 / view.Scale;
+
+            document2DAPI5.ksUndoContainer(true);
+            Dictionary<double, List<ILineDimension>> lDHorizontalTop = new Dictionary<double, List<ILineDimension>>();
+            Dictionary<double, List<ILineDimension>> lDHorizontalBotton = new Dictionary<double, List<ILineDimension>>();
+            Dictionary<double, List<ILineDimension>> lDVerticalLeft= new Dictionary<double, List<ILineDimension>>();
+            Dictionary<double, List<ILineDimension>> lDVerticalRight = new Dictionary<double, List<ILineDimension>>();
             foreach (var item in selectedobjects)
             {
                 if (item is ILineDimension lineDimension)
@@ -1755,59 +1763,124 @@ namespace RelaxingKompas
                     if (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDHorizontal ||
                         (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDParallel && Math.Abs(lineDimension.Y1 - lineDimension.Y2) < 1))
                     {
-                        if (lineDimensionsHorizontal.Keys.Count != 0)
+                        if (lineDimension.Y3 > lineDimension.Y2 && lineDimension.Y3 > lineDimension.Y1)
                         {
-                            bool isFind = false;
-                            foreach (double key in lineDimensionsHorizontal.Keys)
+                            if (lDHorizontalTop.Keys.Count != 0)
                             {
-                                if (Math.Abs(lineDimension.Y3 - key) <= toleranceAlign)
+                                bool isFind = false;
+                                foreach (double key in lDHorizontalTop.Keys)
                                 {
-                                    lineDimensionsHorizontal[key].Add(lineDimension);
-                                    isFind = true;
+                                    if (Math.Abs(lineDimension.Y3 - key) <= toleranceAlign)
+                                    {
+                                        lDHorizontalTop[key].Add(lineDimension);
+                                        isFind = true;
+                                    }
+                                }
+                                if (!isFind)
+                                {
+                                    lDHorizontalTop.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension });
                                 }
                             }
-                            if (!isFind)
+                            else
                             {
-                                lineDimensionsHorizontal.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension });
+                                lDHorizontalTop.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension});
                             }
                         }
-                        else
+                        if (lineDimension.Y3 < lineDimension.Y2 && lineDimension.Y3 < lineDimension.Y1)
                         {
-                            lineDimensionsHorizontal.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension});
+                            if (lDHorizontalBotton.Keys.Count != 0)
+                            {
+                                bool isFind = false;
+                                foreach (double key in lDHorizontalBotton.Keys)
+                                {
+                                    if (Math.Abs(lineDimension.Y3 - key) <= toleranceAlign)
+                                    {
+                                        lDHorizontalBotton[key].Add(lineDimension);
+                                        isFind = true;
+                                    }
+                                }
+                                if (!isFind)
+                                {
+                                    lDHorizontalBotton.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension });
+                                }
+                            }
+                            else
+                            {
+                                lDHorizontalBotton.Add(lineDimension.Y3, new List<ILineDimension>() { lineDimension});
+                            }
                         }
                     }
                     else if (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDVertical ||
                         (lineDimension.Orientation == ksLineDimensionOrientationEnum.ksLinDParallel && Math.Abs(lineDimension.X1 - lineDimension.X2) < 1))
                     {
-                        if (lineDimensionsVertical.Keys.Count != 0)
+                        if (lineDimension.X3 < lineDimension.X2 && lineDimension.X3 < lineDimension.X1)
                         {
-                            bool isFind = false;
-                            foreach (double key in lineDimensionsVertical.Keys)
+                            if (lDVerticalLeft.Keys.Count != 0)
                             {
-                                if (Math.Abs(lineDimension.X3 - key) <= toleranceAlign)
+                                bool isFind = false;
+                                foreach (double key in lDVerticalLeft.Keys)
                                 {
-                                    lineDimensionsVertical[key].Add(lineDimension);
-                                    isFind = true;
+                                    if (Math.Abs(lineDimension.X3 - key) <= toleranceAlign)
+                                    {
+                                        lDVerticalLeft[key].Add(lineDimension);
+                                        isFind = true;
+                                    }
+                                }
+                                if (!isFind)
+                                {
+                                    lDVerticalLeft.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
                                 }
                             }
-                            if (!isFind)
+                            else
                             {
-                                lineDimensionsVertical.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
+                                lDVerticalLeft.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
                             }
                         }
-                        else
+                        if (lineDimension.X3 > lineDimension.X2 && lineDimension.X3 > lineDimension.X1)
                         {
-                            lineDimensionsVertical.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
+                            if (lDVerticalRight.Keys.Count != 0)
+                            {
+                                bool isFind = false;
+                                foreach (double key in lDVerticalRight.Keys)
+                                {
+                                    if (Math.Abs(lineDimension.X3 - key) <= toleranceAlign)
+                                    {
+                                        lDVerticalRight[key].Add(lineDimension);
+                                        isFind = true;
+                                    }
+                                }
+                                if (!isFind)
+                                {
+                                    lDVerticalRight.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
+                                }
+                            }
+                            else
+                            {
+                                lDVerticalRight.Add(lineDimension.X3, new List<ILineDimension>() { lineDimension });
+                            }
                         }
+
+                        
                     }
                 }
             }
-            //Выравнивание размеров в цепочке
-            foreach (KeyValuePair<double, List<ILineDimension>> item in lineDimensionsHorizontal)
+            //TODO проверка что бы при выравнивании один размер не был часть другого размера.
+            // по типу есть общий размер и размер шага. если их выровнять то будет ошибка
+
+            #region Выравнивание размеров в цепочке
+            //Горизонтальные направленные вверх
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDHorizontalTop)
             {
                 if (item.Value.Count > 1)
                 {
                     double mainY3 = item.Value[0].Y3;
+                    foreach (var ld in item.Value)
+                    {
+                        if (ld.Y3 > mainY3)
+                        {
+                            mainY3 = ld.Y3;
+                        }
+                    }
                     foreach (ILineDimension lineDimension in item.Value)
                     {
                         if (lineDimension.Y3 != mainY3)
@@ -1818,11 +1891,81 @@ namespace RelaxingKompas
                     }
                 }
             }
+            //Горизонтальные направленные вниз
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDHorizontalBotton)
+            {
+                if (item.Value.Count > 1)
+                {
+                    double mainY3 = item.Value[0].Y3;
+                    foreach (var ld in item.Value)
+                    {
+                        if (ld.Y3 < mainY3)
+                        {
+                            mainY3 = ld.Y3;
+                        }
+                    }
+                    foreach (ILineDimension lineDimension in item.Value)
+                    {
+                        if (lineDimension.Y3 != mainY3)
+                        {
+                            lineDimension.Y3 = mainY3;
+                        }
+                        lineDimension.Update();
+                    }
+                }
+            }
+            //Вертикальные направленные влево
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDVerticalLeft)
+            {
+                if (item.Value.Count > 1)
+                {
+                    double mainX3 = item.Value[0].X3;
+                    foreach (var ld in item.Value)
+                    {
+                        if (ld.X3 < mainX3)
+                        {
+                            mainX3 = ld.X3;
+                        }
+                    }
+                    foreach (ILineDimension lineDimension in item.Value)
+                    {
+                        if (lineDimension.X3 != mainX3)
+                        {
+                            lineDimension.X3 = mainX3;
+                        }
+                        lineDimension.Update();
+                    }
+                }
+            }
+            //Вертикальные направленные право
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDVerticalRight)
+            {
+                if (item.Value.Count > 1)
+                {
+                    double mainX3 = item.Value[0].X3;
+                    foreach (var ld in item.Value)
+                    {
+                        if (ld.X3 > mainX3)
+                        {
+                            mainX3 = ld.X3;
+                        }
+                    }
+                    foreach (ILineDimension lineDimension in item.Value)
+                    {
+                        if (lineDimension.X3 != mainX3)
+                        {
+                            lineDimension.X3 = mainX3;
+                        }
+                        lineDimension.Update();
+                    }
+                }
+            }
+            #endregion
 
 
             //Создание корректного расстояние между цепочками размеров
-            //TODO узнать куда напрвлен размер вверх/низ, лево/право. Это можно узнать соотнеся координату полки и координату точки размера
 
+            document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
         }
 

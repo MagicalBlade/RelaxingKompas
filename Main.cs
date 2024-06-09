@@ -1749,7 +1749,8 @@ namespace RelaxingKompas
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
-            double toleranceAlign = 3.5 / view.Scale;
+            double between = 8 / view.Scale;
+            double toleranceAlign = between / 2;
 
             document2DAPI5.ksUndoContainer(true);
             Dictionary<double, List<ILineDimension>> lDHorizontalTop = new Dictionary<double, List<ILineDimension>>();
@@ -1865,6 +1866,7 @@ namespace RelaxingKompas
                 }
             }
             //TODO проверка что бы при выравнивании один размер не был часть другого размера.
+            // если не получится то в конце сделать проверу на наложение размеров и выделить их
             // по типу есть общий размер и размер шага. если их выровнять то будет ошибка
 
             #region Выравнивание размеров в цепочке
@@ -1963,7 +1965,74 @@ namespace RelaxingKompas
             #endregion
 
 
-            //Создание корректного расстояние между цепочками размеров
+            #region Создание корректного расстояние между цепочками размеров
+            //Горизонтальный верхний
+            if (lDHorizontalTop.Count != 0)
+            {
+                double[] key = lDHorizontalTop.Keys.ToArray();
+                Array.Sort(key);
+                double iter = key[0];
+                foreach (var item in key)
+                {
+                    foreach (ILineDimension item1 in lDHorizontalTop[item])
+                    {
+                        item1.Y3 = iter;
+                        item1.Update();
+                    }
+                    iter += between;
+                }
+            }
+            //Горизонтальный нижний
+            if (lDHorizontalBotton.Count != 0)
+            {
+                double[] key = lDHorizontalBotton.Keys.ToArray();
+                Array.Sort(key);
+                Array.Reverse(key);
+                double iter = key[0];
+                foreach (var item in key)
+                {
+                    foreach (ILineDimension item1 in lDHorizontalBotton[item])
+                    {
+                        item1.Y3 = iter;
+                        item1.Update();
+                    }
+                    iter -= between;
+                }
+            }
+            //Вертикальный левый
+            if (lDVerticalLeft.Count != 0)
+            {
+                double[] key = lDVerticalLeft.Keys.ToArray();
+                Array.Sort(key);
+                Array.Reverse(key);
+                double iter = key[0];
+                foreach (var item in key)
+                {
+                    foreach (ILineDimension item1 in lDVerticalLeft[item])
+                    {
+                        item1.X3 = iter;
+                        item1.Update();
+                    }
+                    iter -= between;
+                }
+            }
+            //Вертикальный правый
+            if (lDVerticalRight.Count != 0)
+            {
+                double[] key = lDVerticalRight.Keys.ToArray();
+                Array.Sort(key);
+                double iter = key[0];
+                foreach (var item in key)
+                {
+                    foreach (ILineDimension item1 in lDVerticalRight[item])
+                    {
+                        item1.X3 = iter;
+                        item1.Update();
+                    }
+                    iter += between;
+                }
+            }
+            #endregion
 
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);

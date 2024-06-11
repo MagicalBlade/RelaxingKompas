@@ -1972,13 +1972,13 @@ namespace RelaxingKompas
             {
                 double[] keys = lDHorizontalTop.Keys.ToArray();
                 Array.Sort(keys);
-                double iter = keys[0];
+                double iter = lDHorizontalTop[keys[0]][0].Y3;
                 for (int i = 1; i < keys.Length; i++)
                 {
                     iter += between;
                     if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
                     {
-                        iter = keys[i] + between;
+                        iter = keys[i];
                         continue;
                     }
                     foreach (ILineDimension item1 in lDHorizontalTop[keys[i]])
@@ -1987,15 +1987,6 @@ namespace RelaxingKompas
                         item1.Update();
                     }
                 }
-                //foreach (var key in keys)
-                //{
-                //    foreach (ILineDimension item1 in lDHorizontalTop[key])
-                //    {
-                //        item1.Y3 = iter;
-                //        item1.Update();
-                //    }
-                //    iter += between;
-                //}
             }
             //Горизонтальный нижний
             if (lDHorizontalBotton.Count != 0)
@@ -2003,15 +1994,20 @@ namespace RelaxingKompas
                 double[] keys = lDHorizontalBotton.Keys.ToArray();
                 Array.Sort(keys);
                 Array.Reverse(keys);
-                double iter = keys[0];
-                foreach (var key in keys)
+                double iter = lDHorizontalBotton[keys[0]][0].Y3;
+                for (int i = 1; i < keys.Length; i++)
                 {
-                    foreach (ILineDimension item1 in lDHorizontalBotton[key])
+                    iter -= between;
+                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    {
+                        iter = keys[i];
+                        continue;
+                    }
+                    foreach (ILineDimension item1 in lDHorizontalBotton[keys[i]])
                     {
                         item1.Y3 = iter;
                         item1.Update();
                     }
-                    iter -= between;
                 }
             }
             //Вертикальный левый
@@ -2020,15 +2016,20 @@ namespace RelaxingKompas
                 double[] keys = lDVerticalLeft.Keys.ToArray();
                 Array.Sort(keys);
                 Array.Reverse(keys);
-                double iter = keys[0];
-                foreach (var key in keys)
+                double iter = lDVerticalLeft[keys[0]][0].X3;
+                for (int i = 1; i < keys.Length; i++)
                 {
-                    foreach (ILineDimension item1 in lDVerticalLeft[key])
+                    iter -= between;
+                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    {
+                        iter = keys[i];
+                        continue;
+                    }
+                    foreach (ILineDimension item1 in lDVerticalLeft[keys[i]])
                     {
                         item1.X3 = iter;
                         item1.Update();
                     }
-                    iter -= between;
                 }
             }
             //Вертикальный правый
@@ -2036,15 +2037,20 @@ namespace RelaxingKompas
             {
                 double[] keys = lDVerticalRight.Keys.ToArray();
                 Array.Sort(keys);
-                double iter = keys[0];
-                foreach (var key in keys)
+                double iter = lDVerticalRight[keys[0]][0].X3;
+                for (int i = 1; i < keys.Length; i++)
                 {
-                    foreach (ILineDimension item1 in lDVerticalRight[key])
+                    iter += between;
+                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    {
+                        iter = keys[i];
+                        continue;
+                    }
+                    foreach (ILineDimension item1 in lDVerticalRight[keys[i]])
                     {
                         item1.X3 = iter;
                         item1.Update();
                     }
-                    iter += between;
                 }
             }
             #endregion

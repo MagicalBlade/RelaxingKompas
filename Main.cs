@@ -1966,6 +1966,7 @@ namespace RelaxingKompas
 
 
             #region Создание корректного растояние между цепочками размеров
+            //TODO после выравнивания цепочки изменились размеры Y3 но ключи в словаре остались старыми!
             double betweenMin = 10 / view.Scale;
             //Горизонтальный верхний
             if (lDHorizontalTop.Count != 0)

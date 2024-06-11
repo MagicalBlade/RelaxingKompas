@@ -1965,33 +1965,48 @@ namespace RelaxingKompas
             #endregion
 
 
-            #region Создание корректного расстояние между цепочками размеров
+            #region Создание корректного растояние между цепочками размеров
+            double betweenMin = 10 / view.Scale;
             //Горизонтальный верхний
             if (lDHorizontalTop.Count != 0)
             {
-                double[] key = lDHorizontalTop.Keys.ToArray();
-                Array.Sort(key);
-                double iter = key[0];
-                foreach (var item in key)
+                double[] keys = lDHorizontalTop.Keys.ToArray();
+                Array.Sort(keys);
+                double iter = keys[0];
+                for (int i = 1; i < keys.Length; i++)
                 {
-                    foreach (ILineDimension item1 in lDHorizontalTop[item])
+                    iter += between;
+                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    {
+                        iter = keys[i] + between;
+                        continue;
+                    }
+                    foreach (ILineDimension item1 in lDHorizontalTop[keys[i]])
                     {
                         item1.Y3 = iter;
                         item1.Update();
                     }
-                    iter += between;
                 }
+                //foreach (var key in keys)
+                //{
+                //    foreach (ILineDimension item1 in lDHorizontalTop[key])
+                //    {
+                //        item1.Y3 = iter;
+                //        item1.Update();
+                //    }
+                //    iter += between;
+                //}
             }
             //Горизонтальный нижний
             if (lDHorizontalBotton.Count != 0)
             {
-                double[] key = lDHorizontalBotton.Keys.ToArray();
-                Array.Sort(key);
-                Array.Reverse(key);
-                double iter = key[0];
-                foreach (var item in key)
+                double[] keys = lDHorizontalBotton.Keys.ToArray();
+                Array.Sort(keys);
+                Array.Reverse(keys);
+                double iter = keys[0];
+                foreach (var key in keys)
                 {
-                    foreach (ILineDimension item1 in lDHorizontalBotton[item])
+                    foreach (ILineDimension item1 in lDHorizontalBotton[key])
                     {
                         item1.Y3 = iter;
                         item1.Update();
@@ -2002,13 +2017,13 @@ namespace RelaxingKompas
             //Вертикальный левый
             if (lDVerticalLeft.Count != 0)
             {
-                double[] key = lDVerticalLeft.Keys.ToArray();
-                Array.Sort(key);
-                Array.Reverse(key);
-                double iter = key[0];
-                foreach (var item in key)
+                double[] keys = lDVerticalLeft.Keys.ToArray();
+                Array.Sort(keys);
+                Array.Reverse(keys);
+                double iter = keys[0];
+                foreach (var key in keys)
                 {
-                    foreach (ILineDimension item1 in lDVerticalLeft[item])
+                    foreach (ILineDimension item1 in lDVerticalLeft[key])
                     {
                         item1.X3 = iter;
                         item1.Update();
@@ -2019,12 +2034,12 @@ namespace RelaxingKompas
             //Вертикальный правый
             if (lDVerticalRight.Count != 0)
             {
-                double[] key = lDVerticalRight.Keys.ToArray();
-                Array.Sort(key);
-                double iter = key[0];
-                foreach (var item in key)
+                double[] keys = lDVerticalRight.Keys.ToArray();
+                Array.Sort(keys);
+                double iter = keys[0];
+                foreach (var key in keys)
                 {
-                    foreach (ILineDimension item1 in lDVerticalRight[item])
+                    foreach (ILineDimension item1 in lDVerticalRight[key])
                     {
                         item1.X3 = iter;
                         item1.Update();

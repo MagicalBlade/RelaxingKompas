@@ -1979,7 +1979,7 @@ namespace RelaxingKompas
                     iter += between;
                     if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
                     {
-                        iter = keys[i];
+                        iter = lDHorizontalTop[keys[i]][0].Y3; 
                         continue;
                     }
                     foreach (ILineDimension item1 in lDHorizontalTop[keys[i]])
@@ -2001,7 +2001,7 @@ namespace RelaxingKompas
                     iter -= between;
                     if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
                     {
-                        iter = keys[i];
+                        iter = lDHorizontalBotton[keys[i]][0].Y3;
                         continue;
                     }
                     foreach (ILineDimension item1 in lDHorizontalBotton[keys[i]])
@@ -2023,7 +2023,7 @@ namespace RelaxingKompas
                     iter -= between;
                     if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
                     {
-                        iter = keys[i];
+                        iter = lDVerticalLeft[keys[i]][0].X3;
                         continue;
                     }
                     foreach (ILineDimension item1 in lDVerticalLeft[keys[i]])
@@ -2044,7 +2044,7 @@ namespace RelaxingKompas
                     iter += between;
                     if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
                     {
-                        iter = keys[i];
+                        iter = lDVerticalRight[keys[i]][0].X3;
                         continue;
                     }
                     foreach (ILineDimension item1 in lDVerticalRight[keys[i]])

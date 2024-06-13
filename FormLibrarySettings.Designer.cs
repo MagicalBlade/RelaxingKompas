@@ -39,6 +39,8 @@
             this.cb_Close3Ddetail = new System.Windows.Forms.CheckBox();
             this.b_save = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmb_plane = new System.Windows.Forms.ComboBox();
             this.b_FolderDialog = new System.Windows.Forms.Button();
             this.tb_PathExcelFile = new System.Windows.Forms.TextBox();
             this.rb_onDirectory = new System.Windows.Forms.RadioButton();
@@ -46,10 +48,20 @@
             this.tb_NameExcelFile = new System.Windows.Forms.TextBox();
             this.l_NameExcelFile = new System.Windows.Forms.Label();
             this.cb_Excel = new System.Windows.Forms.CheckBox();
-            this.cmb_plane = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.nud_betweenLD = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.nud_toleranceAlign = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -59,7 +71,7 @@
             this.groupBox1.Controls.Add(this.cb_CreatFragment);
             this.groupBox1.Controls.Add(this.cb_SaveDxf);
             this.groupBox1.Controls.Add(this.cb_CloseFragment);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(143, 142);
             this.groupBox1.TabIndex = 0;
@@ -151,7 +163,7 @@
             // b_save
             // 
             this.b_save.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.b_save.Location = new System.Drawing.Point(102, 170);
+            this.b_save.Location = new System.Drawing.Point(118, 183);
             this.b_save.Name = "b_save";
             this.b_save.Size = new System.Drawing.Size(75, 23);
             this.b_save.TabIndex = 0;
@@ -173,12 +185,45 @@
             this.groupBox2.Controls.Add(this.cb_3Ddetail);
             this.groupBox2.Controls.Add(this.cb_Close3Ddetail);
             this.groupBox2.Controls.Add(this.cb_Creat3Ddetail);
-            this.groupBox2.Location = new System.Drawing.Point(161, 12);
+            this.groupBox2.Location = new System.Drawing.Point(155, 6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(386, 142);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Посчитать массу";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 85);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(139, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Плоскость выдавливания";
+            // 
+            // cmb_plane
+            // 
+            this.cmb_plane.AutoCompleteCustomSource.AddRange(new string[] {
+            "Сверху",
+            "Снизу",
+            "Спереди",
+            "Сзади",
+            "Слева",
+            "Справа"});
+            this.cmb_plane.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_plane.FormattingEnabled = true;
+            this.cmb_plane.Items.AddRange(new object[] {
+            "Сверху",
+            "Снизу",
+            "Спереди",
+            "Сзади",
+            "Слева",
+            "Справа"});
+            this.cmb_plane.Location = new System.Drawing.Point(8, 103);
+            this.cmb_plane.Margin = new System.Windows.Forms.Padding(5);
+            this.cmb_plane.Name = "cmb_plane";
+            this.cmb_plane.Size = new System.Drawing.Size(121, 21);
+            this.cmb_plane.TabIndex = 9;
             // 
             // b_FolderDialog
             // 
@@ -246,49 +291,95 @@
             this.cb_Excel.Text = "Записать в Excel файл";
             this.cb_Excel.UseVisualStyleBackColor = true;
             // 
-            // cmb_plane
+            // tabControl1
             // 
-            this.cmb_plane.AutoCompleteCustomSource.AddRange(new string[] {
-            "Сверху",
-            "Снизу",
-            "Спереди",
-            "Сзади",
-            "Слева",
-            "Справа"});
-            this.cmb_plane.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_plane.FormattingEnabled = true;
-            this.cmb_plane.Items.AddRange(new object[] {
-            "Сверху",
-            "Снизу",
-            "Спереди",
-            "Сзади",
-            "Слева",
-            "Справа"});
-            this.cmb_plane.Location = new System.Drawing.Point(8, 103);
-            this.cmb_plane.Margin = new System.Windows.Forms.Padding(5);
-            this.cmb_plane.Name = "cmb_plane";
-            this.cmb_plane.Size = new System.Drawing.Size(121, 21);
-            this.cmb_plane.TabIndex = 9;
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(555, 177);
+            this.tabControl1.TabIndex = 2;
             // 
-            // label1
+            // tabPage1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 85);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(139, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Плоскость выдавливания";
+            this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(547, 151);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Посчитать массу";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.nud_toleranceAlign);
+            this.tabPage2.Controls.Add(this.label3);
+            this.tabPage2.Controls.Add(this.nud_betweenLD);
+            this.tabPage2.Controls.Add(this.label2);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(547, 151);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Выровнять размеры";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(167, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Расстояние между размерами:";
+            // 
+            // nud_betweenLD
+            // 
+            this.nud_betweenLD.DecimalPlaces = 2;
+            this.nud_betweenLD.Location = new System.Drawing.Point(181, 6);
+            this.nud_betweenLD.Name = "nud_betweenLD";
+            this.nud_betweenLD.Size = new System.Drawing.Size(75, 20);
+            this.nud_betweenLD.TabIndex = 1;
+            this.nud_betweenLD.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 36);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(162, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Расстояние поиска размеров:";
+            // 
+            // nud_toleranceAlign
+            // 
+            this.nud_toleranceAlign.DecimalPlaces = 2;
+            this.nud_toleranceAlign.Location = new System.Drawing.Point(181, 32);
+            this.nud_toleranceAlign.Name = "nud_toleranceAlign";
+            this.nud_toleranceAlign.Size = new System.Drawing.Size(75, 20);
+            this.nud_toleranceAlign.TabIndex = 1;
+            this.nud_toleranceAlign.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // FormLibrarySettings
             // 
             this.AcceptButton = this.b_save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(556, 207);
+            this.ClientSize = new System.Drawing.Size(556, 212);
             this.ControlBox = false;
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.b_save);
-            this.Controls.Add(this.groupBox1);
             this.KeyPreview = true;
             this.Name = "FormLibrarySettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -297,6 +388,12 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -323,5 +420,12 @@
         internal System.Windows.Forms.TextBox tb_PathExcelFile;
         private System.Windows.Forms.Label label1;
         internal System.Windows.Forms.ComboBox cmb_plane;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label label2;
+        internal System.Windows.Forms.NumericUpDown nud_betweenLD;
+        internal System.Windows.Forms.NumericUpDown nud_toleranceAlign;
+        private System.Windows.Forms.Label label3;
     }
 }

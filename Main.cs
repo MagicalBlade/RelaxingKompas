@@ -1742,6 +1742,10 @@ namespace RelaxingKompas
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             if (!(selectionManager.SelectedObjects is object[] selectedobjects))
             {
+                if (selectionManager.SelectedObjects is ILineDimension lineDimension)
+                {
+                    lineDimension.Update();
+                }
                 Application.MessageBoxEx("Выберите несколько размеров", "Ошибка", 64);
                 return;
             }
@@ -1749,8 +1753,7 @@ namespace RelaxingKompas
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
-            double between = 8 / view.Scale;
-            double toleranceAlign = between / 2;
+            double toleranceAlign = (double)WindowLibrarySettings.nud_toleranceAlign.Value / view.Scale;
 
             document2DAPI5.ksUndoContainer(true);
             Dictionary<double, List<ILineDimension>> lDHorizontalTop = new Dictionary<double, List<ILineDimension>>();
@@ -1887,9 +1890,11 @@ namespace RelaxingKompas
                     {
                         if (lineDimension.Y3 != mainY3)
                         {
+                            Application.MessageBoxEx($"{lineDimension.X3}", "Ошибка", 64);
                             lineDimension.Y3 = mainY3;
+                            lineDimension.Update();
+                            Application.MessageBoxEx($"{lineDimension.X3}", "Ошибка", 64);
                         }
-                        lineDimension.Update();
                     }
                 }
             }
@@ -1911,8 +1916,8 @@ namespace RelaxingKompas
                         if (lineDimension.Y3 != mainY3)
                         {
                             lineDimension.Y3 = mainY3;
+                            lineDimension.Update();
                         }
-                        lineDimension.Update();
                     }
                 }
             }
@@ -1934,8 +1939,8 @@ namespace RelaxingKompas
                         if (lineDimension.X3 != mainX3)
                         {
                             lineDimension.X3 = mainX3;
+                            lineDimension.Update();
                         }
-                        lineDimension.Update();
                     }
                 }
             }
@@ -1957,8 +1962,8 @@ namespace RelaxingKompas
                         if (lineDimension.X3 != mainX3)
                         {
                             lineDimension.X3 = mainX3;
+                            lineDimension.Update();
                         }
-                        lineDimension.Update();
                     }
                 }
             }
@@ -1967,7 +1972,7 @@ namespace RelaxingKompas
 
             #region Создание корректного растояние между цепочками размеров
             //TODO после выравнивания цепочки изменились размеры Y3 но ключи в словаре остались старыми!
-            double betweenMin = 10 / view.Scale;
+            double betweenMin = (double)WindowLibrarySettings.nud_betweenLD.Value / view.Scale;
             //Горизонтальный верхний
             if (lDHorizontalTop.Count != 0)
             {
@@ -1976,8 +1981,8 @@ namespace RelaxingKompas
                 double iter = lDHorizontalTop[keys[0]][0].Y3;
                 for (int i = 1; i < keys.Length; i++)
                 {
-                    iter += between;
-                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    iter += betweenMin;
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
                     {
                         iter = lDHorizontalTop[keys[i]][0].Y3; 
                         continue;
@@ -1998,8 +2003,8 @@ namespace RelaxingKompas
                 double iter = lDHorizontalBotton[keys[0]][0].Y3;
                 for (int i = 1; i < keys.Length; i++)
                 {
-                    iter -= between;
-                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    iter -= betweenMin;
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
                     {
                         iter = lDHorizontalBotton[keys[i]][0].Y3;
                         continue;
@@ -2020,8 +2025,8 @@ namespace RelaxingKompas
                 double iter = lDVerticalLeft[keys[0]][0].X3;
                 for (int i = 1; i < keys.Length; i++)
                 {
-                    iter -= between;
-                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    iter -= betweenMin;
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
                     {
                         iter = lDVerticalLeft[keys[i]][0].X3;
                         continue;
@@ -2041,8 +2046,8 @@ namespace RelaxingKompas
                 double iter = lDVerticalRight[keys[0]][0].X3;
                 for (int i = 1; i < keys.Length; i++)
                 {
-                    iter += between;
-                    if (Math.Abs(keys[i - 1] - keys[i]) > betweenMin)
+                    iter += betweenMin;
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
                     {
                         iter = lDVerticalRight[keys[i]][0].X3;
                         continue;

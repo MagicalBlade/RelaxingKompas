@@ -17,6 +17,8 @@ using RelaxingKompas.Windows;
 using RelaxingKompas.Utils;
 using System.Globalization;
 using System.Linq;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace RelaxingKompas
 {
@@ -2216,6 +2218,83 @@ namespace RelaxingKompas
         }
 
         /// <summary>
+        /// Настройка набегающего размера
+        /// </summary>
+        private void RunningDimension()
+        {
+            if (!(Application.ActiveDocument is IKompasDocument2D1 kompasDocument2D1)) return;
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (!(selectionManager.SelectedObjects is object[] selectedobjects))
+            {
+                Application.MessageBoxEx("Выберите несколько размеров", "Ошибка", 64);
+                return;
+            }
+
+
+            document2DAPI5.ksUndoContainer(true);
+            List<ILineDimension> lineDimensions = new List<ILineDimension>();
+            foreach (var item in selectedobjects)
+            {
+                if (item is ILineDimension lineDimension)
+                {
+                    lineDimensions.Add(lineDimension);
+                }
+            }
+
+            bool isRunningDimension = true;
+            for (int i = 0; i < lineDimensions.Count; i++)
+            {
+                for (int y = i + 1; y < lineDimensions.Count; y++)
+                {
+                    if ((lineDimensions[i].X1 != lineDimensions[y].X1 || lineDimensions[i].Y1 != lineDimensions[y].Y1)
+                        && (lineDimensions[i].X2 != lineDimensions[y].X2 || lineDimensions[i].Y2 != lineDimensions[y].Y2))
+                    {
+                        isRunningDimension = false;
+                    }
+                }
+            }
+            lineDimensions.Sort((ld1, ld2) =>
+            {
+                if (ld1 is IDimensionText dt1 && ld2 is IDimensionText dt2)
+                {
+                    if (dt1.NominalValue > dt2.NominalValue)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            });
+            double iter = lineDimensions[0].X3;
+            for (int i = 1; i < lineDimensions.Count; i++)
+            {
+                IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
+                IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
+                lineDimensions[i].X3 = lineDimensions[i - 1].X3 + (dtfirst.NominalValue - dtsecond.NominalValue) / 2;
+                    
+                lineDimensions[i].Update();
+            }
+
+
+            Application.MessageBoxEx($"{isRunningDimension}", "Готово", 64);
+            string res = "";
+            foreach (ILineDimension item in lineDimensions)
+            {
+                res += ((IDimensionText)item).NominalValue + "-";
+            }
+            Application.MessageBoxEx($"{res}", "Готово", 64);
+            document2DAPI5.ksUndoContainer(false);
+            Application.MessageBoxEx("Готово", "Готово", 64);
+        }
+
+        /// <summary>
         /// Открытие файла помощи
         /// </summary>
         private void OpenHelp()
@@ -2280,6 +2359,7 @@ namespace RelaxingKompas
                     case 18: SetNameDocumentStamp(); break;
                     case 19: AddRedaction(); break;
                     case 20: AlignDimensions(); break;
+                    case 21: RunningDimension(); break;
 
 
 

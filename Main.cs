@@ -2272,24 +2272,26 @@ namespace RelaxingKompas
                     return 0;
                 }
             });
-            double iter = lineDimensions[0].X3;
+            double iter = lineDimensions[0].X2;
+            IDimensionParams firstLD = lineDimensions[0] as IDimensionParams;
+            firstLD.ArrowType1 = ksArrowEnum.ksPoint;
+            firstLD.ArrowType2 = ksArrowEnum.ksArrow;
+            lineDimensions[0].Update();
             for (int i = 1; i < lineDimensions.Count; i++)
             {
                 IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
                 IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
-                lineDimensions[i].X3 = lineDimensions[i - 1].X3 + (dtfirst.NominalValue - dtsecond.NominalValue) / 2;
-                    
+                IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
+                dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+                dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
+                dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
+                lineDimensions[i].X3 = iter + (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
+                iter += dtsecond.NominalValue - dtfirst.NominalValue;
+                dimensionParams.GapValue = 1;
+                lineDimensions[i].Update();
+                dimensionParams.GapValue = 0;
                 lineDimensions[i].Update();
             }
-
-
-            Application.MessageBoxEx($"{isRunningDimension}", "Готово", 64);
-            string res = "";
-            foreach (ILineDimension item in lineDimensions)
-            {
-                res += ((IDimensionText)item).NominalValue + "-";
-            }
-            Application.MessageBoxEx($"{res}", "Готово", 64);
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
         }

@@ -286,5 +286,41 @@ namespace RelaxingKompas.Properties {
                 this["rb_Sto_2007"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public decimal betweenLD {
+            get {
+                return ((decimal)(this["betweenLD"]));
+            }
+            set {
+                this["betweenLD"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public decimal toleranceAlign {
+            get {
+                return ((decimal)(this["toleranceAlign"]));
+            }
+            set {
+                this["toleranceAlign"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public decimal searchMax {
+            get {
+                return ((decimal)(this["searchMax"]));
+            }
+            set {
+                this["searchMax"] = value;
+            }
+        }
     }
 }

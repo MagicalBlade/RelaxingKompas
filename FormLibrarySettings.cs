@@ -24,6 +24,9 @@ namespace RelaxingKompas
             rb_onDirectory.Checked = Properties.Settings.Default.rb_onDirectory;
             tb_PathExcelFile.Text = Properties.Settings.Default.tb_PathExcelFile;
             cmb_plane.SelectedIndex = Properties.Settings.Default.cmb_plane;
+            nud_betweenLD.Value = Properties.Settings.Default.betweenLD;
+            nud_toleranceAlign.Value = Properties.Settings.Default.toleranceAlign;
+            nud_searchMax.Value = Properties.Settings.Default.searchMax;
             #endregion
 
             Check3Ddetail();
@@ -53,6 +56,9 @@ namespace RelaxingKompas
             Properties.Settings.Default.rb_onDirectory = rb_onDirectory.Checked;
             Properties.Settings.Default.tb_PathExcelFile = tb_PathExcelFile.Text;
             Properties.Settings.Default.cmb_plane = cmb_plane.SelectedIndex;
+            Properties.Settings.Default.betweenLD = nud_betweenLD.Value;
+            Properties.Settings.Default.toleranceAlign = nud_toleranceAlign.Value;
+            Properties.Settings.Default.searchMax = nud_searchMax.Value;
             Properties.Settings.Default.Save();
             #endregion
         }

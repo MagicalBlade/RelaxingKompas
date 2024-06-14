@@ -1864,9 +1864,6 @@ namespace RelaxingKompas
                     }
                 }
             }
-            //TODO проверка что бы при выравнивании один размер не был часть другого размера.
-            // если не получится то в конце сделать проверу на наложение размеров и выделить их
-            // по типу есть общий размер и размер шага. если их выровнять то будет ошибка
 
             #region Выравнивание размеров в цепочке
             //Горизонтальные направленные вверх
@@ -1965,8 +1962,8 @@ namespace RelaxingKompas
 
 
             #region Создание корректного растояние между цепочками размеров
-            //TODO после выравнивания цепочки изменились размеры Y3 но ключи в словаре остались старыми!
             double betweenMin = (double)WindowLibrarySettings.nud_betweenLD.Value / view.Scale;
+            double searchMax = (double)WindowLibrarySettings.nud_searchMax.Value / view.Scale;
             //Горизонтальный верхний
             if (lDHorizontalTop.Count != 0)
             {
@@ -1976,7 +1973,7 @@ namespace RelaxingKompas
                 for (int i = 1; i < keys.Length; i++)
                 {
                     iter += betweenMin;
-                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin || Math.Abs(keys[i - 1] - keys[i]) > searchMax)
                     {
                         iter = lDHorizontalTop[keys[i]][0].Y3; 
                         continue;
@@ -1998,7 +1995,7 @@ namespace RelaxingKompas
                 for (int i = 1; i < keys.Length; i++)
                 {
                     iter -= betweenMin;
-                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin || Math.Abs(keys[i - 1] - keys[i]) > searchMax)
                     {
                         iter = lDHorizontalBotton[keys[i]][0].Y3;
                         continue;
@@ -2020,7 +2017,7 @@ namespace RelaxingKompas
                 for (int i = 1; i < keys.Length; i++)
                 {
                     iter -= betweenMin;
-                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin || Math.Abs(keys[i - 1] - keys[i]) > searchMax)
                     {
                         iter = lDVerticalLeft[keys[i]][0].X3;
                         continue;
@@ -2041,7 +2038,7 @@ namespace RelaxingKompas
                 for (int i = 1; i < keys.Length; i++)
                 {
                     iter += betweenMin;
-                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin)
+                    if (Math.Abs(keys[i - 1] - keys[i]) == betweenMin || Math.Abs(keys[i - 1] - keys[i]) > searchMax)
                     {
                         iter = lDVerticalRight[keys[i]][0].X3;
                         continue;
@@ -2210,8 +2207,10 @@ namespace RelaxingKompas
             }
 
             #endregion
+
             selectionManager.UnselectAll();
             selectionManager.Select(ldselect.ToArray());
+            if (ldselect.Count != 0) MessageBox.Show("Есть наложение размеров. Эти размеры выделены.");
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
         }

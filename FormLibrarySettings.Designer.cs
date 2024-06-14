@@ -51,17 +51,20 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.nud_betweenLD = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
             this.nud_toleranceAlign = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.nud_betweenLD = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.nud_searchMax = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -316,6 +319,8 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.nud_searchMax);
+            this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.nud_toleranceAlign);
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.nud_betweenLD);
@@ -327,24 +332,15 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Выровнять размеры";
             // 
-            // label2
+            // nud_toleranceAlign
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(167, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Расстояние между размерами:";
-            // 
-            // nud_betweenLD
-            // 
-            this.nud_betweenLD.DecimalPlaces = 2;
-            this.nud_betweenLD.Location = new System.Drawing.Point(181, 6);
-            this.nud_betweenLD.Name = "nud_betweenLD";
-            this.nud_betweenLD.Size = new System.Drawing.Size(75, 20);
-            this.nud_betweenLD.TabIndex = 1;
-            this.nud_betweenLD.Value = new decimal(new int[] {
-            8,
+            this.nud_toleranceAlign.DecimalPlaces = 2;
+            this.nud_toleranceAlign.Location = new System.Drawing.Point(208, 32);
+            this.nud_toleranceAlign.Name = "nud_toleranceAlign";
+            this.nud_toleranceAlign.Size = new System.Drawing.Size(75, 20);
+            this.nud_toleranceAlign.TabIndex = 1;
+            this.nud_toleranceAlign.Value = new decimal(new int[] {
+            1,
             0,
             0,
             0});
@@ -358,15 +354,46 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Расстояние поиска размеров:";
             // 
-            // nud_toleranceAlign
+            // nud_betweenLD
             // 
-            this.nud_toleranceAlign.DecimalPlaces = 2;
-            this.nud_toleranceAlign.Location = new System.Drawing.Point(181, 32);
-            this.nud_toleranceAlign.Name = "nud_toleranceAlign";
-            this.nud_toleranceAlign.Size = new System.Drawing.Size(75, 20);
-            this.nud_toleranceAlign.TabIndex = 1;
-            this.nud_toleranceAlign.Value = new decimal(new int[] {
-            1,
+            this.nud_betweenLD.DecimalPlaces = 2;
+            this.nud_betweenLD.Location = new System.Drawing.Point(208, 6);
+            this.nud_betweenLD.Name = "nud_betweenLD";
+            this.nud_betweenLD.Size = new System.Drawing.Size(75, 20);
+            this.nud_betweenLD.TabIndex = 1;
+            this.nud_betweenLD.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(167, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Расстояние между размерами:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 62);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(188, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Максимальное расстояние поиска:";
+            // 
+            // nud_searchMax
+            // 
+            this.nud_searchMax.DecimalPlaces = 2;
+            this.nud_searchMax.Location = new System.Drawing.Point(208, 58);
+            this.nud_searchMax.Name = "nud_searchMax";
+            this.nud_searchMax.Size = new System.Drawing.Size(75, 20);
+            this.nud_searchMax.TabIndex = 1;
+            this.nud_searchMax.Value = new decimal(new int[] {
+            15,
             0,
             0,
             0});
@@ -380,6 +407,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.b_save);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.Name = "FormLibrarySettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -392,8 +420,9 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -427,5 +456,7 @@
         internal System.Windows.Forms.NumericUpDown nud_betweenLD;
         internal System.Windows.Forms.NumericUpDown nud_toleranceAlign;
         private System.Windows.Forms.Label label3;
+        internal System.Windows.Forms.NumericUpDown nud_searchMax;
+        private System.Windows.Forms.Label label4;
     }
 }

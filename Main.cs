@@ -1742,10 +1742,6 @@ namespace RelaxingKompas
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             if (!(selectionManager.SelectedObjects is object[] selectedobjects))
             {
-                if (selectionManager.SelectedObjects is ILineDimension lineDimension)
-                {
-                    lineDimension.Update();
-                }
                 Application.MessageBoxEx("Выберите несколько размеров", "Ошибка", 64);
                 return;
             }
@@ -1890,10 +1886,8 @@ namespace RelaxingKompas
                     {
                         if (lineDimension.Y3 != mainY3)
                         {
-                            Application.MessageBoxEx($"{lineDimension.X3}", "Ошибка", 64);
                             lineDimension.Y3 = mainY3;
                             lineDimension.Update();
-                            Application.MessageBoxEx($"{lineDimension.X3}", "Ошибка", 64);
                         }
                     }
                 }
@@ -2061,6 +2055,163 @@ namespace RelaxingKompas
             }
             #endregion
 
+            #region Проверка наложения размеров
+            List<ILineDimension> ldselect = new List<ILineDimension>();
+            //Горизонтальный верхний
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDHorizontalTop)
+            {
+                for (int i = 0; i < item.Value.Count; i++)
+                {
+                    double[] first;
+                    if (item.Value[i].X1 > item.Value[i].X2)
+                    {
+                        first = new double[] { item.Value[i].X2, item.Value[i].X1 };
+                    }
+                    else
+                    {
+                        first = new double[] { item.Value[i].X1, item.Value[i].X2 };
+                    }
+                    for (int y = i + 1; y < item.Value.Count; y++)
+                    {
+                        double[] second;
+                        if (item.Value[y].X1 > item.Value[y].X2)
+                        {
+                            second = new double[] { item.Value[y].X2, item.Value[y].X1 };
+                        }
+                        else
+                        {
+                            second = new double[] { item.Value[y].X1, item.Value[y].X2 };
+                        }
+
+                        if (second[0] >= first[0] && second[1] <= first[1])
+                        {
+                            ldselect.Add(item.Value[y]);
+                        }
+                        if (first[0] >= second[0] && first[1] <= second[1])
+                        {
+                            ldselect.Add(item.Value[i]);
+                        }
+                    }
+                }
+            }
+            
+            //Горизонтальный нижний
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDHorizontalBotton)
+            {
+                for (int i = 0; i < item.Value.Count; i++)
+                {
+                    double[] first;
+                    if (item.Value[i].X1 > item.Value[i].X2)
+                    {
+                        first = new double[] { item.Value[i].X2, item.Value[i].X1 };
+                    }
+                    else
+                    {
+                        first = new double[] { item.Value[i].X1, item.Value[i].X2 };
+                    }
+                    for (int y = i + 1; y < item.Value.Count; y++)
+                    {
+                        double[] second;
+                        if (item.Value[y].X1 > item.Value[y].X2)
+                        {
+                            second = new double[] { item.Value[y].X2, item.Value[y].X1 };
+                        }
+                        else
+                        {
+                            second = new double[] { item.Value[y].X1, item.Value[y].X2 };
+                        }
+
+                        if (second[0] >= first[0] && second[1] <= first[1])
+                        {
+                            ldselect.Add(item.Value[y]);
+                        }
+                        if (first[0] >= second[0] && first[1] <= second[1])
+                        {
+                            ldselect.Add(item.Value[i]);
+                        }
+                    }
+                }
+            }
+
+            //Вертикальный левый
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDVerticalLeft)
+            {
+                for (int i = 0; i < item.Value.Count; i++)
+                {
+                    double[] first;
+                    if (item.Value[i].Y1 > item.Value[i].Y2)
+                    {
+                        first = new double[] { item.Value[i].Y2, item.Value[i].Y1 };
+                    }
+                    else
+                    {
+                        first = new double[] { item.Value[i].Y1, item.Value[i].Y2 };
+                    }
+                    for (int y = i + 1; y < item.Value.Count; y++)
+                    {
+                        double[] second;
+                        if (item.Value[y].Y1 > item.Value[y].Y2)
+                        {
+                            second = new double[] { item.Value[y].Y2, item.Value[y].Y1 };
+                        }
+                        else
+                        {
+                            second = new double[] { item.Value[y].Y1, item.Value[y].Y2 };
+                        }
+
+                        if (second[0] >= first[0] && second[1] <= first[1])
+                        {
+                            ldselect.Add(item.Value[y]);
+                        }
+                        if (first[0] >= second[0] && first[1] <= second[1])
+                        {
+                            ldselect.Add(item.Value[i]);
+                        }
+                    }
+                }
+            }
+
+            //Вертикальный правый
+            foreach (KeyValuePair<double, List<ILineDimension>> item in lDVerticalRight)
+            {
+                for (int i = 0; i < item.Value.Count; i++)
+                {
+                    double[] first;
+                    if (item.Value[i].Y1 > item.Value[i].Y2)
+                    {
+                        first = new double[] { item.Value[i].Y2, item.Value[i].Y1 };
+                    }
+                    else
+                    {
+                        first = new double[] { item.Value[i].Y1, item.Value[i].Y2 };
+                    }
+                    for (int y = i + 1; y < item.Value.Count; y++)
+                    {
+                        double[] second;
+                        if (item.Value[y].Y1 > item.Value[y].Y2)
+                        {
+                            second = new double[] { item.Value[y].Y2, item.Value[y].Y1 };
+                        }
+                        else
+                        {
+                            second = new double[] { item.Value[y].Y1, item.Value[y].Y2 };
+                        }
+
+                        if (second[0] >= first[0] && second[1] <= first[1])
+                        {
+                            ldselect.Add(item.Value[y]);
+                        }
+                        if (first[0] >= second[0] && first[1] <= second[1])
+                        {
+                            ldselect.Add(item.Value[i]);
+                        }
+                    }
+                }
+            }
+
+            #endregion
+            selectionManager.UnselectAll();
+            selectionManager.Select(ldselect.ToArray());
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
         }

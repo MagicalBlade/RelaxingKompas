@@ -2247,12 +2247,16 @@ namespace RelaxingKompas
             {
                 for (int y = i + 1; y < lineDimensions.Count; y++)
                 {
-                    if ((lineDimensions[i].X1 != lineDimensions[y].X1 || lineDimensions[i].Y1 != lineDimensions[y].Y1)
-                        && (lineDimensions[i].X2 != lineDimensions[y].X2 || lineDimensions[i].Y2 != lineDimensions[y].Y2))
+                    if (Math.Round(lineDimensions[i].X1, 2) != Math.Round(lineDimensions[y].X1, 2) || Math.Round(lineDimensions[i].Y1, 2) != Math.Round(lineDimensions[y].Y1, 2))
                     {
                         isRunningDimension = false;
                     }
                 }
+            }
+            if (!isRunningDimension)
+            {
+                MessageBox.Show("Выбраны не набегающие размеры!");
+                return;
             }
             lineDimensions.Sort((ld1, ld2) =>
             {
@@ -2277,21 +2281,43 @@ namespace RelaxingKompas
             firstLD.ArrowType1 = ksArrowEnum.ksPoint;
             firstLD.ArrowType2 = ksArrowEnum.ksArrow;
             lineDimensions[0].Update();
-            for (int i = 1; i < lineDimensions.Count; i++)
+            if (lineDimensions[0].X1 < lineDimensions[0].X2)
             {
-                IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
-                IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
-                IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
-                dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
-                dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
-                dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
-                lineDimensions[i].X3 = iter + (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
-                iter += dtsecond.NominalValue - dtfirst.NominalValue;
-                dimensionParams.GapValue = 1;
-                lineDimensions[i].Update();
-                dimensionParams.GapValue = 0;
-                lineDimensions[i].Update();
+                for (int i = 1; i < lineDimensions.Count; i++)
+                {
+                    IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
+                    IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
+                    IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
+                    dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+                    dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
+                    dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
+                    lineDimensions[i].X3 = iter + (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
+                    iter += dtsecond.NominalValue - dtfirst.NominalValue;
+                    dimensionParams.GapValue = 1;
+                    lineDimensions[i].Update();
+                    dimensionParams.GapValue = 0;
+                    lineDimensions[i].Update();
+                }
             }
+            else
+            {
+                for (int i = 1; i < lineDimensions.Count; i++)
+                {
+                    IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
+                    IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
+                    IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
+                    dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+                    dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
+                    dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
+                    lineDimensions[i].X3 = iter - (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
+                    iter -= dtsecond.NominalValue - dtfirst.NominalValue;
+                    dimensionParams.GapValue = 1;
+                    lineDimensions[i].Update();
+                    dimensionParams.GapValue = 0;
+                    lineDimensions[i].Update();
+                }
+            }
+            
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
         }

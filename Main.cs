@@ -2276,48 +2276,110 @@ namespace RelaxingKompas
                     return 0;
                 }
             });
-            double iter = lineDimensions[0].X2;
             IDimensionParams firstLD = lineDimensions[0] as IDimensionParams;
             firstLD.ArrowType1 = ksArrowEnum.ksPoint;
             firstLD.ArrowType2 = ksArrowEnum.ksArrow;
             lineDimensions[0].Update();
-            if (lineDimensions[0].X1 < lineDimensions[0].X2)
+            bool isHorizontal = false;
+            bool isVertical = false;
+
+            foreach (ILineDimension ld in lineDimensions)
             {
-                for (int i = 1; i < lineDimensions.Count; i++)
+                if(ld.Orientation == ksLineDimensionOrientationEnum.ksLinDHorizontal) isHorizontal = true;
+                if(ld.Orientation == ksLineDimensionOrientationEnum.ksLinDVertical) isVertical = true;
+            }
+            if(isHorizontal && isVertical) 
+            {
+                MessageBox.Show("Выберите одну цепочку набегающих размеров, или горизонтальные или вертикальные.");
+                return;
+            }
+
+            if (isHorizontal)
+            {
+                double iter = lineDimensions[0].X2;
+                //Размеры направленные вправо
+                if (lineDimensions[0].X1 < lineDimensions[0].X2)
                 {
-                    IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
-                    IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
-                    IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
-                    dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
-                    dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
-                    dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
-                    lineDimensions[i].X3 = iter + (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
-                    iter += dtsecond.NominalValue - dtfirst.NominalValue;
-                    dimensionParams.GapValue = 1;
-                    lineDimensions[i].Update();
-                    dimensionParams.GapValue = 0;
-                    lineDimensions[i].Update();
+                    for (int i = 1; i < lineDimensions.Count; i++)
+                    {
+                        IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
+                        IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
+                        IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
+                        dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+                        dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
+                        dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
+                        lineDimensions[i].X3 = iter + (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
+                        iter += dtsecond.NominalValue - dtfirst.NominalValue;
+                        dimensionParams.GapValue = 1;
+                        lineDimensions[i].Update();
+                        dimensionParams.GapValue = 0;
+                        lineDimensions[i].Update();
+                    }
+                }
+                //Размеры направленные влево
+                else
+                {
+                    for (int i = 1; i < lineDimensions.Count; i++)
+                    {
+                        IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
+                        IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
+                        IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
+                        dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+                        dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
+                        dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
+                        lineDimensions[i].X3 = iter - (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
+                        iter -= dtsecond.NominalValue - dtfirst.NominalValue;
+                        dimensionParams.GapValue = 1;
+                        lineDimensions[i].Update();
+                        dimensionParams.GapValue = 0;
+                        lineDimensions[i].Update();
+                    }
                 }
             }
-            else
+
+            if (isVertical)
             {
-                for (int i = 1; i < lineDimensions.Count; i++)
+                double iter = lineDimensions[0].Y2;
+                //Размеры направленные верх
+                if (lineDimensions[0].Y1 < lineDimensions[0].Y2)
                 {
-                    IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
-                    IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
-                    IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
-                    dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
-                    dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
-                    dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
-                    lineDimensions[i].X3 = iter - (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
-                    iter -= dtsecond.NominalValue - dtfirst.NominalValue;
-                    dimensionParams.GapValue = 1;
-                    lineDimensions[i].Update();
-                    dimensionParams.GapValue = 0;
-                    lineDimensions[i].Update();
+                    for (int i = 1; i < lineDimensions.Count; i++)
+                    {
+                        IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
+                        IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
+                        IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
+                        dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+                        dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
+                        dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
+                        lineDimensions[i].Y3 = iter + (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
+                        iter += dtsecond.NominalValue - dtfirst.NominalValue;
+                        dimensionParams.GapValue = 1;
+                        lineDimensions[i].Update();
+                        dimensionParams.GapValue = 0;
+                        lineDimensions[i].Update();
+                    }
+                }
+                //Размеры направленные вниз
+                else
+                {
+                    for (int i = 1; i < lineDimensions.Count; i++)
+                    {
+                        IDimensionText dtfirst = lineDimensions[i - 1] as IDimensionText;
+                        IDimensionText dtsecond = lineDimensions[i] as IDimensionText;
+                        IDimensionParams dimensionParams = lineDimensions[i] as IDimensionParams;
+                        dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+                        dimensionParams.ArrowType1 = ksArrowEnum.ksPoint;
+                        dimensionParams.ArrowType2 = ksArrowEnum.ksArrow;
+                        lineDimensions[i].Y3 = iter - (dtsecond.NominalValue - dtfirst.NominalValue) / 2;
+                        iter -= dtsecond.NominalValue - dtfirst.NominalValue;
+                        dimensionParams.GapValue = 1;
+                        lineDimensions[i].Update();
+                        dimensionParams.GapValue = 0;
+                        lineDimensions[i].Update();
+                    }
                 }
             }
-            
+
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
         }

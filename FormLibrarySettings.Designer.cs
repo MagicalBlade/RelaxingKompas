@@ -51,20 +51,21 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.nud_searchMax = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.nud_toleranceAlign = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.nud_betweenLD = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.nud_searchMax = new System.Windows.Forms.NumericUpDown();
+            this.cb_typehead = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -332,6 +333,28 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Выровнять размеры";
             // 
+            // nud_searchMax
+            // 
+            this.nud_searchMax.DecimalPlaces = 2;
+            this.nud_searchMax.Location = new System.Drawing.Point(208, 58);
+            this.nud_searchMax.Name = "nud_searchMax";
+            this.nud_searchMax.Size = new System.Drawing.Size(75, 20);
+            this.nud_searchMax.TabIndex = 1;
+            this.nud_searchMax.Value = new decimal(new int[] {
+            15,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 62);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(188, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Максимальное расстояние поиска:";
+            // 
             // nud_toleranceAlign
             // 
             this.nud_toleranceAlign.DecimalPlaces = 2;
@@ -376,27 +399,16 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Расстояние между размерами:";
             // 
-            // label4
+            // cb_typehead
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 62);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(188, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Максимальное расстояние поиска:";
-            // 
-            // nud_searchMax
-            // 
-            this.nud_searchMax.DecimalPlaces = 2;
-            this.nud_searchMax.Location = new System.Drawing.Point(208, 58);
-            this.nud_searchMax.Name = "nud_searchMax";
-            this.nud_searchMax.Size = new System.Drawing.Size(75, 20);
-            this.nud_searchMax.TabIndex = 1;
-            this.nud_searchMax.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
+            this.cb_typehead.FormattingEnabled = true;
+            this.cb_typehead.Items.AddRange(new object[] {
+            "Поз. Кол.т Кол.н Сечение Длина Сталь Вес,ед Вес,общ Лист Площадь",
+            "Поз. Кол.т Кол.н Толщина Ширина Длина Вес,ед Вес,общ Сталь Лист Площадь"});
+            this.cb_typehead.Location = new System.Drawing.Point(318, 179);
+            this.cb_typehead.Name = "cb_typehead";
+            this.cb_typehead.Size = new System.Drawing.Size(121, 21);
+            this.cb_typehead.TabIndex = 3;
             // 
             // FormLibrarySettings
             // 
@@ -405,6 +417,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(556, 212);
             this.ControlBox = false;
+            this.Controls.Add(this.cb_typehead);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.b_save);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -420,9 +433,9 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -458,5 +471,6 @@
         private System.Windows.Forms.Label label3;
         internal System.Windows.Forms.NumericUpDown nud_searchMax;
         private System.Windows.Forms.Label label4;
+        internal System.Windows.Forms.ComboBox cb_typehead;
     }
 }

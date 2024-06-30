@@ -57,6 +57,7 @@ namespace RelaxingKompas.Data
 
         public static void WriteExcelFile()
         {
+            int typehead = DataWeightAndSize.WindowLibrarySettings.cb_typehead.SelectedIndex;
             string PathExcelFile = DataWeightAndSize.KompasDocument.Path;
             string NameExcelFile = "Спецификация металла";
             if (DataWeightAndSize.WindowLibrarySettings.tb_NameExcelFile.Text != "")
@@ -116,6 +117,68 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
             };
+            switch (typehead)
+            {
+                case 0:
+                    header = new string[]
+            {
+                "Позиция",
+                "Кол. т.",
+                "Кол. н.",
+                "Сечение",
+                "Длина",
+                "Сталь",
+                "Вес, ед.",
+                "Вес, общ.",
+                "Номер листа",
+                "Площадь"
+            };
+                    dataexport = new string[]
+            {
+                DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
+                "",
+                "",
+                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
+                DataWeightAndSize.FormWeightAndSize.tb_length.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                "",
+                DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
+            };
+                    break;
+                case 1:
+                    header = new string[]
+            {
+                "Позиция",
+                "Кол-во, т",
+                "Кол-во, н",
+                "Толщина",
+                "Ширина",
+                "Длина",
+                "Вес, ед.",
+                "Вес, общ.",
+                "Сталь",
+                "Номер листа",
+                "Площадь"
+            };
+                    dataexport = new string[]
+            {
+                DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
+                "",
+                "",
+                DataWeightAndSize.Thickness.ToString(),
+                DataWeightAndSize.FormWeightAndSize.tb_width.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_length.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                "",
+                DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
+            };
+                    break;
+            }
+            
             
             if (File.Exists($"{PathExcelFile}{NameExcelFile}.xlsx"))
             {
@@ -142,26 +205,31 @@ namespace RelaxingKompas.Data
                 {
                     worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                    worksheet.Cell(1, 1).Value = header[0];
-                    worksheet.Cell(1, 1).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 2).Value = header[1];
-                    worksheet.Cell(1, 2).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 3).Value = header[2];
-                    worksheet.Cell(1, 3).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 4).Value = header[3];
-                    worksheet.Cell(1, 4).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 5).Value = header[4];
-                    worksheet.Cell(1, 5).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 6).Value = header[5];
-                    worksheet.Cell(1, 6).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 7).Value = header[6];
-                    worksheet.Cell(1, 7).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 8).Value = header[7];
-                    worksheet.Cell(1, 8).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 9).Value = header[8];
-                    worksheet.Cell(1, 9).DataType = XLDataType.Text;
-                    worksheet.Cell(1, 10).Value = header[9];
-                    worksheet.Cell(1, 10).DataType = XLDataType.Text;
+                    for (int i = 0; i < header.Length; i++)
+                    {
+                        worksheet.Cell(1, i + 1).Value = header[i];
+                        worksheet.Cell(1, i + 1).DataType = XLDataType.Text;
+                    }
+                    //worksheet.Cell(1, 1).Value = header[0];
+                    //worksheet.Cell(1, 1).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 2).Value = header[1];
+                    //worksheet.Cell(1, 2).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 3).Value = header[2];
+                    //worksheet.Cell(1, 3).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 4).Value = header[3];
+                    //worksheet.Cell(1, 4).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 5).Value = header[4];
+                    //worksheet.Cell(1, 5).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 6).Value = header[5];
+                    //worksheet.Cell(1, 6).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 7).Value = header[6];
+                    //worksheet.Cell(1, 7).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 8).Value = header[7];
+                    //worksheet.Cell(1, 8).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 9).Value = header[8];
+                    //worksheet.Cell(1, 9).DataType = XLDataType.Text;
+                    //worksheet.Cell(1, 10).Value = header[9];
+                    //worksheet.Cell(1, 10).DataType = XLDataType.Text;
                 }
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, header.Length).AdjustToContents();
@@ -177,49 +245,106 @@ namespace RelaxingKompas.Data
                 if (worksheet != null)
                 {
                     worksheet.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    switch (typehead)
+                    {
+                        case 0:
+                            worksheet.Cell(rowcount, 1).Value = export[0];
+                            if (export[0].IndexOf('.') != -1)
+                            {
+                                worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
 
-                    worksheet.Cell(rowcount, 1).Value = export[0];
-                    if (export[0].IndexOf('.') != -1)
-                    {
-                        worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    worksheet.Cell(rowcount, 1).DataType = XLDataType.Number;
+                                }
+                                catch (Exception)
+                                {
+                                    worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
+                                }
+                            }
+                            worksheet.Cell(rowcount, 2).Value = export[1];
+                            worksheet.Cell(rowcount, 2).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 3).Value = export[2];
+                            worksheet.Cell(rowcount, 3).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 4).Value = export[3];
+                            worksheet.Cell(rowcount, 4).DataType = XLDataType.Text;
+                            worksheet.Cell(rowcount, 5).Value = export[4];
+                            worksheet.Cell(rowcount, 5).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 6).Value = export[5];
+                            worksheet.Cell(rowcount, 6).DataType = XLDataType.Text;
+                            worksheet.Cell(rowcount, 7).Value = export[6];
+                            worksheet.Cell(rowcount, 7).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 8).Value = export[7];
+                            worksheet.Cell(rowcount, 8).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 9).Value = export[8];
+                            try
+                            {
+                                worksheet.Cell(rowcount, 9).DataType = XLDataType.Number;
+                            }
+                            catch (Exception)
+                            {
+                                worksheet.Cell(rowcount, 9).DataType = XLDataType.Text;
+                            }
+                            worksheet.Cell(rowcount, 10).Value = export[9];
+                            worksheet.Cell(rowcount, 10).DataType = XLDataType.Number;
+                            break; 
+                        case 1:
+                            worksheet.Cell(rowcount, 1).Value = export[0];
+                            if (export[0].IndexOf('.') != -1)
+                            {
+                                worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
 
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    worksheet.Cell(rowcount, 1).DataType = XLDataType.Number;
+                                }
+                                catch (Exception)
+                                {
+                                    worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
+                                }
+                            }
+                            worksheet.Cell(rowcount, 2).Value = export[1];
+                            worksheet.Cell(rowcount, 2).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 3).Value = export[2];
+                            worksheet.Cell(rowcount, 3).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 4).Value = export[3];
+                            worksheet.Cell(rowcount, 4).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 5).Value = export[4];
+                            worksheet.Cell(rowcount, 5).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 6).Value = export[5];
+                            worksheet.Cell(rowcount, 6).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 7).Value = export[6];
+                            worksheet.Cell(rowcount, 7).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 8).Value = export[7];
+                            worksheet.Cell(rowcount, 8).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 9).Value = export[8];
+                            worksheet.Cell(rowcount, 9).DataType = XLDataType.Text;
+                            
+                            worksheet.Cell(rowcount, 10).Value = export[9];
+                            try
+                            {
+                                worksheet.Cell(rowcount, 10).DataType = XLDataType.Number;
+                            }
+                            catch (Exception)
+                            {
+                                worksheet.Cell(rowcount, 10).DataType = XLDataType.Text;
+                            }
+
+                            worksheet.Cell(rowcount, 11).Value = export[10];
+                            worksheet.Cell(rowcount, 11).DataType = XLDataType.Number;
+                            break;
+                        default:
+                            break;
                     }
-                    else
-                    {
-                        try
-                        {
-                            worksheet.Cell(rowcount, 1).DataType = XLDataType.Number;
-                        }
-                        catch (Exception)
-                        {
-                            worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
-                        }
-                    }
-                    worksheet.Cell(rowcount, 2).Value = export[1];
-                    worksheet.Cell(rowcount, 2).DataType = XLDataType.Number;
-                    worksheet.Cell(rowcount, 3).Value = export[2];
-                    worksheet.Cell(rowcount, 3).DataType = XLDataType.Number;
-                    worksheet.Cell(rowcount, 4).Value = export[3];
-                    worksheet.Cell(rowcount, 4).DataType = XLDataType.Text;
-                    worksheet.Cell(rowcount, 5).Value = export[4];
-                    worksheet.Cell(rowcount, 5).DataType = XLDataType.Number;
-                    worksheet.Cell(rowcount, 6).Value = export[5];
-                    worksheet.Cell(rowcount, 6).DataType = XLDataType.Text;
-                    worksheet.Cell(rowcount, 7).Value = export[6];
-                    worksheet.Cell(rowcount, 7).DataType = XLDataType.Number;
-                    worksheet.Cell(rowcount, 8).Value = export[7];
-                    worksheet.Cell(rowcount, 8).DataType = XLDataType.Number;
-                    worksheet.Cell(rowcount, 9).Value = export[8];
-                    try
-                    {
-                        worksheet.Cell(rowcount, 9).DataType = XLDataType.Number;
-                    }
-                    catch (Exception)
-                    {
-                        worksheet.Cell(rowcount, 9).DataType = XLDataType.Text;
-                    }
-                    worksheet.Cell(rowcount, 10).Value = export[9];
-                    worksheet.Cell(rowcount, 10).DataType = XLDataType.Number;
+
+
+                    
                 }
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, export.Length).AdjustToContents(); 

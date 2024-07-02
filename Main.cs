@@ -2385,6 +2385,47 @@ namespace RelaxingKompas
         }
 
         /// <summary>
+        /// Создание дугового размера не разбивая дугу. Указав: дугу, две точки ограничавающие участок дуги, точку установки размерной линии.
+        /// </summary>
+        private void ArcDimension()
+        {
+            IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
+            IKompasDocument2D1 kompasDocument2D1 = Application.ActiveDocument as IKompasDocument2D1;
+
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            object selectobj = selectionManager.SelectedObjects;
+            ICircle circle = selectobj as ICircle;
+
+            IProcess2D process2D = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
+            ((IProcess)process2D).Run(true, true);
+            IProcess2D process2D1 = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
+            ((IProcess)process2D1).Run(true, true);
+            IProcess2D process2D2 = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
+            ((IProcess)process2D2).Run(true, true);
+
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
+            IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
+            IArcDimension arcDimension = arcDimensions.Add();
+
+            arcDimension.X1 = process2D.X;
+            arcDimension.Y1 = process2D.Y;
+
+            arcDimension.X2 = process2D1.X;
+            arcDimension.Y2 = process2D1.Y;
+
+            arcDimension.X3 = process2D2.X;
+            arcDimension.Y3 = process2D2.Y;
+
+            arcDimension.Xc = circle.Xc;
+            arcDimension.Yc = circle.Yc;
+            arcDimension.Direction = true;
+            arcDimension.Update();
+        }
+
+        /// <summary>
         /// Открытие файла помощи
         /// </summary>
         private void OpenHelp()
@@ -2450,6 +2491,7 @@ namespace RelaxingKompas
                     case 19: AddRedaction(); break;
                     case 20: AlignDimensions(); break;
                     case 21: RunningDimension(); break;
+                    case 22: ArcDimension(); break;
 
 
 

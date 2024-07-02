@@ -73,6 +73,7 @@
     <Compile Include="Data\Excel.cs" />
     <Compile Include="Data\Global.cs" />
     <Compile Include="Data\Registration.cs" />
+    <Compile Include="EventObjects\ArcDimension\Process2DEvent.cs" />
     <Compile Include="EventObjects\BaseEvent.cs" />
     <Compile Include="FormLibrarySettings.cs">
       <SubType>Form</SubType>

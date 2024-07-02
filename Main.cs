@@ -19,6 +19,8 @@ using System.Globalization;
 using System.Linq;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using DocumentFormat.OpenXml.Bibliography;
+using RelaxingKompas.EventObjects.ArcDimension;
+using RelaxingKompas.EventObjects;
 
 namespace RelaxingKompas
 {
@@ -2394,14 +2396,21 @@ namespace RelaxingKompas
 
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             object selectobj = selectionManager.SelectedObjects;
+            IDrawingObject drawingObject = selectobj as IDrawingObject;
+            switch (drawingObject.Type)
+            {
+                case KompasAPIObjectTypeEnum.ksObjectArc:
+                    break;
+                    case KompasAPIObjectTypeEnum.ksObjectCircle: break;
+                default:
+                    break;
+            }
             ICircle circle = selectobj as ICircle;
 
             IProcess2D process2D = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
+            //Подписка на процесс
+            Process2DEvent process2DEvent = new Process2DEvent(process2D);
             ((IProcess)process2D).Run(true, true);
-            IProcess2D process2D1 = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
-            ((IProcess)process2D1).Run(true, true);
-            IProcess2D process2D2 = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
-            ((IProcess)process2D2).Run(true, true);
 
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
@@ -2410,19 +2419,22 @@ namespace RelaxingKompas
             IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
             IArcDimension arcDimension = arcDimensions.Add();
 
-            arcDimension.X1 = process2D.X;
-            arcDimension.Y1 = process2D.Y;
+            arcDimension.X1 = process2DEvent.coordinat[0][0];
+            arcDimension.Y1 = process2DEvent.coordinat[0][1];
 
-            arcDimension.X2 = process2D1.X;
-            arcDimension.Y2 = process2D1.Y;
+            arcDimension.X2 = process2DEvent.coordinat[1][0];
+            arcDimension.Y2 = process2DEvent.coordinat[1][1];
 
-            arcDimension.X3 = process2D2.X;
-            arcDimension.Y3 = process2D2.Y;
+            arcDimension.X3 = process2DEvent.coordinat[2][0];
+            arcDimension.Y3 = process2DEvent.coordinat[2][1];
 
             arcDimension.Xc = circle.Xc;
             arcDimension.Yc = circle.Yc;
             arcDimension.Direction = true;
             arcDimension.Update();
+            //Отписка от событий панели параметров
+            BaseEvent.TerminateEvents();
+            Application.MessageBoxEx("Готово", "Готово", 64);
         }
 
         /// <summary>

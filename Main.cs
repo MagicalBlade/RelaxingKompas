@@ -2391,32 +2391,67 @@ namespace RelaxingKompas
         /// </summary>
         private void ArcDimension()
         {
+            double Xc, Yc;
             IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
             IKompasDocument2D1 kompasDocument2D1 = Application.ActiveDocument as IKompasDocument2D1;
-
-            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            object selectobj = selectionManager.SelectedObjects;
-            IDrawingObject drawingObject = selectobj as IDrawingObject;
-            switch (drawingObject.Type)
-            {
-                case KompasAPIObjectTypeEnum.ksObjectArc:
-                    break;
-                    case KompasAPIObjectTypeEnum.ksObjectCircle: break;
-                default:
-                    break;
-            }
-            ICircle circle = selectobj as ICircle;
-
-            IProcess2D process2D = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
-            //Подписка на процесс
-            Process2DEvent process2DEvent = new Process2DEvent(process2D);
-            ((IProcess)process2D).Run(true, true);
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
 
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
             ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
             IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
+
+            document2DAPI5.ksUndoContainer(true);
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (selectionManager == null)
+            {
+                Application.MessageBoxEx("Выберите окружность или дугу.", "Готово", 64);
+                return;
+            }
+            object selectobj = selectionManager.SelectedObjects;
+            if (selectobj is IDrawingObject drawingObject)
+            {
+                switch (drawingObject.Type)
+                {
+                    case KompasAPIObjectTypeEnum.ksObjectArc:
+                        IArc arc = drawingObject as IArc;
+                        Xc = arc.Xc;
+                        Yc = arc.Yc;
+                        break;
+                    case KompasAPIObjectTypeEnum.ksObjectCircle:
+                        ICircle circle = drawingObject as ICircle;
+                        Xc = circle.Xc;
+                        Yc = circle.Yc;
+                        break;
+                    default:
+                        Application.MessageBoxEx("Выберите именно окружность или дугу. Если это эквидистанта то ее необходимо разрушить.", "Готово", 64);
+                        BaseEvent.TerminateEvents();
+                        return;
+                }
+            }
+            else
+            {
+                Application.MessageBoxEx("Выберите только одну окружность или дугу.", "Готово", 64);
+                BaseEvent.TerminateEvents();
+                return;
+            }
+            IProcess2D process2D = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
+            IPhantom2D phantom2D = process2D.Phantom2D;
+
+            //Подписка на процесс
+            Process2DEvent process2DEvent = new Process2DEvent(process2D);
+            ((IProcess)process2D).Run(true, true);
+            if (process2DEvent.coordinat.Count != 3)
+            {
+                BaseEvent.TerminateEvents();
+                return;
+            }
+            IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
+            DrawingGroup drawingGroup = drawingGroups.Add(true, "Phantom");
+            phantom2D.PhantomGroup = drawingGroup;
+
+            drawingGroup.Open();
             IArcDimension arcDimension = arcDimensions.Add();
 
             arcDimension.X1 = process2DEvent.coordinat[0][0];
@@ -2428,12 +2463,18 @@ namespace RelaxingKompas
             arcDimension.X3 = process2DEvent.coordinat[2][0];
             arcDimension.Y3 = process2DEvent.coordinat[2][1];
 
-            arcDimension.Xc = circle.Xc;
-            arcDimension.Yc = circle.Yc;
-            arcDimension.Direction = true;
+            arcDimension.Xc = Xc;
+            arcDimension.Yc = Yc;
+
+            arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
             arcDimension.Update();
+            drawingGroup.Close();
+            phantom2D.Update();
+            drawingGroup.Store();
+
             //Отписка от событий панели параметров
             BaseEvent.TerminateEvents();
+            document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
         }
 

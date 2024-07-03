@@ -126,7 +126,9 @@ namespace RelaxingKompas.EventObjects
         }
 
 
-        // Отписать все события
+        /// <summary>
+        /// Отписать все события
+        /// </summary>
         public static void TerminateEvents()
         {
             foreach (var item in Global.EventList)

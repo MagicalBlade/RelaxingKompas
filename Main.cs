@@ -2392,6 +2392,7 @@ namespace RelaxingKompas
         /// </summary>
         private void ArcDimension()
         {
+            /*
             double Xc, Yc;
             IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
             IKompasDocument2D1 kompasDocument2D1 = Application.ActiveDocument as IKompasDocument2D1;
@@ -2477,15 +2478,133 @@ namespace RelaxingKompas
             BaseEvent.TerminateEvents();
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
+            */
+
             Document2D document2D = Kompas.ActiveDocument2D();
+            ksPhantom phan = (ksPhantom)Kompas.GetParamStruct((short)StructType2DEnum.ko_Phantom);
+
+            phan.phantom = 6;
+            ksType6 type6 = phan.GetPhantomParam() as ksType6;
+            if (type6.gr != 0)
+            {
+                document2D.ksDeleteObj(type6.gr);
+            }
+
+            IKompasDocument2D1 kompasDocument2D1 = Application.ActiveDocument as IKompasDocument2D1;
+            IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
+            IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
+
+            type6.gr = document2D.ksNewGroup(1);
+
+            document2D.ksEndGroup();
+
             ksRequestInfo requestInfo = Kompas.GetParamStruct(10);
             requestInfo.dynamic = 1;
             requestInfo.SetCallBackCEx("CALLBACKPROCCURSOR", 0, this);
             double x = 0;
             double y = 0;
-            document2D.ksCursorEx(requestInfo, ref x,ref y, phantom2D, null );
-            MessageBox.Show($"{x} - {y}");
+            document2D.ksCursorEx(requestInfo, ref x,ref y, phan, null );
+            
+        }
 
+        // Функция обратной связи, вызываемая из Cursor
+        public int CALLBACKPROCCURSOR(int comm,
+            ref double x, ref double y,
+            [MarshalAs(UnmanagedType.LPStruct)] object rInfo,
+            [MarshalAs(UnmanagedType.LPStruct)] object rPhan,
+            int dynamic)
+        {
+            if (dynamic == 0) Global.Count++;
+            IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
+            IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
+
+            ksDocument2D document2D = Kompas.ActiveDocument2D();
+            ksRequestInfo info = (ksRequestInfo)rInfo;
+            ksPhantom phan = (ksPhantom)rPhan;
+            phan.phantom = 6;
+            ksType6 type6 = phan.GetPhantomParam() as ksType6;
+            if (type6.gr != 0)
+            {
+                document2D.ksDeleteObj(type6.gr);
+            }
+            type6.gr = document2D.ksNewGroup(1);
+
+            IArcDimension arcDimension = arcDimensions.Add();
+
+            switch (Global.Count)
+            {
+                case 0:
+                    document2D.ksEndGroup();
+                    break;
+                case 1:
+                    if(dynamic == 0) Global.xy1 = new double[] {x, y};
+                    document2D.ksEndGroup();
+                    break;
+                case 2:
+                    if (dynamic == 0) Global.xy2 = new double[] { x, y };
+                    arcDimension.X1 = Global.xy1[0];
+                    arcDimension.Y1 = Global.xy1[1];
+
+                    arcDimension.X2 = Global.xy2[0];
+                    arcDimension.Y2 = Global.xy2[1];
+
+                    arcDimension.X3 = x;
+                    arcDimension.Y3 = y;
+
+                    arcDimension.Xc = 0;
+                    arcDimension.Yc = 0;
+
+                    if (y > arcDimension.Yc)
+                    {
+                        arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
+                    }
+                    else
+                    {
+                        arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
+                    }
+                    arcDimension.Update();
+                    document2D.ksEndGroup();
+                    break;
+                case 3: 
+                    arcDimension.X1 = Global.xy1[0];
+                    arcDimension.Y1 = Global.xy1[1];
+
+                    arcDimension.X2 = Global.xy2[0];
+                    arcDimension.Y2 = Global.xy2[1];
+
+                    arcDimension.X3 = x;
+                    arcDimension.Y3 = y;
+
+                    arcDimension.Xc = 0;
+                    arcDimension.Yc = 0;
+
+                    if (y > arcDimension.Yc)
+                    {
+                        arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
+                    }
+                    else
+                    {
+                        arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
+                    }
+                    arcDimension.Update();
+                    document2D.ksEndGroup();
+                    document2D.ksStoreTmpGroup(type6.gr);
+                    document2D.ksClearGroup(type6.gr, true);
+                    Global.Count = 0;
+                    break;
+                default:
+                    document2D.ksEndGroup();
+                    break;
+            }
+            return 1;
         }
 
         /// <summary>
@@ -2505,20 +2624,6 @@ namespace RelaxingKompas
             }
         }
         #endregion
-
-        // Функция обратной связи, вызываемая из Cursor
-        public int CALLBACKPROCCURSOR(int comm,
-            ref double x, ref double y,
-            [MarshalAs(UnmanagedType.LPStruct)] object rInfo,
-            [MarshalAs(UnmanagedType.LPStruct)] object rPhan,
-            int dynamic)
-        {
-            ksRequestInfo info = (ksRequestInfo)rInfo;
-            ksPhantom phan = (ksPhantom)rPhan;
-            MessageBox.Show($"{x}");
-
-            return 1;
-        }
 
         // Головная функция библиотеки
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)

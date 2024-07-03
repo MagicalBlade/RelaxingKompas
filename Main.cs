@@ -21,6 +21,7 @@ using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using DocumentFormat.OpenXml.Bibliography;
 using RelaxingKompas.EventObjects.ArcDimension;
 using RelaxingKompas.EventObjects;
+using System.Windows.Controls;
 
 namespace RelaxingKompas
 {
@@ -2476,6 +2477,15 @@ namespace RelaxingKompas
             BaseEvent.TerminateEvents();
             document2DAPI5.ksUndoContainer(false);
             Application.MessageBoxEx("Готово", "Готово", 64);
+            Document2D document2D = Kompas.ActiveDocument2D();
+            ksRequestInfo requestInfo = Kompas.GetParamStruct(10);
+            requestInfo.dynamic = 1;
+            requestInfo.SetCallBackCEx("CALLBACKPROCCURSOR", 0, this);
+            double x = 0;
+            double y = 0;
+            document2D.ksCursorEx(requestInfo, ref x,ref y, phantom2D, null );
+            MessageBox.Show($"{x} - {y}");
+
         }
 
         /// <summary>
@@ -2496,6 +2506,19 @@ namespace RelaxingKompas
         }
         #endregion
 
+        // Функция обратной связи, вызываемая из Cursor
+        public int CALLBACKPROCCURSOR(int comm,
+            ref double x, ref double y,
+            [MarshalAs(UnmanagedType.LPStruct)] object rInfo,
+            [MarshalAs(UnmanagedType.LPStruct)] object rPhan,
+            int dynamic)
+        {
+            ksRequestInfo info = (ksRequestInfo)rInfo;
+            ksPhantom phan = (ksPhantom)rPhan;
+            MessageBox.Show($"{x}");
+
+            return 1;
+        }
 
         // Головная функция библиотеки
         public void ExternalRunCommand([In] short command, [In] short mode, [In, MarshalAs(UnmanagedType.IDispatch)] object kompas_)

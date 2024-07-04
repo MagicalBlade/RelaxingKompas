@@ -22,6 +22,8 @@ using DocumentFormat.OpenXml.Bibliography;
 using RelaxingKompas.EventObjects.ArcDimension;
 using RelaxingKompas.EventObjects;
 using System.Windows.Controls;
+using RelaxingKompas.Data.Global;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RelaxingKompas
 {
@@ -2392,94 +2394,6 @@ namespace RelaxingKompas
         /// </summary>
         private void ArcDimension()
         {
-            /*
-            double Xc, Yc;
-            IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
-            IKompasDocument2D1 kompasDocument2D1 = Application.ActiveDocument as IKompasDocument2D1;
-            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
-
-            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-            IViews views = viewsAndLayersManager.Views;
-            IView view = views.ActiveView;
-            ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
-            IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
-
-            document2DAPI5.ksUndoContainer(true);
-            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
-            if (selectionManager == null)
-            {
-                Application.MessageBoxEx("Выберите окружность или дугу.", "Готово", 64);
-                return;
-            }
-            object selectobj = selectionManager.SelectedObjects;
-            if (selectobj is IDrawingObject drawingObject)
-            {
-                switch (drawingObject.Type)
-                {
-                    case KompasAPIObjectTypeEnum.ksObjectArc:
-                        IArc arc = drawingObject as IArc;
-                        Xc = arc.Xc;
-                        Yc = arc.Yc;
-                        break;
-                    case KompasAPIObjectTypeEnum.ksObjectCircle:
-                        ICircle circle = drawingObject as ICircle;
-                        Xc = circle.Xc;
-                        Yc = circle.Yc;
-                        break;
-                    default:
-                        Application.MessageBoxEx("Выберите именно окружность или дугу. Если это эквидистанта то ее необходимо разрушить.", "Готово", 64);
-                        BaseEvent.TerminateEvents();
-                        return;
-                }
-            }
-            else
-            {
-                Application.MessageBoxEx("Выберите только одну окружность или дугу.", "Готово", 64);
-                BaseEvent.TerminateEvents();
-                return;
-            }
-            IProcess2D process2D = kompasDocument2D1.LibProcess[ksProcess2DTypeEnum.ksProcess2DCursor];
-            IPhantom2D phantom2D = process2D.Phantom2D;
-
-            //Подписка на процесс
-            Process2DEvent process2DEvent = new Process2DEvent(process2D);
-            ((IProcess)process2D).Run(true, true);
-            if (process2DEvent.coordinat.Count != 3)
-            {
-                BaseEvent.TerminateEvents();
-                return;
-            }
-            IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
-            DrawingGroup drawingGroup = drawingGroups.Add(true, "Phantom");
-            phantom2D.PhantomGroup = drawingGroup;
-
-            drawingGroup.Open();
-            IArcDimension arcDimension = arcDimensions.Add();
-
-            arcDimension.X1 = process2DEvent.coordinat[0][0];
-            arcDimension.Y1 = process2DEvent.coordinat[0][1];
-
-            arcDimension.X2 = process2DEvent.coordinat[1][0];
-            arcDimension.Y2 = process2DEvent.coordinat[1][1];
-
-            arcDimension.X3 = process2DEvent.coordinat[2][0];
-            arcDimension.Y3 = process2DEvent.coordinat[2][1];
-
-            arcDimension.Xc = Xc;
-            arcDimension.Yc = Yc;
-
-            arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
-            arcDimension.Update();
-            drawingGroup.Close();
-            phantom2D.Update();
-            drawingGroup.Store();
-
-            //Отписка от событий панели параметров
-            BaseEvent.TerminateEvents();
-            document2DAPI5.ksUndoContainer(false);
-            Application.MessageBoxEx("Готово", "Готово", 64);
-            */
-
             Document2D document2D = Kompas.ActiveDocument2D();
             ksPhantom phan = (ksPhantom)Kompas.GetParamStruct((short)StructType2DEnum.ko_Phantom);
 
@@ -2496,7 +2410,6 @@ namespace RelaxingKompas
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
             ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
-            IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
 
             document2D.ksUndoContainer(true);
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
@@ -2512,13 +2425,14 @@ namespace RelaxingKompas
                 {
                     case KompasAPIObjectTypeEnum.ksObjectArc:
                         IArc arc = drawingObject as IArc;
-                        Global.Xc = arc.Xc;
-                        Global.Yc = arc.Yc;
+                        Global_ArcDimension.arc = arc;
+                        Global_ArcDimension.Xc = arc.Xc;
+                        Global_ArcDimension.Yc = arc.Yc;
                         break;
                     case KompasAPIObjectTypeEnum.ksObjectCircle:
                         ICircle circle = drawingObject as ICircle;
-                        Global.Xc = circle.Xc;
-                        Global.Yc = circle.Yc;
+                        Global_ArcDimension.Xc = circle.Xc;
+                        Global_ArcDimension.Yc = circle.Yc;
                         break;
                     default:
                         Application.MessageBoxEx("Выберите именно окружность или дугу. Если это эквидистанта то ее необходимо разрушить.", "Готово", 64);
@@ -2537,23 +2451,32 @@ namespace RelaxingKompas
 
             ksRequestInfo requestInfo = Kompas.GetParamStruct(10);
             requestInfo.dynamic = 1;
-            requestInfo.SetCallBackCEx("CALLBACKPROCCURSOR", 0, this);
+            requestInfo.SetCallBackCEx("CALLBACKPROCCURSOR_ArcDimension", 0, this);
             double x = 0;
             double y = 0;
             document2D.ksCursorEx(requestInfo, ref x,ref y, phan, null );
-            Global.Count = 0;
+            Global_ArcDimension.Count = 0;
             document2D.ksUndoContainer(false);
 
         }
 
-        // Функция обратной связи, вызываемая из Cursor
-        public int CALLBACKPROCCURSOR(int comm,
+        /// <summary>
+        /// Функция обратной связи для ArcDimension, вызываемая из Cursor
+        /// </summary>
+        /// <param name="comm"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="rInfo"></param>
+        /// <param name="rPhan"></param>
+        /// <param name="dynamic"></param>
+        /// <returns></returns>
+        public int CALLBACKPROCCURSOR_ArcDimension(int comm,
             ref double x, ref double y,
             [MarshalAs(UnmanagedType.LPStruct)] object rInfo,
             [MarshalAs(UnmanagedType.LPStruct)] object rPhan,
             int dynamic)
         {
-            if (dynamic == 0) Global.Count++;
+            if (dynamic == 0) Global_ArcDimension.Count++;
             IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
@@ -2574,71 +2497,112 @@ namespace RelaxingKompas
 
             IArcDimension arcDimension = arcDimensions.Add();
 
-            switch (Global.Count)
+            switch (Global_ArcDimension.Count)
             {
                 case 0:
                     document2D.ksEndGroup();
                     break;
                 case 1:
-                    if(dynamic == 0) Global.xy1 = new double[] {x, y};
+                    if (dynamic == 0)
+                    {
+                        Global_ArcDimension.X1 = x;
+                        Global_ArcDimension.Y1 = y;
+                    }
                     document2D.ksEndGroup();
                     break;
                 case 2:
-                    if (dynamic == 0) Global.xy2 = new double[] { x, y };
-                    arcDimension.X1 = Global.xy1[0];
-                    arcDimension.Y1 = Global.xy1[1];
+                    {
+                        if (dynamic == 0)
+                        {
+                            Global_ArcDimension.X2 = x;
+                            Global_ArcDimension.Y2 = y;
+                        }
+                        arcDimension.X1 = Global_ArcDimension.X1;
+                        arcDimension.Y1 = Global_ArcDimension.Y1;
 
-                    arcDimension.X2 = Global.xy2[0];
-                    arcDimension.Y2 = Global.xy2[1];
+                        arcDimension.X2 = Global_ArcDimension.X2;
+                        arcDimension.Y2 = Global_ArcDimension.Y2;
 
-                    arcDimension.X3 = x;
-                    arcDimension.Y3 = y;
+                        arcDimension.X3 = x;
+                        arcDimension.Y3 = y;
 
-                    arcDimension.Xc = Global.Xc;
-                    arcDimension.Yc = Global.Yc;
+                        arcDimension.Xc = Global_ArcDimension.Xc;
+                        arcDimension.Yc = Global_ArcDimension.Yc;
 
-                    //if (y > arcDimension.Yc)
-                    //{
-                    //    arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
-                    //}
-                    //else
-                    //{
-                    //    arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
-                    //}
-                    arcDimension.Update();
-                    document2D.ksEndGroup();
-                    break;
-                case 3: 
-                    arcDimension.X1 = Global.xy1[0];
-                    arcDimension.Y1 = Global.xy1[1];
+                        double anglPoint1 = GetAngle(Global_ArcDimension.X1, Global_ArcDimension.Y1);
+                        double anglPoint2 = GetAngle(Global_ArcDimension.X2, Global_ArcDimension.Y2);
 
-                    arcDimension.X2 = Global.xy2[0];
-                    arcDimension.Y2 = Global.xy2[1];
+                        if (anglPoint2 > anglPoint1)
+                        {
+                            arcDimension.Direction = false;
+                        }
+                        else if (anglPoint2 < anglPoint1)
+                        {
+                            arcDimension.Direction = true;
+                        }
+                        arcDimension.Update();
+                        document2D.ksEndGroup();
+                        break;
+                    }
+                case 3:
+                    {
+                        arcDimension.X1 = Global_ArcDimension.X1;
+                        arcDimension.Y1 = Global_ArcDimension.Y1;
 
-                    arcDimension.X3 = x;
-                    arcDimension.Y3 = y;
+                        arcDimension.X2 = Global_ArcDimension.X2;
+                        arcDimension.Y2 = Global_ArcDimension.Y2;
 
-                    arcDimension.Xc = Global.Xc;
-                    arcDimension.Yc = Global.Yc;
+                        arcDimension.X3 = x;
+                        arcDimension.Y3 = y;
 
-                    //if (y > arcDimension.Yc)
-                    //{
-                    //    arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
-                    //}
-                    //else
-                    //{
-                    //    arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
-                    //}
-                    arcDimension.Update();
-                    document2D.ksEndGroup();
-                    document2D.ksStoreTmpGroup(type6.gr);
-                    document2D.ksClearGroup(type6.gr, true);
-                    Global.Count = 0;
-                    break;
+                        arcDimension.Xc = Global_ArcDimension.Xc;
+                        arcDimension.Yc = Global_ArcDimension.Yc;
+                        double anglPoint1 = GetAngle(Global_ArcDimension.X1, Global_ArcDimension.Y1);
+                        double anglPoint2 = GetAngle(Global_ArcDimension.X2, Global_ArcDimension.Y2);
+                        if (Global_ArcDimension.arc != null)
+                        {
+
+                        }
+
+                        if (anglPoint2 > anglPoint1)
+                        {
+                            arcDimension.Direction = false;
+                        }
+                        else if (anglPoint2 < anglPoint1)
+                        {
+                            arcDimension.Direction = true;
+                        }
+                        arcDimension.Update();
+                        document2D.ksEndGroup();
+                        document2D.ksStoreTmpGroup(type6.gr);
+                        document2D.ksClearGroup(type6.gr, true);
+                        Global_ArcDimension.Count = 0;
+                        break;
+                    }
                 default:
                     document2D.ksEndGroup();
                     break;
             }
+            double GetAngle(double _x, double _y)
+            {
+                double x_local = _x - Global_ArcDimension.Xc;
+                double y_local = _y - Global_ArcDimension.Yc;
+                double angle = Math.Abs(Math.Atan(y_local / x_local) * 180 / Math.PI);
+                if (x_local < 0 && y_local > 0)
+                {
+                    angle += 90;
+                }
+                else if (x_local < 0 && y_local < 0)
+                {
+                    angle += 180;
+                }
+                else if (x_local > 0 && y_local < 0)
+                {
+                    angle += 270;
+                }
+                return angle;
+            }
+
             return 1;
         }
 

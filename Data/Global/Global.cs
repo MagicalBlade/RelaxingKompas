@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RelaxingKompas.Data
+namespace RelaxingKompas.Data.Global
 {
-    internal class Global
+    internal static class Global
     {
         /// <summary>
         /// Хранение списка ивентов на которые подписался
@@ -25,10 +25,7 @@ namespace RelaxingKompas.Data
             }
         }
 
-        public static int Count = 0;
-        public static double[] xy1;
-        public static double[] xy2;
-        public static double Xc, Yc;
+
 
     }
 }

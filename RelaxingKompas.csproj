@@ -71,7 +71,8 @@
     <Compile Include="Classes\TablePosDet.cs" />
     <Compile Include="Data\DataWeightAndSize.cs" />
     <Compile Include="Data\Excel.cs" />
-    <Compile Include="Data\Global.cs" />
+    <Compile Include="Data\Global\Global_ArcDimension.cs" />
+    <Compile Include="Data\Global\Global.cs" />
     <Compile Include="Data\Registration.cs" />
     <Compile Include="EventObjects\ArcDimension\Process2DEvent.cs" />
     <Compile Include="EventObjects\BaseEvent.cs" />

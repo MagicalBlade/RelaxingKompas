@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using RelaxingKompas.Data;
+using RelaxingKompas.Data.Global;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

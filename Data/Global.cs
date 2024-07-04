@@ -28,5 +28,7 @@ namespace RelaxingKompas.Data
         public static int Count = 0;
         public static double[] xy1;
         public static double[] xy2;
+        public static double Xc, Yc;
+
     }
 }

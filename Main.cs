@@ -2498,6 +2498,39 @@ namespace RelaxingKompas
             ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
             IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
 
+            document2D.ksUndoContainer(true);
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+            if (selectionManager == null)
+            {
+                Application.MessageBoxEx("Выберите окружность или дугу.", "Готово", 64);
+                return;
+            }
+            object selectobj = selectionManager.SelectedObjects;
+            if (selectobj is IDrawingObject drawingObject)
+            {
+                switch (drawingObject.Type)
+                {
+                    case KompasAPIObjectTypeEnum.ksObjectArc:
+                        IArc arc = drawingObject as IArc;
+                        Global.Xc = arc.Xc;
+                        Global.Yc = arc.Yc;
+                        break;
+                    case KompasAPIObjectTypeEnum.ksObjectCircle:
+                        ICircle circle = drawingObject as ICircle;
+                        Global.Xc = circle.Xc;
+                        Global.Yc = circle.Yc;
+                        break;
+                    default:
+                        Application.MessageBoxEx("Выберите именно окружность или дугу. Если это эквидистанта то ее необходимо разрушить.", "Готово", 64);
+                        return;
+                }
+            }
+            else
+            {
+                Application.MessageBoxEx("Выберите только одну окружность или дугу.", "Готово", 64);
+                return;
+            }
+
             type6.gr = document2D.ksNewGroup(1);
 
             document2D.ksEndGroup();
@@ -2508,7 +2541,9 @@ namespace RelaxingKompas
             double x = 0;
             double y = 0;
             document2D.ksCursorEx(requestInfo, ref x,ref y, phan, null );
-            
+            Global.Count = 0;
+            document2D.ksUndoContainer(false);
+
         }
 
         // Функция обратной связи, вызываемая из Cursor
@@ -2559,17 +2594,17 @@ namespace RelaxingKompas
                     arcDimension.X3 = x;
                     arcDimension.Y3 = y;
 
-                    arcDimension.Xc = 0;
-                    arcDimension.Yc = 0;
+                    arcDimension.Xc = Global.Xc;
+                    arcDimension.Yc = Global.Yc;
 
-                    if (y > arcDimension.Yc)
-                    {
-                        arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
-                    }
-                    else
-                    {
-                        arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
-                    }
+                    //if (y > arcDimension.Yc)
+                    //{
+                    //    arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
+                    //}
+                    //else
+                    //{
+                    //    arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
+                    //}
                     arcDimension.Update();
                     document2D.ksEndGroup();
                     break;
@@ -2583,17 +2618,17 @@ namespace RelaxingKompas
                     arcDimension.X3 = x;
                     arcDimension.Y3 = y;
 
-                    arcDimension.Xc = 0;
-                    arcDimension.Yc = 0;
+                    arcDimension.Xc = Global.Xc;
+                    arcDimension.Yc = Global.Yc;
 
-                    if (y > arcDimension.Yc)
-                    {
-                        arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
-                    }
-                    else
-                    {
-                        arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
-                    }
+                    //if (y > arcDimension.Yc)
+                    //{
+                    //    arcDimension.Direction = true; //TODO Пользователь должен указать в какую сторону
+                    //}
+                    //else
+                    //{
+                    //    arcDimension.Direction = false; //TODO Пользователь должен указать в какую сторону
+                    //}
                     arcDimension.Update();
                     document2D.ksEndGroup();
                     document2D.ksStoreTmpGroup(type6.gr);

@@ -9,7 +9,10 @@ namespace RelaxingKompas.Data.Global
 {
     internal static class Global_ArcDimension
     {
-        public static int Count = 0;
+        /// <summary>
+        /// Счетчик количество кликов произведенных пользователем
+        /// </summary>
+        public static int CountClick = 0;
         public static double X1;
         public static double X2;
         public static double Y1;

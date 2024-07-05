@@ -2394,25 +2394,17 @@ namespace RelaxingKompas
         /// </summary>
         private void ArcDimension()
         {
+            IKompasDocument2D1 kompasDocument2D1 = Application.ActiveDocument as IKompasDocument2D1;
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             Document2D document2D = Kompas.ActiveDocument2D();
-            ksPhantom phan = (ksPhantom)Kompas.GetParamStruct((short)StructType2DEnum.ko_Phantom);
 
-            phan.phantom = 6;
+            ksPhantom phan = (ksPhantom)Kompas.GetParamStruct((short)StructType2DEnum.ko_Phantom);
+            phan.phantom = 6; //Пользовательский тип фантома
             ksType6 type6 = phan.GetPhantomParam() as ksType6;
             if (type6.gr != 0)
             {
                 document2D.ksDeleteObj(type6.gr);
             }
-
-            IKompasDocument2D1 kompasDocument2D1 = Application.ActiveDocument as IKompasDocument2D1;
-            IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
-            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-            IViews views = viewsAndLayersManager.Views;
-            IView view = views.ActiveView;
-            ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
-
-            document2D.ksUndoContainer(true);
-            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
             if (selectionManager == null)
             {
                 Application.MessageBoxEx("Выберите окружность или дугу.", "Готово", 64);
@@ -2450,14 +2442,13 @@ namespace RelaxingKompas
             document2D.ksEndGroup();
 
             ksRequestInfo requestInfo = Kompas.GetParamStruct(10);
+            requestInfo.prompt = "Выберите первую точку на дуге";
             requestInfo.dynamic = 1;
             requestInfo.SetCallBackCEx("CALLBACKPROCCURSOR_ArcDimension", 0, this);
             double x = 0;
             double y = 0;
             document2D.ksCursorEx(requestInfo, ref x,ref y, phan, null );
-            Global_ArcDimension.Count = 0;
-            document2D.ksUndoContainer(false);
-
+            Global_ArcDimension.CountClick = 0;
         }
 
         /// <summary>
@@ -2476,15 +2467,14 @@ namespace RelaxingKompas
             [MarshalAs(UnmanagedType.LPStruct)] object rPhan,
             int dynamic)
         {
-            if (dynamic == 0) Global_ArcDimension.Count++;
+            if (dynamic == 0) Global_ArcDimension.CountClick++;
+            ksDocument2D document2D = Kompas.ActiveDocument2D();
             IKompasDocument2D kompasDocument2D = Application.ActiveDocument as IKompasDocument2D;
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
             ISymbols2DContainer symbols2DContainer = view as ISymbols2DContainer;
             IArcDimensions arcDimensions = symbols2DContainer.ArcDimensions;
-
-            ksDocument2D document2D = Kompas.ActiveDocument2D();
             ksRequestInfo info = (ksRequestInfo)rInfo;
             ksPhantom phan = (ksPhantom)rPhan;
             phan.phantom = 6;
@@ -2496,8 +2486,8 @@ namespace RelaxingKompas
             type6.gr = document2D.ksNewGroup(1);
 
             IArcDimension arcDimension = arcDimensions.Add();
-
-            switch (Global_ArcDimension.Count)
+            //В зависимости от количества кликов пользователем
+            switch (Global_ArcDimension.CountClick)
             {
                 case 0:
                     document2D.ksEndGroup();
@@ -2509,6 +2499,7 @@ namespace RelaxingKompas
                         Global_ArcDimension.Y1 = y;
                     }
                     document2D.ksEndGroup();
+                    info.prompt = "Выберите вторую точку на дуге";
                     break;
                 case 2:
                     {
@@ -2532,16 +2523,13 @@ namespace RelaxingKompas
                         double anglPoint1 = GetAngle(Global_ArcDimension.X1, Global_ArcDimension.Y1);
                         double anglPoint2 = GetAngle(Global_ArcDimension.X2, Global_ArcDimension.Y2);
 
-                        if (anglPoint2 > anglPoint1)
+                        if (Global_ArcDimension.arc != null)
                         {
-                            arcDimension.Direction = false;
-                        }
-                        else if (anglPoint2 < anglPoint1)
-                        {
-                            arcDimension.Direction = true;
+                            arcDimension.Direction = GetDirection(anglPoint1, anglPoint2, Global_ArcDimension.arc);
                         }
                         arcDimension.Update();
                         document2D.ksEndGroup();
+                        info.prompt = "Выберите точку установки размера";
                         break;
                     }
                 case 3:
@@ -2557,40 +2545,40 @@ namespace RelaxingKompas
 
                         arcDimension.Xc = Global_ArcDimension.Xc;
                         arcDimension.Yc = Global_ArcDimension.Yc;
+
                         double anglPoint1 = GetAngle(Global_ArcDimension.X1, Global_ArcDimension.Y1);
                         double anglPoint2 = GetAngle(Global_ArcDimension.X2, Global_ArcDimension.Y2);
                         if (Global_ArcDimension.arc != null)
                         {
-
+                            arcDimension.Direction = GetDirection(anglPoint1, anglPoint2, Global_ArcDimension.arc);
                         }
 
-                        if (anglPoint2 > anglPoint1)
-                        {
-                            arcDimension.Direction = false;
-                        }
-                        else if (anglPoint2 < anglPoint1)
-                        {
-                            arcDimension.Direction = true;
-                        }
                         arcDimension.Update();
                         document2D.ksEndGroup();
                         document2D.ksStoreTmpGroup(type6.gr);
                         document2D.ksClearGroup(type6.gr, true);
-                        Global_ArcDimension.Count = 0;
+                        Global_ArcDimension.CountClick = 0;
+                        info.prompt = "Выберите первую точку на дуге";
                         break;
                     }
                 default:
                     document2D.ksEndGroup();
+                    document2D.ksClearGroup(type6.gr, true);
+                    Global_ArcDimension.CountClick = 0;
                     break;
             }
+
             double GetAngle(double _x, double _y)
             {
+                //Перенос нулевой точкии координат в центр дуги/окружности
                 double x_local = _x - Global_ArcDimension.Xc;
                 double y_local = _y - Global_ArcDimension.Yc;
+                //Угол к оси OX
                 double angle = Math.Abs(Math.Atan(y_local / x_local) * 180 / Math.PI);
+                //Перевожу в угол "окружности"
                 if (x_local < 0 && y_local > 0)
                 {
-                    angle += 90;
+                    angle = 180 - angle;
                 }
                 else if (x_local < 0 && y_local < 0)
                 {
@@ -2598,9 +2586,76 @@ namespace RelaxingKompas
                 }
                 else if (x_local > 0 && y_local < 0)
                 {
-                    angle += 270;
+                    angle = 360 - angle;
                 }
                 return angle;
+            }
+
+            bool GetDirection(double angle1, double angle2, IArc arc)
+            {
+                double openingAngleArc;
+                double arcDim_t1;
+                double arcDim_t2;
+                //Перенумерация точек указанных пользователем в зависимости от близости этих точек к крайним точкам дуги
+                if (Math.Abs(arc.Angle1 - angle1) < Math.Abs(arc.Angle1 - angle2))
+                {
+                    arcDim_t1 = angle1;
+                    arcDim_t2 = angle2;
+                }
+                else
+                {
+                    arcDim_t1 = angle2;
+                    arcDim_t2 = angle1;
+                }
+                //Высчитываю раскрытие дуги "построенной" по точкам указанным пользователем
+                if (arc.Direction)
+                {
+                    openingAngleArc = arcDim_t1 - arcDim_t2;
+                    if (openingAngleArc < 0)
+                    {
+                        openingAngleArc += 360;
+                    }
+                }
+                else
+                {
+                    openingAngleArc = arcDim_t2 - arcDim_t1;
+                    if (openingAngleArc < 0)
+                    {
+                        openingAngleArc += 360;
+                    }
+                }
+                //Возвращаю направление размера в зависимости от велечены раскрытия дуги
+                if (angle1 == arcDim_t1)
+                {
+                    return arc.Direction;
+                }
+                else
+                {
+                    return !arc.Direction;
+                }
+                //if (openingAngleArc > 180)
+                //{
+
+                //    if (angle2 > angle1)
+                //    {
+                //        return true;
+                //    }
+                //    else
+                //    {
+                //        return false;
+                //    }
+                //}
+                //else
+                //{
+                //    if (angle2 > angle1)
+                //    {
+                //        return false;
+                //    }
+                //    else
+                //    {
+                //        return true;
+                //    }
+                //}
             }
 
             return 1;

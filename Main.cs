@@ -2437,7 +2437,7 @@ namespace RelaxingKompas
                 return;
             }
 
-            type6.gr = document2D.ksNewGroup(1);
+            type6.gr = document2D.ksNewGroup(6);
 
             document2D.ksEndGroup();
 
@@ -2593,71 +2593,53 @@ namespace RelaxingKompas
 
             bool GetDirection(double angle1, double angle2, IArc arc)
             {
-                double openingAngleArc;
-                double arcDim_t1;
-                double arcDim_t2;
-                //Перенумерация точек указанных пользователем в зависимости от близости этих точек к крайним точкам дуги
-                if (Math.Abs(arc.Angle1 - angle1) < Math.Abs(arc.Angle1 - angle2))
-                {
-                    arcDim_t1 = angle1;
-                    arcDim_t2 = angle2;
-                }
-                else
-                {
-                    arcDim_t1 = angle2;
-                    arcDim_t2 = angle1;
-                }
-                //Высчитываю раскрытие дуги "построенной" по точкам указанным пользователем
                 if (arc.Direction)
                 {
-                    openingAngleArc = arcDim_t1 - arcDim_t2;
-                    if (openingAngleArc < 0)
+                    //Расчитываю угол раскрытия от первой точки дуги до точек указанных пользователем
+                    //Наименьший размер дуги указывает что эта точка ближайшая к первой точки дуги
+                    double openingAngleArcDimFirst = arc.Angle1 - angle1;
+                    if (openingAngleArcDimFirst < 0)
                     {
-                        openingAngleArc += 360;
+                        openingAngleArcDimFirst += 360;
+                    }
+                    double openingAngleArcDimSecond = arc.Angle1 - angle2;
+                    if (openingAngleArcDimSecond < 0)
+                    {
+                        openingAngleArcDimSecond += 360;
+                    }
+                    if (openingAngleArcDimFirst < openingAngleArcDimSecond)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
                 else
                 {
-                    openingAngleArc = arcDim_t2 - arcDim_t1;
-                    if (openingAngleArc < 0)
+                    //Расчитываю угол раскрытия от второй точки дуги до точек указанных пользователем
+                    //Наименьший размер дуги указывает что эта точка ближайшая ко второй точки дуги
+                    double openingAngleArcDimFirst = arc.Angle2 - angle1;
+                    if (openingAngleArcDimFirst < 0)
                     {
-                        openingAngleArc += 360;
+                        openingAngleArcDimFirst += 360;
+                    }
+                    double openingAngleArcDimSecond = arc.Angle2 - angle2;
+                    if (openingAngleArcDimSecond < 0)
+                    {
+                        openingAngleArcDimSecond += 360;
+                    }
+                    if (openingAngleArcDimFirst < openingAngleArcDimSecond)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
-                //Возвращаю направление размера в зависимости от велечены раскрытия дуги
-                if (angle1 == arcDim_t1)
-                {
-                    return arc.Direction;
-                }
-                else
-                {
-                    return !arc.Direction;
-                }
-                //if (openingAngleArc > 180)
-                //{
-
-                //    if (angle2 > angle1)
-                //    {
-                //        return true;
-                //    }
-                //    else
-                //    {
-                //        return false;
-                //    }
-                //}
-                //else
-                //{
-                //    if (angle2 > angle1)
-                //    {
-                //        return false;
-                //    }
-                //    else
-                //    {
-                //        return true;
-                //    }
-                //}
             }
-
             return 1;
         }
 

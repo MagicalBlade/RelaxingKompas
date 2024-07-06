@@ -58,6 +58,7 @@
             this.nud_betweenLD = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.cb_typehead = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -167,7 +168,7 @@
             // b_save
             // 
             this.b_save.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.b_save.Location = new System.Drawing.Point(118, 183);
+            this.b_save.Location = new System.Drawing.Point(123, 215);
             this.b_save.Name = "b_save";
             this.b_save.Size = new System.Drawing.Size(75, 23);
             this.b_save.TabIndex = 0;
@@ -177,6 +178,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.cb_typehead);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.cmb_plane);
             this.groupBox2.Controls.Add(this.b_FolderDialog);
@@ -191,7 +194,7 @@
             this.groupBox2.Controls.Add(this.cb_Creat3Ddetail);
             this.groupBox2.Location = new System.Drawing.Point(155, 6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(386, 142);
+            this.groupBox2.Size = new System.Drawing.Size(386, 171);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Посчитать массу";
@@ -302,7 +305,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(555, 177);
+            this.tabControl1.Size = new System.Drawing.Size(555, 209);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
@@ -313,7 +316,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(547, 151);
+            this.tabPage1.Size = new System.Drawing.Size(547, 183);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Посчитать массу";
             // 
@@ -401,23 +404,32 @@
             // 
             // cb_typehead
             // 
+            this.cb_typehead.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_typehead.FormattingEnabled = true;
             this.cb_typehead.Items.AddRange(new object[] {
-            "Поз. Кол.т Кол.н Сечение Длина Сталь Вес,ед Вес,общ Лист Площадь",
-            "Поз. Кол.т Кол.н Толщина Ширина Длина Вес,ед Вес,общ Сталь Лист Площадь"});
-            this.cb_typehead.Location = new System.Drawing.Point(318, 179);
+            "Поз|Кол.т|Кол.н|Сечение|Длина|Сталь|Вес,ед|Вес,общ|Лист|Площадь",
+            "Поз|Кол.т|Кол.н|Толщина|Ширина|Длина|Вес,ед|Вес,общ|Сталь|Лист|Площадь"});
+            this.cb_typehead.Location = new System.Drawing.Point(144, 143);
             this.cb_typehead.Name = "cb_typehead";
-            this.cb_typehead.Size = new System.Drawing.Size(121, 21);
+            this.cb_typehead.Size = new System.Drawing.Size(226, 21);
             this.cb_typehead.TabIndex = 3;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(1, 147);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(137, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Тип шапки в Excel файле:";
             // 
             // FormLibrarySettings
             // 
             this.AcceptButton = this.b_save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(556, 212);
+            this.ClientSize = new System.Drawing.Size(556, 248);
             this.ControlBox = false;
-            this.Controls.Add(this.cb_typehead);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.b_save);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -472,5 +484,6 @@
         internal System.Windows.Forms.NumericUpDown nud_searchMax;
         private System.Windows.Forms.Label label4;
         internal System.Windows.Forms.ComboBox cb_typehead;
+        private System.Windows.Forms.Label label5;
     }
 }

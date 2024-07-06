@@ -301,7 +301,7 @@ namespace RelaxingKompas.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public decimal toleranceAlign {
             get {
                 return ((decimal)(this["toleranceAlign"]));

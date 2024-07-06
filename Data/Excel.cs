@@ -340,6 +340,49 @@ namespace RelaxingKompas.Data
                             worksheet.Cell(rowcount, 11).DataType = XLDataType.Number;
                             break;
                         default:
+                            worksheet.Cell(rowcount, 1).Value = export[0];
+                            if (export[0].IndexOf('.') != -1)
+                            {
+                                worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
+
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    worksheet.Cell(rowcount, 1).DataType = XLDataType.Number;
+                                }
+                                catch (Exception)
+                                {
+                                    worksheet.Cell(rowcount, 1).DataType = XLDataType.Text;
+                                }
+                            }
+                            worksheet.Cell(rowcount, 2).Value = export[1];
+                            worksheet.Cell(rowcount, 2).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 3).Value = export[2];
+                            worksheet.Cell(rowcount, 3).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 4).Value = export[3];
+                            worksheet.Cell(rowcount, 4).DataType = XLDataType.Text;
+                            worksheet.Cell(rowcount, 5).Value = export[4];
+                            worksheet.Cell(rowcount, 5).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 6).Value = export[5];
+                            worksheet.Cell(rowcount, 6).DataType = XLDataType.Text;
+                            worksheet.Cell(rowcount, 7).Value = export[6];
+                            worksheet.Cell(rowcount, 7).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 8).Value = export[7];
+                            worksheet.Cell(rowcount, 8).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 9).Value = export[8];
+                            try
+                            {
+                                worksheet.Cell(rowcount, 9).DataType = XLDataType.Number;
+                            }
+                            catch (Exception)
+                            {
+                                worksheet.Cell(rowcount, 9).DataType = XLDataType.Text;
+                            }
+                            worksheet.Cell(rowcount, 10).Value = export[9];
+                            worksheet.Cell(rowcount, 10).DataType = XLDataType.Number;
+                            break;
                             break;
                     }
 

@@ -72,7 +72,7 @@
       <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="toleranceAlign" Type="System.Decimal" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="searchMax" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">15</Value>

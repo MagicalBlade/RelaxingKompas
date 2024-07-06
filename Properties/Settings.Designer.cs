@@ -322,5 +322,17 @@ namespace RelaxingKompas.Properties {
                 this["searchMax"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FormLibrarySettings_cb_typehead {
+            get {
+                return ((int)(this["FormLibrarySettings_cb_typehead"]));
+            }
+            set {
+                this["FormLibrarySettings_cb_typehead"] = value;
+            }
+        }
     }
 }

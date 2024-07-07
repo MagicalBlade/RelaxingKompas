@@ -177,6 +177,34 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
             };
                     break;
+                default:
+                    header = new string[]
+            {
+                "Позиция",
+                "Кол. т.",
+                "Кол. н.",
+                "Сечение",
+                "Длина",
+                "Сталь",
+                "Вес, ед.",
+                "Вес, общ.",
+                "Номер листа",
+                "Площадь"
+            };
+                    dataexport = new string[]
+            {
+                DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
+                "",
+                "",
+                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
+                DataWeightAndSize.FormWeightAndSize.tb_length.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
+                "",
+                DataWeightAndSize.FormWeightAndSize.tb_sheet.Text,
+                DataWeightAndSize.FormWeightAndSize.tb_yardage.Text
+            };
+                    break;
             }
             
             

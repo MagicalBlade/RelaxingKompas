@@ -36,6 +36,10 @@ namespace RelaxingKompas.Data
         /// Инвентарный номер
         /// </summary>
         static public string inventoryNumber = "0000";
+        /// <summary>
+        /// Название заказа
+        /// </summary>
+        static public string nameOrder = "Назвение заказа";
         #endregion
 
 
@@ -172,7 +176,8 @@ namespace RelaxingKompas.Data
                 PathFile = $"{KompasDocument.Path}{NameFile}";
                 if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
-                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты\\Инв.№{inventoryNumber}. З.з.№{order}.";
+                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                        $"\\Документы из библиотеки\\Фрагменты\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}";
                     try
                     {
                         Directory.CreateDirectory(pathfolder);
@@ -195,7 +200,8 @@ namespace RelaxingKompas.Data
                 PathFile = $"{KompasDocument.Path}{NameFile}";
                 if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
-                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Контуры\\Инв.№{inventoryNumber}. З.з.№{order}.";
+                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                        $"\\Документы из библиотеки\\Контуры\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}";
                     try
                     {
                         Directory.CreateDirectory(pathfolder);

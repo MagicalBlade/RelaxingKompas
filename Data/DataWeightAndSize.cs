@@ -28,6 +28,14 @@ namespace RelaxingKompas.Data
         public static double Thickness { get => _thickness; set => _thickness = value; }
 
         static private double _thickness = 0;
+        /// <summary>
+        /// Номер заказа
+        /// </summary>
+        static public string order = "0000";
+        /// <summary>
+        /// Инвентарный номер
+        /// </summary>
+        static public string inventoryNumber = "0000";
         #endregion
 
 
@@ -164,16 +172,17 @@ namespace RelaxingKompas.Data
                 PathFile = $"{KompasDocument.Path}{NameFile}";
                 if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
+                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты\\Инв.№{inventoryNumber}. З.з.№{order}.";
                     try
                     {
-                        Directory.CreateDirectory($"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты");
+                        Directory.CreateDirectory(pathfolder);
                     }
                     catch (Exception)
                     {
                         System.Windows.Forms.MessageBox.Show("Не удалось сохранить фрагмент. Проверьте возможность сохранения по выбранному пути.");
                         return false;
                     }
-                    PathFile = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Фрагменты\\{NameFile}";
+                    PathFile = $"{pathfolder}\\{NameFile}";
                 }
                 if (!CheckFile())
                 {
@@ -186,16 +195,17 @@ namespace RelaxingKompas.Data
                 PathFile = $"{KompasDocument.Path}{NameFile}";
                 if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
+                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Контуры\\Инв.№{inventoryNumber}. З.з.№{order}.";
                     try
                     {
-                        Directory.CreateDirectory($"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Контуры");
+                        Directory.CreateDirectory(pathfolder);
                     }
                     catch (Exception)
                     {
                         System.Windows.Forms.MessageBox.Show("Не удалось сохранить контур. Проверьте возможность сохранения по выбранному пути.");
                         return false;
                     }
-                    PathFile = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Контуры\\{NameFile}";
+                    PathFile = $"{pathfolder}\\{NameFile}";
                 }
 
                 if (!CheckFile())

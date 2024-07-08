@@ -404,6 +404,8 @@ namespace RelaxingKompas
                     WindowWeightAndSize.tb_steel.Text = profile[4];
                 }
             }
+            DataWeightAndSize.order = DataWeightAndSize.GetCellStamp(16003);
+            DataWeightAndSize.inventoryNumber = DataWeightAndSize.GetCellStamp(16002);
             #endregion
 
             ksDocument2D ksdocument2D = Kompas.ActiveDocument2D();

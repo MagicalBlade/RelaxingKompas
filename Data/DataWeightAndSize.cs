@@ -207,7 +207,6 @@ namespace RelaxingKompas.Data
                     }
                     PathFile = $"{pathfolder}\\{NameFile}";
                 }
-
                 if (!CheckFile())
                 {
                     return false;

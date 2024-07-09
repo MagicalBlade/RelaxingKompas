@@ -411,7 +411,6 @@ namespace RelaxingKompas.Data
                             worksheet.Cell(rowcount, 10).Value = export[9];
                             worksheet.Cell(rowcount, 10).DataType = XLDataType.Number;
                             break;
-                            break;
                     }
 
 

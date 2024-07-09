@@ -334,5 +334,17 @@ namespace RelaxingKompas.Properties {
                 this["FormLibrarySettings_cb_typehead"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FormLibrarySettings_cb_isUseOrder {
+            get {
+                return ((bool)(this["FormLibrarySettings_cb_isUseOrder"]));
+            }
+            set {
+                this["FormLibrarySettings_cb_isUseOrder"] = value;
+            }
+        }
     }
 }

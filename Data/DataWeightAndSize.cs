@@ -176,8 +176,17 @@ namespace RelaxingKompas.Data
                 PathFile = $"{KompasDocument.Path}{NameFile}";
                 if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
-                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                    string pathfolder;
+                    if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
+                    {
+                        pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
                         $"\\Документы из библиотеки\\Фрагменты\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}";
+                    }
+                    else
+                    {
+                        pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                        $"\\Документы из библиотеки\\Фрагменты";
+                    }
                     try
                     {
                         Directory.CreateDirectory(pathfolder);
@@ -200,9 +209,18 @@ namespace RelaxingKompas.Data
                 PathFile = $"{KompasDocument.Path}{NameFile}";
                 if (WindowLibrarySettings.rb_onDirectory.Checked)
                 {
-                    string pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                    string pathfolder;
+                    if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
+                    {
+                        pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
                         $"\\Документы из библиотеки\\Контуры\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}";
-                    try
+                    }
+                    else
+                    {
+                        pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                        $"\\Документы из библиотеки\\Контуры";
+                    }
+                        try
                     {
                         Directory.CreateDirectory(pathfolder);
                     }

@@ -180,7 +180,7 @@ namespace RelaxingKompas.Data
                     if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
                     {
                         pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
-                        $"\\Документы из библиотеки\\Фрагменты\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}";
+                        $"\\Документы из библиотеки\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}\\Фрагменты";
                     }
                     else
                     {
@@ -213,7 +213,7 @@ namespace RelaxingKompas.Data
                     if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
                     {
                         pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
-                        $"\\Документы из библиотеки\\Контуры\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}";
+                        $"\\Документы из библиотеки\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}\\Контуры";
                     }
                     else
                     {

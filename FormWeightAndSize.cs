@@ -87,18 +87,19 @@ namespace RelaxingKompas
                 DataWeightAndSize.WriteWeightStamp();
             }
             //Записуем данные в Excel файл
-            if (DataWeightAndSize.WindowLibrarySettings.cb_Excel.Checked)
-            {
-                try
-                {
-                    Excel.WriteExcelFile();
-                }
-                catch (System.IO.IOException)
-                {
+            Excel.WriteExcelFile();
+            //if (DataWeightAndSize.WindowLibrarySettings.cb_Excel.Checked)
+            //{
+            //    try
+            //    {
+            //        Excel.WriteExcelFile();
+            //    }
+            //    catch (System.IO.IOException)
+            //    {
 
-                    MessageBox.Show($"Не удается записать Excel файл. Возможно он открыт в другой программе");
-                }
-            }
+            //        MessageBox.Show($"Не удается записать Excel файл. Возможно он открыт в другой программе");
+            //    }
+            //}
 
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "H", tb_width.Text, "Ширина");

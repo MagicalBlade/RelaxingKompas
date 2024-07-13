@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using RelaxingKompas.Windows;
 using System;
 using System.Globalization;
 using System.IO;
@@ -210,7 +211,34 @@ namespace RelaxingKompas.Data
             
             if (File.Exists($"{PathExcelFile}{NameExcelFile}.xlsx"))
             {
-                XLWorkbook workbook = new XLWorkbook($"{PathExcelFile}{NameExcelFile}.xlsx");
+                RepeatSkipCancel repeatSkipCancel = new RepeatSkipCancel
+                {
+                    Text = "Excel файл или открыт или нет прав на его редактирование."
+                };
+                XLWorkbook workbook = null;
+                do
+                {
+                    try
+                    {
+                        workbook = new XLWorkbook($"{PathExcelFile}{NameExcelFile}.xlsx");
+
+                    }
+                    catch (Exception)
+                    {
+                        repeatSkipCancel.ShowDialog();
+                    }
+                } while (workbook == null && repeatSkipCancel.DialogResult == DialogResult.Retry);
+
+                if (repeatSkipCancel.DialogResult == DialogResult.Ignore || repeatSkipCancel.DialogResult == DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                if (workbook == null)
+                {
+                    MessageBox.Show($"Не удается записать Excel файл. Возможно он открыт в другой программе");
+                    return;
+                }
                 IXLWorksheet worksheet = workbook.Worksheet(1);
                 if (worksheet.LastRowUsed() != null)
                 {
@@ -238,26 +266,6 @@ namespace RelaxingKompas.Data
                         worksheet.Cell(1, i + 1).Value = header[i];
                         worksheet.Cell(1, i + 1).DataType = XLDataType.Text;
                     }
-                    //worksheet.Cell(1, 1).Value = header[0];
-                    //worksheet.Cell(1, 1).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 2).Value = header[1];
-                    //worksheet.Cell(1, 2).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 3).Value = header[2];
-                    //worksheet.Cell(1, 3).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 4).Value = header[3];
-                    //worksheet.Cell(1, 4).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 5).Value = header[4];
-                    //worksheet.Cell(1, 5).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 6).Value = header[5];
-                    //worksheet.Cell(1, 6).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 7).Value = header[6];
-                    //worksheet.Cell(1, 7).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 8).Value = header[7];
-                    //worksheet.Cell(1, 8).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 9).Value = header[8];
-                    //worksheet.Cell(1, 9).DataType = XLDataType.Text;
-                    //worksheet.Cell(1, 10).Value = header[9];
-                    //worksheet.Cell(1, 10).DataType = XLDataType.Text;
                 }
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, header.Length).AdjustToContents();

@@ -108,6 +108,12 @@
     <Compile Include="Windows\FormTolerance.Designer.cs">
       <DependentUpon>FormTolerance.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\RepeatSkipCancel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\RepeatSkipCancel.Designer.cs">
+      <DependentUpon>RepeatSkipCancel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\RougForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\FormTolerance.resx">
       <DependentUpon>FormTolerance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\RepeatSkipCancel.resx">
+      <DependentUpon>RepeatSkipCancel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\RougForm.resx">
       <DependentUpon>RougForm.cs</DependentUpon>

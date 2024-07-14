@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace RelaxingKompas
@@ -74,6 +75,27 @@ namespace RelaxingKompas
 
         private void b_ok_Click(object sender, EventArgs e)
         {
+            #region Сохранение настроек
+            Properties.Settings.Default.Density = tb_density.Text;
+            Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
+            Properties.Settings.Default.Isweight = cb_weight.Checked;
+            Properties.Settings.Default.Round = comb_round.SelectedIndex;
+            Properties.Settings.Default.Point = this.Location;
+
+            Properties.Settings.Default.Save();
+            #endregion
+            //Записуем данные в Excel файл
+            // отмена = -1 успешно = 1 пропуск запуска в excel файл = 0
+            switch (Excel.WriteExcelFile())
+            {
+                case -1:
+                    return;
+                case 0:
+                    DataWeightAndSize.Application.MessageBoxEx("Данные не были записаны в Excel файл","Готово", 64);
+                    break;
+                default:
+                    break;
+            }
             // Передаем массу
             DataWeightAndSize.Weight = tb_weight.Text;
             // Копируем в буфер обмена
@@ -86,36 +108,12 @@ namespace RelaxingKompas
             {
                 DataWeightAndSize.WriteWeightStamp();
             }
-            //Записуем данные в Excel файл
-            Excel.WriteExcelFile();
-            //if (DataWeightAndSize.WindowLibrarySettings.cb_Excel.Checked)
-            //{
-            //    try
-            //    {
-            //        Excel.WriteExcelFile();
-            //    }
-            //    catch (System.IO.IOException)
-            //    {
-
-            //        MessageBox.Show($"Не удается записать Excel файл. Возможно он открыт в другой программе");
-            //    }
-            //}
 
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "H", tb_width.Text, "Ширина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "L", tb_length.Text, "Длинна");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "steel", "1", tb_steel.Text); //Сталь
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "weight", tb_weight.Text, "Вес");
-
-            #region Сохранение настроек
-            Properties.Settings.Default.Density = tb_density.Text;
-            Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
-            Properties.Settings.Default.Isweight = cb_weight.Checked;
-            Properties.Settings.Default.Round = comb_round.SelectedIndex;
-            Properties.Settings.Default.Point = this.Location;
-
-            Properties.Settings.Default.Save();
-            #endregion
 
             Hide();
             //Создает новый документ-фрагмент

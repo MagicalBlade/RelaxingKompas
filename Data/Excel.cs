@@ -56,7 +56,7 @@ namespace RelaxingKompas.Data
             Clipboard.SetDataObject(dataObject); //Копируем в буфер обмена
         }
 
-        public static void WriteExcelFile()
+        public static int WriteExcelFile()
         {
             int typehead = DataWeightAndSize.WindowLibrarySettings.cb_typehead.SelectedIndex;
             string PathExcelFile = DataWeightAndSize.KompasDocument.Path;
@@ -80,14 +80,15 @@ namespace RelaxingKompas.Data
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show($"Не удалось сохранить Excel файл. Проверьте возможность сохранения по выбранному пути.");
-                        return;
+                        MessageBox.Show($"Не удалось сохранить Excel файл. Проверьте возможность сохранения по выбранному пути. Действие было отменено.");
+                        return -1;
 
                     }
                 }
                 else
                 {
-                    DataWeightAndSize.Application.MessageBoxEx($"Путь не найден. Excel файл сохранен: {PathExcelFile}", "Ошибка", 0);
+                    DataWeightAndSize.Application.MessageBoxEx($"Путь не найден. Действие было отменено.", "Ошибка", 0);
+                    return -1;
                 }
             }
             
@@ -229,15 +230,19 @@ namespace RelaxingKompas.Data
                     }
                 } while (workbook == null && repeatSkipCancel.DialogResult == DialogResult.Retry);
 
-                if (repeatSkipCancel.DialogResult == DialogResult.Ignore || repeatSkipCancel.DialogResult == DialogResult.Cancel)
+                if (repeatSkipCancel.DialogResult == DialogResult.Ignore)
                 {
-                    return;
+                    return 0;
+                }
+                if (repeatSkipCancel.DialogResult == DialogResult.Cancel)
+                {
+                    return -1;
                 }
 
                 if (workbook == null)
                 {
                     MessageBox.Show($"Не удается записать Excel файл. Возможно он открыт в другой программе");
-                    return;
+                    return 0;
                 }
                 IXLWorksheet worksheet = workbook.Worksheet(1);
                 if (worksheet.LastRowUsed() != null)
@@ -427,7 +432,7 @@ namespace RelaxingKompas.Data
                 //Ширина колонки по содержимому
                 worksheet.Columns(1, export.Length).AdjustToContents(); 
             }
-            return;
+            return 1;
         }
     }
 }

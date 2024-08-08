@@ -166,21 +166,21 @@ namespace RelaxingKompas
             switch (DataWeightAndSize.WindowLibrarySettings.cb_typehead.SelectedIndex)
             {
                 case 0:
-                    plainText = $"{tb_pos.Text}\t\t\t{DataWeightAndSize.Thickness}х{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}\t" +
+                    plainText = $"{tb_pos.Text}\t\t\t{tb_thickness.Text}х{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}\t" +
                 $"\t{tb_sheet.Text}\t{tb_yardage.Text}";
-                    htmlText = $"<table><tr><td>{tb_pos.Text}</td><td></td><td></td><td>{DataWeightAndSize.Thickness}х{tb_width.Text}</td>" +
+                    htmlText = $"<table><tr><td>{tb_pos.Text}</td><td></td><td></td><td>{tb_thickness.Text}х{tb_width.Text}</td>" +
                         $"<td>{tb_length.Text}</td><td>{tb_steel.Text}</td><td>{tb_weight.Text}</td><td></td><td>{tb_sheet.Text}</td><td>{tb_yardage.Text}</td></tr></table>";
                     break;
                 case 1:
-                    plainText = $"{tb_pos.Text}\t\t\t{DataWeightAndSize.Thickness}\t{tb_width.Text}\t{tb_length.Text}\t{tb_weight.Text}\t" +
+                    plainText = $"{tb_pos.Text}\t\t\t{tb_thickness.Text}\t{tb_width.Text}\t{tb_length.Text}\t{tb_weight.Text}\t" +
                 $"\t{tb_steel.Text}\t{tb_sheet.Text}\t{tb_yardage.Text}";
-                    htmlText = $"<table><tr><td>{tb_pos.Text}</td><td></td><td></td><td>{DataWeightAndSize.Thickness}</td><td>{tb_width.Text}</td>" +
+                    htmlText = $"<table><tr><td>{tb_pos.Text}</td><td></td><td></td><td>{tb_thickness.Text}</td><td>{tb_width.Text}</td>" +
                         $"<td>{tb_length.Text}</td><td>{tb_weight.Text}</td><td></td><td>{tb_steel.Text}</td><td>{tb_sheet.Text}</td><td>{tb_yardage.Text}</td></tr></table>";
                     break;
                 default:
-                    plainText = $"{tb_pos.Text}\t\t\t{DataWeightAndSize.Thickness}х{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}\t" +
+                    plainText = $"{tb_pos.Text}\t\t\t{tb_thickness.Text}х{tb_width.Text}\t{tb_length.Text}\t{tb_steel.Text}\t{tb_weight.Text}\t" +
                 $"\t{tb_sheet.Text}\t{tb_yardage.Text}";
-                    htmlText = $"<table><tr><td>{tb_pos.Text}</td><td></td><td></td><td>{DataWeightAndSize.Thickness}х{tb_width.Text}</td>" +
+                    htmlText = $"<table><tr><td>{tb_pos.Text}</td><td></td><td></td><td>{tb_thickness.Text}х{tb_width.Text}</td>" +
                         $"<td>{tb_length.Text}</td><td>{tb_steel.Text}</td><td>{tb_weight.Text}</td><td></td><td>{tb_sheet.Text}</td><td>{tb_yardage.Text}</td></tr></table>";
                     break;
             }

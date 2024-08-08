@@ -111,7 +111,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 "",
                 "",
-                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
+                $"{DataWeightAndSize.FormWeightAndSize.tb_thickness.Text}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
@@ -140,7 +140,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 "",
                 "",
-                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
+                $"{DataWeightAndSize.FormWeightAndSize.tb_thickness.Text}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
@@ -169,7 +169,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 "",
                 "",
-                DataWeightAndSize.Thickness.ToString(),
+                DataWeightAndSize.FormWeightAndSize.tb_thickness.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_width.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
@@ -198,7 +198,7 @@ namespace RelaxingKompas.Data
                 DataWeightAndSize.FormWeightAndSize.tb_pos.Text,
                 "",
                 "",
-                $"{DataWeightAndSize.Thickness}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
+                $"{DataWeightAndSize.FormWeightAndSize.tb_thickness.Text}х{DataWeightAndSize.FormWeightAndSize.tb_width.Text}",
                 DataWeightAndSize.FormWeightAndSize.tb_length.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_steel.Text,
                 DataWeightAndSize.FormWeightAndSize.tb_weight.Text,
@@ -355,7 +355,7 @@ namespace RelaxingKompas.Data
                             worksheet.Cell(rowcount, 3).Value = export[2];
                             worksheet.Cell(rowcount, 3).DataType = XLDataType.Number;
                             worksheet.Cell(rowcount, 4).Value = export[3];
-                            worksheet.Cell(rowcount, 4).DataType = XLDataType.Number;
+                            worksheet.Cell(rowcount, 4).DataType = XLDataType.Text;
                             worksheet.Cell(rowcount, 5).Value = export[4];
                             worksheet.Cell(rowcount, 5).DataType = XLDataType.Number;
                             worksheet.Cell(rowcount, 6).Value = export[5];

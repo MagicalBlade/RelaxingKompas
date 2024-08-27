@@ -85,16 +85,19 @@ namespace RelaxingKompas
             Properties.Settings.Default.Save();
             #endregion
             //Записуем данные в Excel файл
-            // отмена = -1 успешно = 1 пропуск запуска в excel файл = 0
-            switch (Excel.WriteExcelFile())
+            if (DataWeightAndSize.WindowLibrarySettings.cb_Excel.Checked)
             {
-                case -1:
-                    return;
-                case 0:
-                    DataWeightAndSize.Application.MessageBoxEx("Данные не были записаны в Excel файл","Готово", 64);
-                    break;
-                default:
-                    break;
+                // отмена = -1 успешно = 1 пропуск запуска в excel файл = 0
+                switch (Excel.WriteExcelFile())
+                {
+                    case -1:
+                        return;
+                    case 0:
+                        DataWeightAndSize.Application.MessageBoxEx("Данные не были записаны в Excel файл", "Готово", 64);
+                        break;
+                    default:
+                        break;
+                }
             }
             // Передаем массу
             DataWeightAndSize.Weight = tb_weight.Text;

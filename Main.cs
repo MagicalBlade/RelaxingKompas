@@ -414,7 +414,7 @@ namespace RelaxingKompas
 
             ksDocument2D ksdocument2D = Kompas.ActiveDocument2D();
 
-            Kompas.ksSetCriticalProcess();
+            //Kompas.ksSetCriticalProcess();
 
             ksInertiaParam ksinertiaParam = Kompas.GetParamStruct(83); //Параметры МЦХ
             int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace RelaxingKompas.Data
 {
@@ -230,6 +231,14 @@ namespace RelaxingKompas.Data
                         return false;
                     }
                     PathFile = $"{pathfolder}\\{NameFile}";
+                }
+                if (File.Exists($"{PathFile}.{TypeFile}"))
+                {
+                    DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Файл контура уже существует! Заменить?", "Внимание!", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.No)
+                    {
+                        return false;
+                    }
                 }
                 if (!CheckFile())
                 {

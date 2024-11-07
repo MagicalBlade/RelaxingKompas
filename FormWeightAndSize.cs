@@ -3,6 +3,7 @@ using KompasAPI7;
 using RelaxingKompas.Data;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography.X509Certificates;

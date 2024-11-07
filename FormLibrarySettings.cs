@@ -29,6 +29,7 @@ namespace RelaxingKompas
             nud_searchMax.Value = Properties.Settings.Default.searchMax;
             cb_typehead.SelectedIndex = Properties.Settings.Default.FormLibrarySettings_cb_typehead;
             cb_isUseOrder.Checked = Properties.Settings.Default.FormLibrarySettings_cb_isUseOrder;
+            cb_exists_dxf.Checked = Properties.Settings.Default.FormLibrarySettings_cb_exists_dxf;
             #endregion
 
             Check3Ddetail();
@@ -63,6 +64,7 @@ namespace RelaxingKompas
             Properties.Settings.Default.searchMax = nud_searchMax.Value;
             Properties.Settings.Default.FormLibrarySettings_cb_typehead = cb_typehead.SelectedIndex;
             Properties.Settings.Default.FormLibrarySettings_cb_isUseOrder = cb_isUseOrder.Checked;
+            Properties.Settings.Default.FormLibrarySettings_cb_exists_dxf= cb_exists_dxf.Checked;
             Properties.Settings.Default.Save();
             #endregion
         }

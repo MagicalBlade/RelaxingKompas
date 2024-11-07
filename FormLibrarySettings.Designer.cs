@@ -53,6 +53,7 @@
             this.cb_Excel = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cb_isUseOrder = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.nud_searchMax = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -60,8 +61,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.nud_betweenLD = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.cb_isUseOrder = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.cb_exists_dxf = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -171,7 +172,7 @@
             // b_save
             // 
             this.b_save.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.b_save.Location = new System.Drawing.Point(123, 215);
+            this.b_save.Location = new System.Drawing.Point(241, 232);
             this.b_save.Name = "b_save";
             this.b_save.Size = new System.Drawing.Size(75, 23);
             this.b_save.TabIndex = 0;
@@ -329,21 +330,33 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(555, 209);
+            this.tabControl1.Size = new System.Drawing.Size(555, 226);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.cb_exists_dxf);
             this.tabPage1.Controls.Add(this.cb_isUseOrder);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(547, 183);
+            this.tabPage1.Size = new System.Drawing.Size(547, 200);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Посчитать массу";
+            // 
+            // cb_isUseOrder
+            // 
+            this.cb_isUseOrder.AutoSize = true;
+            this.cb_isUseOrder.Location = new System.Drawing.Point(12, 154);
+            this.cb_isUseOrder.Name = "cb_isUseOrder";
+            this.cb_isUseOrder.Size = new System.Drawing.Size(142, 17);
+            this.cb_isUseOrder.TabIndex = 2;
+            this.cb_isUseOrder.Text = "Разделять по заказам";
+            this.toolTip1.SetToolTip(this.cb_isUseOrder, "Разделять по заказам контуры и фрагменты");
+            this.cb_isUseOrder.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -427,23 +440,24 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Расстояние между размерами:";
             // 
-            // cb_isUseOrder
+            // cb_exists_dxf
             // 
-            this.cb_isUseOrder.AutoSize = true;
-            this.cb_isUseOrder.Location = new System.Drawing.Point(12, 154);
-            this.cb_isUseOrder.Name = "cb_isUseOrder";
-            this.cb_isUseOrder.Size = new System.Drawing.Size(142, 17);
-            this.cb_isUseOrder.TabIndex = 2;
-            this.cb_isUseOrder.Text = "Разделять по заказам";
-            this.toolTip1.SetToolTip(this.cb_isUseOrder, "Разделять по заказам контуры и фрагменты");
-            this.cb_isUseOrder.UseVisualStyleBackColor = true;
+            this.cb_exists_dxf.AutoSize = true;
+            this.cb_exists_dxf.Checked = true;
+            this.cb_exists_dxf.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_exists_dxf.Location = new System.Drawing.Point(12, 177);
+            this.cb_exists_dxf.Name = "cb_exists_dxf";
+            this.cb_exists_dxf.Size = new System.Drawing.Size(193, 17);
+            this.cb_exists_dxf.TabIndex = 3;
+            this.cb_exists_dxf.Text = "Спрашивать при замене контура";
+            this.cb_exists_dxf.UseVisualStyleBackColor = true;
             // 
             // FormLibrarySettings
             // 
             this.AcceptButton = this.b_save;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(556, 248);
+            this.ClientSize = new System.Drawing.Size(556, 268);
             this.ControlBox = false;
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.b_save);
@@ -503,5 +517,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ToolTip toolTip1;
         internal System.Windows.Forms.CheckBox cb_isUseOrder;
+        internal System.Windows.Forms.CheckBox cb_exists_dxf;
     }
 }

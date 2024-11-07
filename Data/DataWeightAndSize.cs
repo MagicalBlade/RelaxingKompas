@@ -232,12 +232,15 @@ namespace RelaxingKompas.Data
                     }
                     PathFile = $"{pathfolder}\\{NameFile}";
                 }
-                if (File.Exists($"{PathFile}.{TypeFile}"))
+                if (WindowLibrarySettings.cb_exists_dxf.Checked)
                 {
-                    DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Файл контура уже существует! Заменить?", "Внимание!", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.No)
+                    if (File.Exists($"{PathFile}.{TypeFile}"))
                     {
-                        return false;
+                        DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Файл контура уже существует! Заменить?", "Внимание!", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.No)
+                        {
+                            return false;
+                        }
                     }
                 }
                 if (!CheckFile())

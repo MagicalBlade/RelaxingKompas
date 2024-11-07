@@ -83,5 +83,8 @@
     <Setting Name="FormLibrarySettings_cb_isUseOrder" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="FormLibrarySettings_cb_exists_dxf" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -346,5 +346,17 @@ namespace RelaxingKompas.Properties {
                 this["FormLibrarySettings_cb_isUseOrder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FormLibrarySettings_cb_exists_dxf {
+            get {
+                return ((bool)(this["FormLibrarySettings_cb_exists_dxf"]));
+            }
+            set {
+                this["FormLibrarySettings_cb_exists_dxf"] = value;
+            }
+        }
     }
 }

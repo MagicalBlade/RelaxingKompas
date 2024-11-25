@@ -82,7 +82,6 @@ namespace RelaxingKompas
             Properties.Settings.Default.Isweight = cb_weight.Checked;
             Properties.Settings.Default.Round = comb_round.SelectedIndex;
             Properties.Settings.Default.Point = this.Location;
-
             Properties.Settings.Default.Save();
             #endregion
             //Записуем данные в Excel файл

@@ -358,5 +358,17 @@ namespace RelaxingKompas.Properties {
                 this["FormLibrarySettings_cb_exists_dxf"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FormLibrarySettings_cb_typeModelingSelectedIndex {
+            get {
+                return ((int)(this["FormLibrarySettings_cb_typeModelingSelectedIndex"]));
+            }
+            set {
+                this["FormLibrarySettings_cb_typeModelingSelectedIndex"] = value;
+            }
+        }
     }
 }

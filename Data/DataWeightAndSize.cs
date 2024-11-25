@@ -372,29 +372,41 @@ namespace RelaxingKompas.Data
             //WriteVariable(kompasDocument, "H", FormWeightAndSize.tb_width.Text, "Ширина");
             //WriteVariable(kompasDocument, "L", FormWeightAndSize.tb_length.Text, "Длинна");
             //WriteVariable(kompasDocument, "steel", "1", FormWeightAndSize.tb_steel.Text); //Сталь
-
-
-            #region Выдавливаем эскиз
-            IExtrusions extrusions = modelContainer.Extrusions;
-            IExtrusion extrusion = extrusions.Add(ksObj3dTypeEnum.o3d_bossExtrusion);
-            extrusion.Direction = ksDirectionTypeEnum.dtMiddlePlane; //Выдавливание "симметрично"
-            extrusion.Sketch = (Sketch)sketch;
-
             if (Thickness == 0)
             {
                 Application.MessageBoxEx("Не указана толщина. Выдавливание произведено с толщиной равно единице.", "ошибка", 0);
-                extrusion.Depth[true] = 1; //Толщина выдавливания
-            }
-            else
-            {
-                extrusion.Depth[true] = Thickness; //Толщина выдавливания
+                Thickness = 1; //Толщина выдавливания
             }
 
-            if (!extrusion.Update())
+            switch (WindowLibrarySettings.cb_typeModeling.SelectedIndex)
             {
-                Application.MessageBoxEx("Не удалось выдавить", "ошибка", 0);
-                return false;
+                case 0: //Твердотельное моделирование
+                    IExtrusions extrusions = modelContainer.Extrusions;
+                    IExtrusion extrusion = extrusions.Add(ksObj3dTypeEnum.o3d_bossExtrusion);
+                    extrusion.Direction = ksDirectionTypeEnum.dtMiddlePlane; //Выдавливание "симметрично"
+                    extrusion.Sketch = (Sketch)sketch;
+                    extrusion.Depth[true] = Thickness; //Толщина выдавливания
+                    if (!extrusion.Update())
+                    {
+                        Application.MessageBoxEx("Не удалось выдавить", "ошибка", 0);
+                        return false;
+                    }
+                    break;
+                case 1:
+                    ISheetMetalContainer sheetMetalContainer = (ISheetMetalContainer)part7;
+                    ISheetMetalBodies sheetMetalBodies = sheetMetalContainer.SheetMetalBodies;
+                    ISheetMetalBody sheetMetalBody = sheetMetalBodies.Add();
+                    sheetMetalBody.Sketch = (Sketch)sketch;
+                    sheetMetalBody.Thickness = Thickness;
+                    sheetMetalBody.BendCoefficient = 0.5;
+                    sheetMetalBody.Direction = ksDirectionTypeEnum.dtNormal;
+                    sheetMetalBody.Update();
+                    break;
+                default:
+                    System.Windows.Forms.MessageBox.Show("Не выбран тип объектов выдавливание. Будет использовать твердотельное моделирование");
+                    goto case 0;
             }
+
             if (WindowLibrarySettings.cb_3Ddetail.Checked)
             {
                 kompasDocument3D.SaveAs(PathFile);
@@ -409,8 +421,6 @@ namespace RelaxingKompas.Data
             {
                 kompasDocument3D.Close(DocumentCloseOptions.kdDoNotSaveChanges);
             }
-
-            #endregion
             return true;
         }
         /// <summary>

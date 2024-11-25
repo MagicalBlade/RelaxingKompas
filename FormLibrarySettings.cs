@@ -30,6 +30,8 @@ namespace RelaxingKompas
             cb_typehead.SelectedIndex = Properties.Settings.Default.FormLibrarySettings_cb_typehead;
             cb_isUseOrder.Checked = Properties.Settings.Default.FormLibrarySettings_cb_isUseOrder;
             cb_exists_dxf.Checked = Properties.Settings.Default.FormLibrarySettings_cb_exists_dxf;
+            cb_typeModeling.SelectedIndex = Properties.Settings.Default.FormLibrarySettings_cb_typeModelingSelectedIndex;
+
             #endregion
 
             Check3Ddetail();
@@ -65,6 +67,7 @@ namespace RelaxingKompas
             Properties.Settings.Default.FormLibrarySettings_cb_typehead = cb_typehead.SelectedIndex;
             Properties.Settings.Default.FormLibrarySettings_cb_isUseOrder = cb_isUseOrder.Checked;
             Properties.Settings.Default.FormLibrarySettings_cb_exists_dxf= cb_exists_dxf.Checked;
+            Properties.Settings.Default.FormLibrarySettings_cb_typeModelingSelectedIndex = cb_typeModeling.SelectedIndex;
             Properties.Settings.Default.Save();
             #endregion
         }

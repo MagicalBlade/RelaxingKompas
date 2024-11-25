@@ -86,5 +86,8 @@
     <Setting Name="FormLibrarySettings_cb_exists_dxf" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="FormLibrarySettings_cb_typeModelingSelectedIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -53,6 +53,7 @@
             this.cb_Excel = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cb_exists_dxf = new System.Windows.Forms.CheckBox();
             this.cb_isUseOrder = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.nud_searchMax = new System.Windows.Forms.NumericUpDown();
@@ -62,7 +63,7 @@
             this.nud_betweenLD = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.cb_exists_dxf = new System.Windows.Forms.CheckBox();
+            this.cb_typeModeling = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -347,6 +348,18 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Посчитать массу";
             // 
+            // cb_exists_dxf
+            // 
+            this.cb_exists_dxf.AutoSize = true;
+            this.cb_exists_dxf.Checked = true;
+            this.cb_exists_dxf.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_exists_dxf.Location = new System.Drawing.Point(12, 177);
+            this.cb_exists_dxf.Name = "cb_exists_dxf";
+            this.cb_exists_dxf.Size = new System.Drawing.Size(193, 17);
+            this.cb_exists_dxf.TabIndex = 3;
+            this.cb_exists_dxf.Text = "Спрашивать при замене контура";
+            this.cb_exists_dxf.UseVisualStyleBackColor = true;
+            // 
             // cb_isUseOrder
             // 
             this.cb_isUseOrder.AutoSize = true;
@@ -370,7 +383,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(547, 183);
+            this.tabPage2.Size = new System.Drawing.Size(547, 200);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Выровнять размеры";
             // 
@@ -440,17 +453,17 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Расстояние между размерами:";
             // 
-            // cb_exists_dxf
+            // cb_typeModeling
             // 
-            this.cb_exists_dxf.AutoSize = true;
-            this.cb_exists_dxf.Checked = true;
-            this.cb_exists_dxf.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_exists_dxf.Location = new System.Drawing.Point(12, 177);
-            this.cb_exists_dxf.Name = "cb_exists_dxf";
-            this.cb_exists_dxf.Size = new System.Drawing.Size(193, 17);
-            this.cb_exists_dxf.TabIndex = 3;
-            this.cb_exists_dxf.Text = "Спрашивать при замене контура";
-            this.cb_exists_dxf.UseVisualStyleBackColor = true;
+            this.cb_typeModeling.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_typeModeling.FormattingEnabled = true;
+            this.cb_typeModeling.Items.AddRange(new object[] {
+            "Твердотельное",
+            "Листовое"});
+            this.cb_typeModeling.Location = new System.Drawing.Point(378, 235);
+            this.cb_typeModeling.Name = "cb_typeModeling";
+            this.cb_typeModeling.Size = new System.Drawing.Size(121, 21);
+            this.cb_typeModeling.TabIndex = 3;
             // 
             // FormLibrarySettings
             // 
@@ -459,6 +472,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(556, 268);
             this.ControlBox = false;
+            this.Controls.Add(this.cb_typeModeling);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.b_save);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -518,5 +532,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         internal System.Windows.Forms.CheckBox cb_isUseOrder;
         internal System.Windows.Forms.CheckBox cb_exists_dxf;
+        internal System.Windows.Forms.ComboBox cb_typeModeling;
     }
 }

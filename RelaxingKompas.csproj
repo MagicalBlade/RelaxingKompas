@@ -102,6 +102,7 @@
       <DependentUpon>FormRegistration.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\JsonUtils.cs" />
+    <Compile Include="Utils\MessageTextBox.cs" />
     <Compile Include="Windows\FormTolerance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +120,12 @@
     </Compile>
     <Compile Include="Windows\RougForm.Designer.cs">
       <DependentUpon>RougForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Utils\WindowMessageTextBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Utils\WindowMessageTextBox.Designer.cs">
+      <DependentUpon>WindowMessageTextBox.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\RougForm.resx">
       <DependentUpon>RougForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Utils\WindowMessageTextBox.resx">
+      <DependentUpon>WindowMessageTextBox.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -24,6 +24,7 @@ using RelaxingKompas.EventObjects;
 using System.Windows.Controls;
 using RelaxingKompas.Data.Global;
 using System.Security.Cryptography.X509Certificates;
+using DocumentFormat.OpenXml.Vml.Office;
 
 namespace RelaxingKompas
 {
@@ -1416,7 +1417,7 @@ namespace RelaxingKompas
         }
         
         /// <summary>
-        /// Меняет выделенные макроэлементы на последний выдленный макроэлемент
+        /// Меняет выделенные макроэлементы на последний выделенный макроэлемент
         /// </summary>
         private void MacroObjectsReplacement()
         {
@@ -2650,6 +2651,121 @@ namespace RelaxingKompas
         }
 
         /// <summary>
+        /// Посчитать количество упоров в виде окружностей
+        /// </summary>
+        private void CountCircle()
+        {
+            Kompas.ksGetSystemVersion(out int major, out int minor, out int release, out _);
+            if (major < 20 || release < 12)
+            {
+                MessageBox.Show("Эта команда работает только в компасе версии 20.0.12");
+                return;
+            }
+            double tolerance = 1; //Допуск 1мм
+            bool overlayyError = false;
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
+
+            document2DAPI5.ksUndoContainer(true);
+
+            ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
+
+            List<ICircle> circles = new List<ICircle>();
+            if (selectionManager.SelectedObjects == null)
+            {
+                IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+                IViews views = viewsAndLayersManager.Views;
+                IView view = views.ActiveView;
+                IDrawingContainer drawingContainer = (IDrawingContainer)view;
+                foreach (ICircle circle in drawingContainer.Circles)
+                {
+                    OverlayCircle(circle);
+                }
+            }
+            if (selectionManager.SelectedObjects is object[])
+            {
+                foreach (IDrawingObject drawingObject in selectionManager.SelectedObjects)
+                {
+                    if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectCircle)
+                    {
+                        OverlayCircle(drawingObject as ICircle);
+                    }
+                }
+            }
+            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение отверстий. Они вынесены в отдельный слой, проверьте. Эти макроэлементы не учтены в количестве отверстий.");
+
+
+            //TODO сделать более красивый вывод информации??
+            Dictionary<double, int> countCircle = new Dictionary<double, int>();
+            if (circles.Count != 0)
+            {
+
+                foreach (ICircle item in circles)
+                {
+                    double diametr = Math.Round(item.Radius * 2,2);
+                    if (countCircle.ContainsKey(diametr))
+                    {
+                        countCircle[diametr]++;
+                    }
+                    else
+                    {
+                        countCircle.Add(diametr, 1);
+                    }
+                }
+                Clipboard.SetText($"{circles.Count}");
+                string str = "Количество окружностей: ";
+                foreach (var item in countCircle)
+                {
+                    str += $"\r\nдиаметр {item.Key} - {item.Value} шт.";
+                }
+                MessageTextBox.Show(str);
+            }
+            document2DAPI5.ksUndoContainer(false);
+
+            #region Функции            
+            void OverlayCircle(ICircle circle)
+            {
+                bool isExists = false;
+                foreach (ICircle circleClear in circles)
+                {
+                    if (Math.Abs(circle.Xc - circleClear.Xc) < tolerance && Math.Abs(circle.Yc - circleClear.Yc) < tolerance && (circle.Radius - circleClear.Radius) < tolerance)
+                    {
+                        isExists = true;
+                    }
+                }
+                if (isExists)
+                {
+                    if (circle.Parent is IView view1)
+                    {
+                        ILayers layers = view1.Layers;
+                        ILayer activLayer = layers[0] as ILayer;
+                        ILayer layer = null;
+                        foreach (ILayer item in layers)
+                        {
+                            if (item.Name == "Наложение окружностей") layer = item;
+                        }
+                        if (layer == null) layer = layers.Add();
+                        layer.Name = "Наложение окружностей";
+                        layer.Color = 255;
+                        layer.Update();
+                        circle.LayerNumber = layer.LayerNumber;
+                        circle.Update();
+                        activLayer.Current = true;
+                        activLayer.Update();
+                        overlayyError = true;
+                    }
+                }
+                else
+                {
+                    circles.Add(circle);
+                }
+            }
+            #endregion
+        }
+
+        /// <summary>
         /// Открытие файла помощи
         /// </summary>
         private void OpenHelp()
@@ -2715,6 +2831,7 @@ namespace RelaxingKompas
                     case 20: AlignDimensions(); break;
                     case 21: RunningDimension(); break;
                     case 22: ArcDimension(); break;
+                    case 23: CountCircle(); break;
 
 
 

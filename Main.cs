@@ -2676,20 +2676,11 @@ namespace RelaxingKompas
             double tolerance = (double)WindowLibrarySettings.nud_CountCircle_tolerance.Value;
             double tolerance_Diametr = (double)WindowLibrarySettings.nud_CountCircle_tolerance_Diametr.Value;
             bool isSearchInMacro = true;
-            List<ICircle> circles = new List<ICircle>();
-            List<CircleTransform> circleTransform = new List<CircleTransform>();
+            List<double[]> circles = new List<double[]>();
             if (selectionManager.SelectedObjects == null)
             {
                 IDrawingContainer drawingContainer = (IDrawingContainer)view;
                 Macro(drawingContainer, null);
-                //foreach (ICircle circle in drawingContainer.Circles)
-                //{
-                //    OverlayCircle(circle);
-                //}
-                //if (isSearchInMacro)
-                //{
-
-                //}
             }
             if (selectionManager.SelectedObjects is object[])
             {
@@ -2697,8 +2688,30 @@ namespace RelaxingKompas
                 {
                     if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectCircle)
                     {
-                        OverlayCircle(drawingObject as ICircle);
+                        ICircle circle = (ICircle)drawingObject;
+                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
                     }
+                    if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
+                    {
+                        IMacroObject macroObject = (IMacroObject)drawingObject;
+                        IDrawingContainer drawingContainer = (IDrawingContainer)macroObject;
+                        Macro(drawingContainer, macroObject);
+                    }
+                }
+            }
+            if (selectionManager.SelectedObjects is IDrawingObject)
+            {
+                IDrawingObject drawingObject = selectionManager.SelectedObjects;
+                if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectCircle)
+                {
+                    ICircle circle = (ICircle)drawingObject;
+                    OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
+                }
+                if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
+                {
+                    IMacroObject macroObject = (IMacroObject)drawingObject;
+                    IDrawingContainer drawingContainer = (IDrawingContainer)macroObject;
+                    Macro(drawingContainer, macroObject);
                 }
             }
             if (overlayyError) MessageBox.Show("Ошибка. Есть наложение оружностей. Они вынесены в отдельный слой, проверьте. Эти макроэлементы не учтены в количестве окружностей.");
@@ -2707,9 +2720,9 @@ namespace RelaxingKompas
             if (circles.Count != 0)
             {
 
-                foreach (ICircle item in circles)
+                foreach (double[] item in circles)
                 {
-                    double diametr = Math.Round(item.Radius * 2,2);
+                    double diametr = Math.Round(item[2] * 2,2);
                     if (countCircle.ContainsKey(diametr))
                     {
                         countCircle[diametr]++;
@@ -2719,7 +2732,6 @@ namespace RelaxingKompas
                         countCircle.Add(diametr, 1);
                     }
                 }
-                Clipboard.SetText($"{circles.Count}");
                 string str = "Количество окружностей: ";
                 foreach (var item in countCircle)
                 {
@@ -2730,13 +2742,13 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
 
             #region Функции            
-            void OverlayCircle(ICircle circle)
+            void OverlayCircle(double[] _objects, ICircle circle)
             {
                 bool isExists = false;
-                foreach (ICircle circleClear in circles)
+                foreach (double[] item in circles)
                 {
-                    if (Math.Abs(circle.Xc - circleClear.Xc) < tolerance && Math.Abs(circle.Yc - circleClear.Yc) < tolerance
-                        && (circle.Radius * 2 - circleClear.Radius * 2) < tolerance_Diametr)
+                    if (Math.Abs(_objects[0] - item[0]) < tolerance && Math.Abs(_objects[1] - item[1]) < tolerance
+                        && (_objects[2] * 2 - item[2] * 2) < tolerance_Diametr)
                     {
                         isExists = true;
                     }
@@ -2765,46 +2777,7 @@ namespace RelaxingKompas
                 }
                 else
                 {
-                    circles.Add(circle);
-                }
-            }
-
-            void OverlayCircleTr(CircleTransform circle)
-            {
-                bool isExists = false;
-                foreach (CircleTransform circleClear in circleTransform)
-                {
-                    if (Math.Abs(circle.XcTransf - circleClear.XcTransf) < tolerance && Math.Abs(circle.YcTransf - circleClear.YcTransf) < tolerance
-                        && (circle.Radius * 2 - circleClear.Radius * 2) < tolerance_Diametr)
-                    {
-                        isExists = true;
-                    }
-                }
-                if (isExists)
-                {
-                    if (circle.Parent is IView view1)
-                    {
-                        ILayers layers = view1.Layers;
-                        ILayer activLayer = layers[0] as ILayer;
-                        ILayer layer = null;
-                        foreach (ILayer item in layers)
-                        {
-                            if (item.Name == "Наложение окружностей") layer = item;
-                        }
-                        if (layer == null) layer = layers.Add();
-                        layer.Name = "Наложение окружностей";
-                        layer.Color = 255;
-                        layer.Update();
-                        circle.LayerNumber = layer.LayerNumber;
-                        circle.Update();
-                        activLayer.Current = true;
-                        activLayer.Update();
-                        overlayyError = true;
-                    }
-                }
-                else
-                {
-                    circles.Add(circle);
+                    circles.Add(_objects);
                 }
             }
 
@@ -2814,13 +2787,16 @@ namespace RelaxingKompas
                 {
                     if (_macroObject == null)
                     {
-                        OverlayCircle(circle);
+                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
                     }
                     else
                     {
-                        CircleTransform circleTransform1 = new CircleTransform(_macroObject, circle);
-                        OverlayCircleTr(circleTransform1);
-                        MessageBox.Show($"{circleTransform1.Radius}");
+                        double xcTr = circle.Xc;
+                        double ycTr = circle.Yc;
+                        _macroObject.ExternalEditable = true;
+                        _macroObject.TransformPointToView(ref xcTr, ref ycTr);
+                        OverlayCircle(new double[] { xcTr, ycTr, circle.Radius }, circle);
+                        _macroObject.Update();
                     }
                 }
                 if (isSearchInMacro)

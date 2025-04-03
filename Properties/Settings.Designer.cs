@@ -12,7 +12,7 @@ namespace RelaxingKompas.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.13.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -368,6 +368,42 @@ namespace RelaxingKompas.Properties {
             }
             set {
                 this["FormLibrarySettings_cb_typeModelingSelectedIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public decimal FormLibrarySettings_nud_CountHoles_tolerance {
+            get {
+                return ((decimal)(this["FormLibrarySettings_nud_CountHoles_tolerance"]));
+            }
+            set {
+                this["FormLibrarySettings_nud_CountHoles_tolerance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public decimal FormLibrarySettings_nud_CountCircle_tolerance {
+            get {
+                return ((decimal)(this["FormLibrarySettings_nud_CountCircle_tolerance"]));
+            }
+            set {
+                this["FormLibrarySettings_nud_CountCircle_tolerance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public decimal FormLibrarySettings_nud_CountCircle_tolerance_Diametr {
+            get {
+                return ((decimal)(this["FormLibrarySettings_nud_CountCircle_tolerance_Diametr"]));
+            }
+            set {
+                this["FormLibrarySettings_nud_CountCircle_tolerance_Diametr"] = value;
             }
         }
     }

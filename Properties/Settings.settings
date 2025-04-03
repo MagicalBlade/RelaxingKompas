@@ -89,5 +89,14 @@
     <Setting Name="FormLibrarySettings_cb_typeModelingSelectedIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="FormLibrarySettings_nud_CountHoles_tolerance" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="FormLibrarySettings_nud_CountCircle_tolerance" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="FormLibrarySettings_nud_CountCircle_tolerance_Diametr" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

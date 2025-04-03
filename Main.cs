@@ -759,7 +759,7 @@ namespace RelaxingKompas
         }
 
         /// <summary>
-        /// Убрать илипоказать разрыв вида
+        /// Убрать или показать разрыв вида
         /// </summary>
         private void BreakView()
         {
@@ -1289,13 +1289,13 @@ namespace RelaxingKompas
                 MessageBox.Show("Эта команда работает только в компасе версии 20.0.12");
                 return;
             }
-            double tolerance = 1; //Допуск 1мм
             bool overlayyError = false;
             bool severalCentersError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
+            double tolerance = (double)WindowLibrarySettings.nud_CountHoles_tolerance.Value;
 
             document2DAPI5.ksUndoContainer(true);
 
@@ -2661,28 +2661,35 @@ namespace RelaxingKompas
                 MessageBox.Show("Эта команда работает только в компасе версии 20.0.12");
                 return;
             }
-            double tolerance = 1; //Допуск 1мм
             bool overlayyError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
             ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
-
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
             document2DAPI5.ksUndoContainer(true);
 
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
 
+            double tolerance = (double)WindowLibrarySettings.nud_CountCircle_tolerance.Value;
+            double tolerance_Diametr = (double)WindowLibrarySettings.nud_CountCircle_tolerance_Diametr.Value;
+            bool isSearchInMacro = true;
             List<ICircle> circles = new List<ICircle>();
+            List<CircleTransform> circleTransform = new List<CircleTransform>();
             if (selectionManager.SelectedObjects == null)
             {
-                IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-                IViews views = viewsAndLayersManager.Views;
-                IView view = views.ActiveView;
                 IDrawingContainer drawingContainer = (IDrawingContainer)view;
-                foreach (ICircle circle in drawingContainer.Circles)
-                {
-                    OverlayCircle(circle);
-                }
+                Macro(drawingContainer, null);
+                //foreach (ICircle circle in drawingContainer.Circles)
+                //{
+                //    OverlayCircle(circle);
+                //}
+                //if (isSearchInMacro)
+                //{
+
+                //}
             }
             if (selectionManager.SelectedObjects is object[])
             {
@@ -2694,10 +2701,8 @@ namespace RelaxingKompas
                     }
                 }
             }
-            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение отверстий. Они вынесены в отдельный слой, проверьте. Эти макроэлементы не учтены в количестве отверстий.");
+            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение оружностей. Они вынесены в отдельный слой, проверьте. Эти макроэлементы не учтены в количестве окружностей.");
 
-
-            //TODO сделать более красивый вывод информации??
             Dictionary<double, int> countCircle = new Dictionary<double, int>();
             if (circles.Count != 0)
             {
@@ -2730,7 +2735,8 @@ namespace RelaxingKompas
                 bool isExists = false;
                 foreach (ICircle circleClear in circles)
                 {
-                    if (Math.Abs(circle.Xc - circleClear.Xc) < tolerance && Math.Abs(circle.Yc - circleClear.Yc) < tolerance && (circle.Radius - circleClear.Radius) < tolerance)
+                    if (Math.Abs(circle.Xc - circleClear.Xc) < tolerance && Math.Abs(circle.Yc - circleClear.Yc) < tolerance
+                        && (circle.Radius * 2 - circleClear.Radius * 2) < tolerance_Diametr)
                     {
                         isExists = true;
                     }
@@ -2762,7 +2768,71 @@ namespace RelaxingKompas
                     circles.Add(circle);
                 }
             }
+
+            void OverlayCircleTr(CircleTransform circle)
+            {
+                bool isExists = false;
+                foreach (CircleTransform circleClear in circleTransform)
+                {
+                    if (Math.Abs(circle.XcTransf - circleClear.XcTransf) < tolerance && Math.Abs(circle.YcTransf - circleClear.YcTransf) < tolerance
+                        && (circle.Radius * 2 - circleClear.Radius * 2) < tolerance_Diametr)
+                    {
+                        isExists = true;
+                    }
+                }
+                if (isExists)
+                {
+                    if (circle.Parent is IView view1)
+                    {
+                        ILayers layers = view1.Layers;
+                        ILayer activLayer = layers[0] as ILayer;
+                        ILayer layer = null;
+                        foreach (ILayer item in layers)
+                        {
+                            if (item.Name == "Наложение окружностей") layer = item;
+                        }
+                        if (layer == null) layer = layers.Add();
+                        layer.Name = "Наложение окружностей";
+                        layer.Color = 255;
+                        layer.Update();
+                        circle.LayerNumber = layer.LayerNumber;
+                        circle.Update();
+                        activLayer.Current = true;
+                        activLayer.Update();
+                        overlayyError = true;
+                    }
+                }
+                else
+                {
+                    circles.Add(circle);
+                }
+            }
+
+            void Macro(IDrawingContainer _drawingContainer, IMacroObject _macroObject)
+            {
+                foreach (ICircle circle in _drawingContainer.Circles)
+                {
+                    if (_macroObject == null)
+                    {
+                        OverlayCircle(circle);
+                    }
+                    else
+                    {
+                        CircleTransform circleTransform1 = new CircleTransform(_macroObject, circle);
+                        OverlayCircleTr(circleTransform1);
+                        MessageBox.Show($"{circleTransform1.Radius}");
+                    }
+                }
+                if (isSearchInMacro)
+                {
+                    foreach (IMacroObject macroObject in _drawingContainer.MacroObjects)
+                    {
+                        Macro((IDrawingContainer)macroObject, macroObject);
+                    }
+                }
+            }
             #endregion
+            
         }
 
         /// <summary>

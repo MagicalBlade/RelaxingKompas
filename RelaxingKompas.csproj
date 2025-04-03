@@ -67,6 +67,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CircleTransform.cs" />
     <Compile Include="Classes\Sto_012.cs" />
     <Compile Include="Classes\TablePosDet.cs" />
     <Compile Include="Data\DataWeightAndSize.cs" />

@@ -31,6 +31,9 @@ namespace RelaxingKompas
             cb_isUseOrder.Checked = Properties.Settings.Default.FormLibrarySettings_cb_isUseOrder;
             cb_exists_dxf.Checked = Properties.Settings.Default.FormLibrarySettings_cb_exists_dxf;
             cb_typeModeling.SelectedIndex = Properties.Settings.Default.FormLibrarySettings_cb_typeModelingSelectedIndex;
+            nud_CountHoles_tolerance.Value = Properties.Settings.Default.FormLibrarySettings_nud_CountHoles_tolerance;
+            nud_CountCircle_tolerance.Value = Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance;
+            nud_CountCircle_tolerance_Diametr.Value = Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance_Diametr;
 
             #endregion
 
@@ -68,6 +71,9 @@ namespace RelaxingKompas
             Properties.Settings.Default.FormLibrarySettings_cb_isUseOrder = cb_isUseOrder.Checked;
             Properties.Settings.Default.FormLibrarySettings_cb_exists_dxf= cb_exists_dxf.Checked;
             Properties.Settings.Default.FormLibrarySettings_cb_typeModelingSelectedIndex = cb_typeModeling.SelectedIndex;
+            Properties.Settings.Default.FormLibrarySettings_nud_CountHoles_tolerance = nud_CountHoles_tolerance.Value;
+            Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance = nud_CountCircle_tolerance.Value;
+            Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance_Diametr = nud_CountCircle_tolerance_Diametr.Value;
             Properties.Settings.Default.Save();
             #endregion
         }

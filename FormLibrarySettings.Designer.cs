@@ -64,6 +64,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.cb_typeModeling = new System.Windows.Forms.ComboBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.nud_CountHoles_tolerance = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.nud_CountCircle_tolerance = new System.Windows.Forms.NumericUpDown();
+            this.nud_CountCircle_tolerance_Diametr = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -72,6 +80,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CountHoles_tolerance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance_Diametr)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -328,6 +341,8 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -465,6 +480,99 @@
             this.cb_typeModeling.Size = new System.Drawing.Size(121, 21);
             this.cb_typeModeling.TabIndex = 3;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.nud_CountHoles_tolerance);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(547, 200);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Посчитать количество отверстий";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Controls.Add(this.label8);
+            this.tabPage4.Controls.Add(this.nud_CountCircle_tolerance_Diametr);
+            this.tabPage4.Controls.Add(this.label7);
+            this.tabPage4.Controls.Add(this.nud_CountCircle_tolerance);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(547, 200);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Посчитать количество окружностей";
+            // 
+            // nud_CountHoles_tolerance
+            // 
+            this.nud_CountHoles_tolerance.Location = new System.Drawing.Point(330, 6);
+            this.nud_CountHoles_tolerance.Name = "nud_CountHoles_tolerance";
+            this.nud_CountHoles_tolerance.Size = new System.Drawing.Size(75, 20);
+            this.nud_CountHoles_tolerance.TabIndex = 0;
+            this.nud_CountHoles_tolerance.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(5, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(311, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Минимальное допустимое расстояние между отверстиями:";
+            this.toolTip1.SetToolTip(this.label6, "Если центры отвестий будут ближе чем указаное значение,\r\nбудет считаться что отве" +
+        "рстия налазят друг на друга.");
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(5, 10);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(325, 13);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Минимальное допустимое расстояние между окружностиями:";
+            this.toolTip1.SetToolTip(this.label7, "Если центры отвестий будут ближе чем указаное значение,\r\nбудет считаться что отве" +
+        "рстия налазят друг на друга.");
+            // 
+            // nud_CountCircle_tolerance
+            // 
+            this.nud_CountCircle_tolerance.Location = new System.Drawing.Point(340, 6);
+            this.nud_CountCircle_tolerance.Name = "nud_CountCircle_tolerance";
+            this.nud_CountCircle_tolerance.Size = new System.Drawing.Size(75, 20);
+            this.nud_CountCircle_tolerance.TabIndex = 2;
+            this.nud_CountCircle_tolerance.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // nud_CountCircle_tolerance_Diametr
+            // 
+            this.nud_CountCircle_tolerance_Diametr.Location = new System.Drawing.Point(340, 38);
+            this.nud_CountCircle_tolerance_Diametr.Name = "nud_CountCircle_tolerance_Diametr";
+            this.nud_CountCircle_tolerance_Diametr.Size = new System.Drawing.Size(75, 20);
+            this.nud_CountCircle_tolerance_Diametr.TabIndex = 2;
+            this.nud_CountCircle_tolerance_Diametr.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(5, 42);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(316, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Минимальная допустимая разница диаметров окружностей:";
+            // 
             // FormLibrarySettings
             // 
             this.AcceptButton = this.b_save;
@@ -492,6 +600,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_searchMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_toleranceAlign)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_betweenLD)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CountHoles_tolerance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance_Diametr)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -533,5 +648,13 @@
         internal System.Windows.Forms.CheckBox cb_isUseOrder;
         internal System.Windows.Forms.CheckBox cb_exists_dxf;
         internal System.Windows.Forms.ComboBox cb_typeModeling;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        internal System.Windows.Forms.NumericUpDown nud_CountHoles_tolerance;
+        internal System.Windows.Forms.NumericUpDown nud_CountCircle_tolerance;
+        private System.Windows.Forms.Label label8;
+        internal System.Windows.Forms.NumericUpDown nud_CountCircle_tolerance_Diametr;
     }
 }

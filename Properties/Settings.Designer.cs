@@ -406,5 +406,17 @@ namespace RelaxingKompas.Properties {
                 this["FormLibrarySettings_nud_CountCircle_tolerance_Diametr"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FormLibrarySettings_cb_CountCircle_Macro {
+            get {
+                return ((bool)(this["FormLibrarySettings_cb_CountCircle_Macro"]));
+            }
+            set {
+                this["FormLibrarySettings_cb_CountCircle_Macro"] = value;
+            }
+        }
     }
 }

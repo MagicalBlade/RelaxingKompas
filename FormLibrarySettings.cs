@@ -34,6 +34,7 @@ namespace RelaxingKompas
             nud_CountHoles_tolerance.Value = Properties.Settings.Default.FormLibrarySettings_nud_CountHoles_tolerance;
             nud_CountCircle_tolerance.Value = Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance;
             nud_CountCircle_tolerance_Diametr.Value = Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance_Diametr;
+            cb_CountCircle_Macro.Checked = Properties.Settings.Default.FormLibrarySettings_cb_CountCircle_Macro;
 
             #endregion
 
@@ -74,6 +75,7 @@ namespace RelaxingKompas
             Properties.Settings.Default.FormLibrarySettings_nud_CountHoles_tolerance = nud_CountHoles_tolerance.Value;
             Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance = nud_CountCircle_tolerance.Value;
             Properties.Settings.Default.FormLibrarySettings_nud_CountCircle_tolerance_Diametr = nud_CountCircle_tolerance_Diametr.Value;
+            Properties.Settings.Default.FormLibrarySettings_cb_CountCircle_Macro = cb_CountCircle_Macro.Checked;
             Properties.Settings.Default.Save();
             #endregion
         }

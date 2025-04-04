@@ -2676,7 +2676,7 @@ namespace RelaxingKompas
 
             double tolerance = (double)WindowLibrarySettings.nud_CountCircle_tolerance.Value;
             double tolerance_Diametr = (double)WindowLibrarySettings.nud_CountCircle_tolerance_Diametr.Value;
-            bool isSearchInMacro = true;
+            bool isSearchInMacro = WindowLibrarySettings.cb_CountCircle_Macro.Checked;
             List<double[]> circles = new List<double[]>();
             if (selectionManager.SelectedObjects == null)
             {
@@ -2689,13 +2689,16 @@ namespace RelaxingKompas
                     if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectCircle)
                     {
                         ICircle circle = (ICircle)drawingObject;
-                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle, null);
+                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
                     }
-                    if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
+                    if (isSearchInMacro)
                     {
-                        IMacroObject macroObject = (IMacroObject)drawingObject;
-                        IDrawingContainer drawingContainer = (IDrawingContainer)macroObject;
-                        Macro(drawingContainer, macroObject);
+                        if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
+                        {
+                            IMacroObject macroObject = (IMacroObject)drawingObject;
+                            IDrawingContainer drawingContainer = (IDrawingContainer)macroObject;
+                            Macro(drawingContainer, macroObject);
+                        }
                     }
                 }
             }
@@ -2705,13 +2708,16 @@ namespace RelaxingKompas
                 if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectCircle)
                 {
                     ICircle circle = (ICircle)drawingObject;
-                    OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle, null);
+                    OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
                 }
-                if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
+                if (isSearchInMacro)
                 {
-                    IMacroObject macroObject = (IMacroObject)drawingObject;
-                    IDrawingContainer drawingContainer = (IDrawingContainer)macroObject;
-                    Macro(drawingContainer, macroObject);
+                    if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
+                    {
+                        IMacroObject macroObject = (IMacroObject)drawingObject;
+                        IDrawingContainer drawingContainer = (IDrawingContainer)macroObject;
+                        Macro(drawingContainer, macroObject);
+                    }
                 }
             }
             if (overlayyError) MessageBox.Show("Ошибка. Есть наложение окружностей. Они отмечены точками со стилем \"квадрат\", вынесенными в отдельный слой." +
@@ -2740,10 +2746,41 @@ namespace RelaxingKompas
                 }
                 MessageTextBox.Show(str);
             }
+            else
+            {
+                Application.MessageBoxEx("Окружности не найдены", "", 64);
+            }
             document2DAPI5.ksUndoContainer(false);
 
             #region Функции            
-            void OverlayCircle(double[] _objects, ICircle circle, IMacroObject macroObject)
+            void Macro(IDrawingContainer _drawingContainer, IMacroObject _macroObject)
+            {
+                foreach (ICircle circle in _drawingContainer.Circles)
+                {
+                    if (_macroObject == null)
+                    {
+                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
+                    }
+                    else
+                    {
+                        double xcTr = circle.Xc;
+                        double ycTr = circle.Yc;
+                        _macroObject.ExternalEditable = true;
+                        _macroObject.TransformPointToView(ref xcTr, ref ycTr);
+                        OverlayCircle(new double[] { xcTr, ycTr, circle.Radius }, circle);
+                        _macroObject.Update();
+                    }
+                }
+                if (isSearchInMacro)
+                {
+                    foreach (IMacroObject macroObject in _drawingContainer.MacroObjects)
+                    {
+                        Macro((IDrawingContainer)macroObject, macroObject);
+                    }
+                }
+            }
+
+            void OverlayCircle(double[] _objects, ICircle circle)
             {
                 bool isExists = false;
                 foreach (double[] item in circles)
@@ -2769,30 +2806,13 @@ namespace RelaxingKompas
                         layer.Name = "Наложение окружностей";
                         layer.Color = 255;
                         layer.Update();
-                        circle.LayerNumber = layer.LayerNumber;
-                        circle.Update();
-
-                        //if (macroObject != null)
-                        //{
-                        //    macroObject.LayerNumber = layer.LayerNumber;
-                        //    macroObject.Update();
-
-                        //}
-
+                        //Создаём точку в районе наложения окружностей
                         IPoint point = dc_activeView.Points.Add();
                         point.X = _objects[0];
                         point.Y = _objects[1];
                         point.Style = (int)ksAnnotationSymbolEnum.ksSquarePoint;
                         point.LayerNumber = layer.LayerNumber;
                         point.Update();
-                        //ICircle circleNew = dc_activeView.Circles.Add();
-                        //circleNew.Xc = _objects[0];
-                        //circleNew.Yc = _objects[1];
-                        //circleNew.Radius = _objects[2];
-                        //circleNew.Style = circle.Style;
-                        //circleNew.Update();
-                        //circleNew.LayerNumber = layer.LayerNumber;
-                        //circleNew.Update();
 
                         activLayer.Current = true;
                         activLayer.Update();
@@ -2802,33 +2822,6 @@ namespace RelaxingKompas
                 else
                 {
                     circles.Add(_objects);
-                }
-            }
-
-            void Macro(IDrawingContainer _drawingContainer, IMacroObject _macroObject)
-            {
-                foreach (ICircle circle in _drawingContainer.Circles)
-                {
-                    if (_macroObject == null)
-                    {
-                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle, null);
-                    }
-                    else
-                    {
-                        double xcTr = circle.Xc;
-                        double ycTr = circle.Yc;
-                        _macroObject.ExternalEditable = true;
-                        _macroObject.TransformPointToView(ref xcTr, ref ycTr);
-                        OverlayCircle(new double[] { xcTr, ycTr, circle.Radius }, circle, _macroObject);
-                        _macroObject.Update();
-                    }
-                }
-                if (isSearchInMacro)
-                {
-                    foreach (IMacroObject macroObject in _drawingContainer.MacroObjects)
-                    {
-                        Macro((IDrawingContainer)macroObject, macroObject);
-                    }
                 }
             }
             #endregion

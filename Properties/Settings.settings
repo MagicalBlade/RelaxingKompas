@@ -98,5 +98,8 @@
     <Setting Name="FormLibrarySettings_nud_CountCircle_tolerance_Diametr" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="FormLibrarySettings_cb_CountCircle_Macro" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -2663,12 +2663,13 @@ namespace RelaxingKompas
             }
             bool overlayyError = false;
             IKompasDocument kompasDocument = Application.ActiveDocument;
-            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)(kompasDocument);
-            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)(kompasDocument);
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
             ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
+            IDrawingContainer dc_activeView = (IDrawingContainer)view;
             document2DAPI5.ksUndoContainer(true);
 
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
@@ -2679,8 +2680,7 @@ namespace RelaxingKompas
             List<double[]> circles = new List<double[]>();
             if (selectionManager.SelectedObjects == null)
             {
-                IDrawingContainer drawingContainer = (IDrawingContainer)view;
-                Macro(drawingContainer, null);
+                Macro(dc_activeView, null);
             }
             if (selectionManager.SelectedObjects is object[])
             {
@@ -2689,7 +2689,7 @@ namespace RelaxingKompas
                     if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectCircle)
                     {
                         ICircle circle = (ICircle)drawingObject;
-                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
+                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle, null);
                     }
                     if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
                     {
@@ -2705,7 +2705,7 @@ namespace RelaxingKompas
                 if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectCircle)
                 {
                     ICircle circle = (ICircle)drawingObject;
-                    OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
+                    OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle, null);
                 }
                 if (drawingObject.Type == KompasAPIObjectTypeEnum.ksObjectMacroObject)
                 {
@@ -2714,7 +2714,8 @@ namespace RelaxingKompas
                     Macro(drawingContainer, macroObject);
                 }
             }
-            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение оружностей. Они вынесены в отдельный слой, проверьте. Эти макроэлементы не учтены в количестве окружностей.");
+            if (overlayyError) MessageBox.Show("Ошибка. Есть наложение окружностей. Они отмечены точками со стилем \"квадрат\", вынесенными в отдельный слой." +
+                " Эти окружности не учитываются при подсчете количества.");
 
             Dictionary<double, int> countCircle = new Dictionary<double, int>();
             if (circles.Count != 0)
@@ -2742,7 +2743,7 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
 
             #region Функции            
-            void OverlayCircle(double[] _objects, ICircle circle)
+            void OverlayCircle(double[] _objects, ICircle circle, IMacroObject macroObject)
             {
                 bool isExists = false;
                 foreach (double[] item in circles)
@@ -2757,7 +2758,7 @@ namespace RelaxingKompas
                 {
                     if (circle.Parent is IView view1)
                     {
-                        ILayers layers = view1.Layers;
+                        ILayers layers = view.Layers;
                         ILayer activLayer = layers[0] as ILayer;
                         ILayer layer = null;
                         foreach (ILayer item in layers)
@@ -2770,6 +2771,29 @@ namespace RelaxingKompas
                         layer.Update();
                         circle.LayerNumber = layer.LayerNumber;
                         circle.Update();
+
+                        //if (macroObject != null)
+                        //{
+                        //    macroObject.LayerNumber = layer.LayerNumber;
+                        //    macroObject.Update();
+
+                        //}
+
+                        IPoint point = dc_activeView.Points.Add();
+                        point.X = _objects[0];
+                        point.Y = _objects[1];
+                        point.Style = (int)ksAnnotationSymbolEnum.ksSquarePoint;
+                        point.LayerNumber = layer.LayerNumber;
+                        point.Update();
+                        //ICircle circleNew = dc_activeView.Circles.Add();
+                        //circleNew.Xc = _objects[0];
+                        //circleNew.Yc = _objects[1];
+                        //circleNew.Radius = _objects[2];
+                        //circleNew.Style = circle.Style;
+                        //circleNew.Update();
+                        //circleNew.LayerNumber = layer.LayerNumber;
+                        //circleNew.Update();
+
                         activLayer.Current = true;
                         activLayer.Update();
                         overlayyError = true;
@@ -2787,7 +2811,7 @@ namespace RelaxingKompas
                 {
                     if (_macroObject == null)
                     {
-                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle);
+                        OverlayCircle(new double[] { circle.Xc, circle.Yc, circle.Radius }, circle, null);
                     }
                     else
                     {
@@ -2795,7 +2819,7 @@ namespace RelaxingKompas
                         double ycTr = circle.Yc;
                         _macroObject.ExternalEditable = true;
                         _macroObject.TransformPointToView(ref xcTr, ref ycTr);
-                        OverlayCircle(new double[] { xcTr, ycTr, circle.Radius }, circle);
+                        OverlayCircle(new double[] { xcTr, ycTr, circle.Radius }, circle, _macroObject);
                         _macroObject.Update();
                     }
                 }

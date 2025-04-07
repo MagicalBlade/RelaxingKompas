@@ -2668,8 +2668,8 @@ namespace RelaxingKompas
             ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
-            IView view = views.ActiveView;
-            IDrawingContainer dc_activeView = (IDrawingContainer)view;
+            IView viewActive = views.ActiveView;
+            IDrawingContainer dc_activeView = (IDrawingContainer)viewActive;
             document2DAPI5.ksUndoContainer(true);
 
             ISelectionManager selectionManager = kompasDocument2D1.SelectionManager;
@@ -2793,31 +2793,28 @@ namespace RelaxingKompas
                 }
                 if (isExists)
                 {
-                    if (circle.Parent is IView view1)
+                    ILayers layers = viewActive.Layers;
+                    ILayer activLayer = layers[0] as ILayer;
+                    ILayer layer = null;
+                    foreach (ILayer item in layers)
                     {
-                        ILayers layers = view.Layers;
-                        ILayer activLayer = layers[0] as ILayer;
-                        ILayer layer = null;
-                        foreach (ILayer item in layers)
-                        {
-                            if (item.Name == "Наложение окружностей") layer = item;
-                        }
-                        if (layer == null) layer = layers.Add();
-                        layer.Name = "Наложение окружностей";
-                        layer.Color = 255;
-                        layer.Update();
-                        //Создаём точку в районе наложения окружностей
-                        IPoint point = dc_activeView.Points.Add();
-                        point.X = _objects[0];
-                        point.Y = _objects[1];
-                        point.Style = (int)ksAnnotationSymbolEnum.ksSquarePoint;
-                        point.LayerNumber = layer.LayerNumber;
-                        point.Update();
-
-                        activLayer.Current = true;
-                        activLayer.Update();
-                        overlayyError = true;
+                        if (item.Name == "Наложение окружностей") layer = item;
                     }
+                    if (layer == null) layer = layers.Add();
+                    layer.Name = "Наложение окружностей";
+                    layer.Color = 255;
+                    layer.Update();
+                    //Создаём точку в районе наложения окружностей
+                    IPoint point = dc_activeView.Points.Add();
+                    point.X = _objects[0];
+                    point.Y = _objects[1];
+                    point.Style = (int)ksAnnotationSymbolEnum.ksSquarePoint;
+                    point.LayerNumber = layer.LayerNumber;
+                    point.Update();
+
+                    activLayer.Current = true;
+                    activLayer.Update();
+                    overlayyError = true;
                 }
                 else
                 {

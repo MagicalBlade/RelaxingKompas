@@ -103,6 +103,12 @@
     </Compile>
     <Compile Include="Utils\JsonUtils.cs" />
     <Compile Include="Utils\MessageTextBox.cs" />
+    <Compile Include="Windows\FormInsertTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\FormInsertTable.Designer.cs">
+      <DependentUpon>FormInsertTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\FormTolerance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRegistration.resx">
       <DependentUpon>FormRegistration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\FormInsertTable.resx">
+      <DependentUpon>FormInsertTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\FormTolerance.resx">
       <DependentUpon>FormTolerance.cs</DependentUpon>
@@ -248,6 +257,9 @@
     <None Include="Resources\CTO-ГК «Трансстрой»-012-2018.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\InsertTable\Спецификация металла. Основная.frw">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Kompas6API5">
@@ -297,11 +309,14 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Classes\InsertTable\" />
     <Folder Include="dll\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)$(TargetName).dll" "c:\Program Files\ASCON\KOMPAS-3D v20\Libs\RelaxingKompas\" /y
-xcopy "$(TargetDir)$(TargetName).xml" "c:\Program Files\ASCON\KOMPAS-3D v20\Libs\RelaxingKompas\" /y</PostBuildEvent>
+xcopy "$(TargetDir)$(TargetName).xml" "c:\Program Files\ASCON\KOMPAS-3D v20\Libs\RelaxingKompas\" /y
+xcopy "$(TargetDir)\Resources" "c:\Program Files\ASCON\KOMPAS-3D v20\Libs\RelaxingKompas\Resources" /y /e
+xcopy "$(TargetDir)\Hole" "c:\Program Files\ASCON\KOMPAS-3D v20\Libs\RelaxingKompas\Hole" /y /e</PostBuildEvent>
   </PropertyGroup>
 </Project>

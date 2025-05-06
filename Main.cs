@@ -25,6 +25,7 @@ using System.Windows.Controls;
 using RelaxingKompas.Data.Global;
 using System.Security.Cryptography.X509Certificates;
 using DocumentFormat.OpenXml.Vml.Office;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace RelaxingKompas
 {
@@ -321,7 +322,7 @@ namespace RelaxingKompas
         /// <summary>
         /// Вставка в таблицу данных из эксель.
         /// </summary>
-        private void InsertTable()
+        private void InsertIntoTable()
         {
             IApplication application = Kompas.ksGetApplication7();
             IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)application.ActiveDocument;
@@ -2826,6 +2827,92 @@ namespace RelaxingKompas
         }
 
         /// <summary>
+        /// Вставка в таблицу данных из эксель.
+        /// </summary>
+        private void InsertTable()
+        {
+            FormInsertTable formInsertTable = new FormInsertTable();
+            if (formInsertTable.ShowDialog() == DialogResult.Cancel) return;
+            IApplication application = Kompas.ksGetApplication7();
+            IKompasDocument kompasDocument = application.ActiveDocument;
+            ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView activView = views.ActiveView;
+            ILibraryManager libraryManager = Application.LibraryManager;
+            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папке библиотеки
+            //TODO Будет выбор типа таблицы пользователем. От этого изменится путь.
+            string pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Основная.frw");
+            document2DAPI5.ksUndoContainer(true);
+
+            #region Подготовка таблицы из файла к вставке
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1] ?? layoutSheets[0];
+            layoutSheet.GetPlaceInsideFrames(out double left, out double ypaste, out double xpaste, out double bottom);
+            xpaste /= activView.Scale;
+            ypaste /= activView.Scale;
+            IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
+            IDrawingGroup drawingGroup = drawingGroups.Add(true, "");
+            drawingGroup.ReadFragment(pathTable, true, 0, 0, 1, 0, false);
+            IDrawingTable drawingTable = drawingGroup.Objects[0]; //Таблица
+            double xold = drawingTable.X;
+            #endregion
+
+
+            ITable table = (ITable)drawingTable;
+            string clipboardString = Clipboard.GetText();
+            List<string[]> cells = new List<string[]>();
+            foreach (string row in clipboardString.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                cells.Add(row.Split(new string[] { "\t" }, StringSplitOptions.None));                
+            }
+
+            for (int i = 0; i < cells.Count; i++)
+            {
+                //Проверка на совпадение количества столбцов.
+                if (cells[i].Length != table.ColumnsCount)
+                {
+                    MessageBox.Show($"Неверное количество столбцов в Excel. Должно быть равно: {table.ColumnsCount}");
+                    drawingGroup.Delete();
+                    document2DAPI5.ksUndoContainer(false);
+                    return;
+                }
+                table.AddRow(i + 3, true);
+                for (int j = 0; j < cells[i].Length; j++)
+                {
+                    IText text = (IText)table.Cell[i + 3, j].Text;
+                    text.Str = cells[i][j];                    
+                }
+            }
+
+            //Вставка таблицы
+            var buttons = formInsertTable.gb_InsertType.Controls.OfType<System.Windows.Forms.RadioButton>()
+                           .FirstOrDefault(n => n.Checked);
+            switch (buttons.Name)
+            {
+                case nameof(formInsertTable.rb_TopRight):
+                    drawingTable.X = xpaste + xold;
+                    drawingTable.Y = ypaste;
+                    break;
+                case nameof(formInsertTable.rb_Manual):
+                    drawingTable.X = xpaste + xold;
+                    drawingTable.Y = ypaste;
+                    break;
+                default:
+                    break;
+            }
+
+            drawingTable.Update();
+            drawingGroup.Store();
+
+            document2DAPI5.ksUndoContainer(false);
+            Application.MessageBoxEx("Таблица вставлена", "", 64);
+        }
+
+
+        /// <summary>
         /// Открытие файла помощи
         /// </summary>
         private void OpenHelp()
@@ -2871,7 +2958,7 @@ namespace RelaxingKompas
                 {
                     case 1: SaveContour(); break;
                     case 2: CopyTable(); break;
-                    case 3: InsertTable(); break;
+                    case 3: InsertIntoTable(); break;
                     case 4: WeightAndSize(); break;
                     case 5: CopyText(); break;
                     case 6: PlaceSymbolHole(); break;
@@ -2892,6 +2979,7 @@ namespace RelaxingKompas
                     case 21: RunningDimension(); break;
                     case 22: ArcDimension(); break;
                     case 23: CountCircle(); break;
+                    case 24: InsertTable(); break;
 
 
 

@@ -17,15 +17,9 @@ using RelaxingKompas.Windows;
 using RelaxingKompas.Utils;
 using System.Globalization;
 using System.Linq;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using DocumentFormat.OpenXml.Bibliography;
-using RelaxingKompas.EventObjects.ArcDimension;
-using RelaxingKompas.EventObjects;
-using System.Windows.Controls;
 using RelaxingKompas.Data.Global;
-using System.Security.Cryptography.X509Certificates;
-using DocumentFormat.OpenXml.Vml.Office;
-using DocumentFormat.OpenXml.Spreadsheet;
+using HtmlAgilityPack;
+using System.Text;
 
 namespace RelaxingKompas
 {
@@ -2885,11 +2879,27 @@ namespace RelaxingKompas
 
             ITable table = (ITable)drawingTable;
             string clipboardString = Clipboard.GetText(TextDataFormat.Html);
+            //Починка кириллицы
+            var bytes = Encoding.GetEncoding(1251).GetBytes(clipboardString);
+            clipboardString = Encoding.UTF8.GetString(bytes);
+
             List<string[]> cells = new List<string[]>();
-            foreach (string row in clipboardString.Split(new string[] { "\r\n" }, StringSplitOptions.None))
+
+            var doc = new HtmlAgilityPack.HtmlDocument();            
+            doc.LoadHtml(clipboardString);
+            var nodes = doc.DocumentNode.SelectNodes("//table/tr");
+            foreach (var row in nodes)
             {
-                cells.Add(row.Split(new string[] { "\t" }, StringSplitOptions.None));                
+                var nodecells = row.SelectNodes("th|td");
+                List<string> tempstr = new List<string>();
+                foreach (var cell in nodecells)
+                {
+                    tempstr.Add(cell.InnerText);                
+
+                }
+                cells.Add(tempstr.ToArray());
             }
+
             //Заполнение таблицы
             for (int i = 0; i < cells.Count; i++)
             {
@@ -2902,7 +2912,6 @@ namespace RelaxingKompas
                     return;
                 }
                 table.AddRow(i + 3, true);
-                //table.Range[];
                 for (int j = 0; j < cells[i].Length; j++)
                 {
                     IText text = (IText)table.Cell[i + 3, j].Text;

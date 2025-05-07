@@ -2844,7 +2844,29 @@ namespace RelaxingKompas
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папке библиотеки
             //TODO Будет выбор типа таблицы пользователем. От этого изменится путь.
+            var typeTable = formInsertTable.gb_TypeTable.Controls.OfType<System.Windows.Forms.RadioButton>()
+                                .FirstOrDefault(n => n.Checked);
             string pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Основная.frw");
+            switch (typeTable.Name)
+            {
+                case nameof(formInsertTable.rb_SpecMain):
+                    pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Основная.frw");
+                    break;
+                case nameof(formInsertTable.rb_SpecManyMarks):
+                    pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Несколько сварных марок.frw");
+                    break;
+                case nameof(formInsertTable.rb_SpecNotWeldMark):
+                    pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Без сварных марок.frw");
+                    break;
+                default:
+                    break;
+            }
+            if (!File.Exists(pathTable))
+            {
+                MessageBox.Show($"Не найден файл таблицы: {pathTable}");
+                return;
+            }
+
             document2DAPI5.ksUndoContainer(true);
 
             #region Подготовка таблицы из файла к вставке
@@ -2862,13 +2884,13 @@ namespace RelaxingKompas
 
 
             ITable table = (ITable)drawingTable;
-            string clipboardString = Clipboard.GetText();
+            string clipboardString = Clipboard.GetText(TextDataFormat.Html);
             List<string[]> cells = new List<string[]>();
-            foreach (string row in clipboardString.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string row in clipboardString.Split(new string[] { "\r\n" }, StringSplitOptions.None))
             {
                 cells.Add(row.Split(new string[] { "\t" }, StringSplitOptions.None));                
             }
-
+            //Заполнение таблицы
             for (int i = 0; i < cells.Count; i++)
             {
                 //Проверка на совпадение количества столбцов.
@@ -2880,12 +2902,15 @@ namespace RelaxingKompas
                     return;
                 }
                 table.AddRow(i + 3, true);
+                //table.Range[];
                 for (int j = 0; j < cells[i].Length; j++)
                 {
                     IText text = (IText)table.Cell[i + 3, j].Text;
                     text.Str = cells[i][j];                    
                 }
             }
+            //Удаляю лишнюю строку
+            table.DeleteRow(table.RowsCount - 1);
 
             //Вставка таблицы
             var buttons = formInsertTable.gb_InsertType.Controls.OfType<System.Windows.Forms.RadioButton>()

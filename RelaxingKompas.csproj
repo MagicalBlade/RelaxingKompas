@@ -257,6 +257,12 @@
     <None Include="Resources\CTO-ГК «Трансстрой»-012-2018.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\InsertTable\Спецификация металла. Без сварных марок.frw">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\InsertTable\Спецификация металла. Несколько сварных марок.frw">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\InsertTable\Спецификация металла. Основная.frw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

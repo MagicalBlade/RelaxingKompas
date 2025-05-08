@@ -20,6 +20,7 @@ using System.Linq;
 using RelaxingKompas.Data.Global;
 using HtmlAgilityPack;
 using System.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace RelaxingKompas
 {
@@ -2825,6 +2826,7 @@ namespace RelaxingKompas
         /// </summary>
         private void InsertTable()
         {
+            int rowHeadTable = 3; //Количество строк шапки заготовки таблицы
             FormInsertTable formInsertTable = new FormInsertTable();
             if (formInsertTable.ShowDialog() == DialogResult.Cancel) return;
             IApplication application = Kompas.ksGetApplication7();
@@ -2876,50 +2878,87 @@ namespace RelaxingKompas
             double xold = drawingTable.X;
             #endregion
 
-
             ITable table = (ITable)drawingTable;
             string clipboardString = Clipboard.GetText(TextDataFormat.Html);
             //Починка кириллицы
             var bytes = Encoding.GetEncoding(1251).GetBytes(clipboardString);
             clipboardString = Encoding.UTF8.GetString(bytes);
 
-            List<string[]> cells = new List<string[]>();
-
+            //Парсинг HTML
             var doc = new HtmlAgilityPack.HtmlDocument();            
             doc.LoadHtml(clipboardString);
-            var nodes = doc.DocumentNode.SelectNodes("//table/tr");
-            foreach (var row in nodes)
-            {
-                var nodecells = row.SelectNodes("th|td");
-                List<string> tempstr = new List<string>();
-                foreach (var cell in nodecells)
-                {
-                    tempstr.Add(cell.InnerText);                
+            var rows = doc.DocumentNode.SelectNodes("//table/tr");
+            int rowCount = rows.Count;
+            int columnCount = rows[0].SelectNodes("th|td").Count;
 
-                }
-                cells.Add(tempstr.ToArray());
+            //Проверка на совпадение количества столбцов.
+            if (columnCount != table.ColumnsCount)
+            {
+                MessageBox.Show($"Неверное количество столбцов в Excel. Должно быть равно: {table.ColumnsCount}");
+                drawingGroup.Delete();
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
+            //Добвляем строки в таблицу
+            for (int i = 0; i < rowCount -1; i++)
+            {
+                table.AddRow(i + rowHeadTable, true);
             }
 
-            //Заполнение таблицы
-            for (int i = 0; i < cells.Count; i++)
+            string[,] cells = new string[rowCount, columnCount];
+            for (int row = 0; row < rowCount; row++)
             {
-                //Проверка на совпадение количества столбцов.
-                if (cells[i].Length != table.ColumnsCount)
+                var cellsHTML = rows[row].SelectNodes("th|td");
+                int strSpan = 0;
+                for (int column = 0; column < columnCount; column++)
                 {
-                    MessageBox.Show($"Неверное количество столбцов в Excel. Должно быть равно: {table.ColumnsCount}");
-                    drawingGroup.Delete();
-                    document2DAPI5.ksUndoContainer(false);
-                    return;
-                }
-                table.AddRow(i + 3, true);
-                for (int j = 0; j < cells[i].Length; j++)
-                {
-                    IText text = (IText)table.Cell[i + 3, j].Text;
-                    text.Str = cells[i][j];                    
+                    if (cells[row, column] == "пусто")
+                    {
+                        strSpan++;
+                        continue;
+                    }
+                    int rowspan = cellsHTML[column - strSpan].GetAttributeValue("rowspan", 0);
+                    int colspan = cellsHTML[column - strSpan].GetAttributeValue("colspan", 0);
+                    if (rowspan != 0)
+                    {
+                        for (int rowspanI = 1; rowspanI < rowspan; rowspanI++)
+                        {
+                            cells[row + rowspanI, column] = "пусто";
+                        }
+                        ITableRange tableRange = table.Range[row + rowHeadTable, column, row + rowHeadTable +  rowspan - 1, column];
+                        tableRange.CombineCells();
+                    }
+                    if (colspan != 0)
+                    {
+                        for (int colspanI = 1; colspanI < colspan; colspanI++)
+                        {
+                            cells[row, column + colspanI] = "пусто";
+                        }
+                        ITableRange tableRange = table.Range[row + rowHeadTable, column, row + rowHeadTable, column + colspan - 1];
+                        tableRange.CombineCells();
+                    }
+                    IText text = (IText)table.Cell[row + rowHeadTable, column].Text; 
+                    text.Str = cellsHTML[column - strSpan].InnerText.Trim();
                 }
             }
-            //Удаляю лишнюю строку
-            table.DeleteRow(table.RowsCount - 1);
+
+            //Доработка таблицы в зависимости от типа
+            ITableRange endrow = table.Range[table.RowsCount, 0, table.RowsCount, table.ColumnsCount];
+            switch (typeTable.Name)
+            {
+                case nameof(formInsertTable.rb_SpecMain):
+                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
+                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBTopBorder] = ksCurveStyleEnum.ksCSNormal;
+                    break;
+                case nameof(formInsertTable.rb_SpecManyMarks):
+                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
+                    break;
+                case nameof(formInsertTable.rb_SpecNotWeldMark):
+                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
+                    break;
+                default:
+                    break;
+            }
 
             //Вставка таблицы
             var buttons = formInsertTable.gb_InsertType.Controls.OfType<System.Windows.Forms.RadioButton>()

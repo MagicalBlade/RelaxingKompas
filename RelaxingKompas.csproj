@@ -261,6 +261,9 @@
     <None Include="Resources\CTO-ГК «Трансстрой»-012-2018.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\InsertTable\Заготовки таблиц.ods">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\InsertTable\Спецификация металла. Без сварных марок.frw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

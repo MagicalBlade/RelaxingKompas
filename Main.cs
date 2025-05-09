@@ -2905,6 +2905,7 @@ namespace RelaxingKompas
                 table.AddRow(i + rowHeadTable, true);
             }
 
+            //Получаем данные из HTML полученного из буфера
             string[,] cells = new string[rowCount, columnCount];
             for (int row = 0; row < rowCount; row++)
             {
@@ -2925,6 +2926,7 @@ namespace RelaxingKompas
                         {
                             cells[row + rowspanI, column] = "пусто";
                         }
+                        //Объединяем ячейки
                         ITableRange tableRange = table.Range[row + rowHeadTable, column, row + rowHeadTable +  rowspan - 1, column];
                         tableRange.CombineCells();
                     }
@@ -2934,9 +2936,11 @@ namespace RelaxingKompas
                         {
                             cells[row, column + colspanI] = "пусто";
                         }
+                        //Объединяем ячейки
                         ITableRange tableRange = table.Range[row + rowHeadTable, column, row + rowHeadTable, column + colspan - 1];
                         tableRange.CombineCells();
                     }
+                    //Заполняем таблицу
                     IText text = (IText)table.Cell[row + rowHeadTable, column].Text; 
                     text.Str = cellsHTML[column - strSpan].InnerText.Trim();
                 }
@@ -2970,6 +2974,21 @@ namespace RelaxingKompas
                     drawingTable.Y = ypaste;
                     break;
                 case nameof(formInsertTable.rb_Manual):
+
+                    drawingTable.Update();
+                    #region Создаем фантом и вставляем группу в чертеж по полученным координатам
+                    ksPhantom phantom = Kompas.GetParamStruct(6);
+                    phantom.phantom = 1; //Указываем тип фантом "Фантом для сдвига группы"
+                    ksType1 type1 = phantom.GetPhantomParam();
+                    type1.gr = drawingGroup.Reference;
+                    if (document2DAPI5.ksCursorEx(null, ref xpaste, ref ypaste, phantom, null) == 0) //Вызываем курсор для указания точки вставки. Если была нажата Esc, прерываем вставку.
+                    {
+                        document2DAPI5.ksDeleteObj(type1.gr);
+                        return;
+                    }
+                    document2DAPI5.ksMoveObj(drawingGroup.Reference, xpaste, ypaste);
+                    #endregion
+
                     drawingTable.X = xpaste + xold;
                     drawingTable.Y = ypaste;
                     break;

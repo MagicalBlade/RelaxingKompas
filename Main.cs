@@ -2827,37 +2827,45 @@ namespace RelaxingKompas
         /// </summary>
         private void InsertTable()
         {
+            int rowHeadTable = 3; //Количество строк шапки заготовки таблицы
             ILibraryManager libraryManager = Application.LibraryManager;
             string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папке библиотеки
-            string dirsettings = Path.Combine(pathlibrary, "Settings");
-            string pathsettings = Path.Combine(pathlibrary, "Settings", $"{nameof(Settings_Prog.InsertTable)}.xml");
+            string pathAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string dirsettings = Path.Combine(pathAppData, "KOMPAS_Libs", nameof(RelaxingKompas), "Settings");
+            string pathsettings = Path.Combine(dirsettings, $"{nameof(Settings_Prog.InsertTable)}.xml");
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Settings_Prog.InsertTable));
-            int rowHeadTable = 3; //Количество строк шапки заготовки таблицы
             FormInsertTable formInsertTable = new FormInsertTable();
             #region Загружаем настройки
-            if (File.Exists(pathsettings))
+            if (Settings_Prog.TempStatic.LoadSettings<Settings_Prog.InsertTable>(nameof(Settings_Prog.InsertTable)) is Settings_Prog.InsertTable insertTable)
             {
-                using (FileStream fs = new FileStream(pathsettings, FileMode.Open))
-                {
-                    Settings_Prog.InsertTable insertTable = xmlSerializer.Deserialize(fs) as Settings_Prog.InsertTable;
-                    Settings_Prog.TempStatic.InsertTable = insertTable;
-                }
+                Settings_Prog.TempStatic.InsertTable = insertTable;
             }
-
+            //if (File.Exists(pathsettings))
+            //{
+            //    using (FileStream fs = new FileStream(pathsettings, FileMode.Open))
+            //    {
+            //        Settings_Prog.InsertTable insertTable = xmlSerializer.Deserialize(fs) as Settings_Prog.InsertTable;
+            //        Settings_Prog.TempStatic.InsertTable = insertTable;
+            //    }
+            //}
             formInsertTable.gb_InsertType.Controls.OfType<RadioButton>()
                             .FirstOrDefault(n => n.Name == Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo).Checked = true;
             #endregion
             if (formInsertTable.ShowDialog() == DialogResult.Cancel) return;
-            #region Запоминаем временные настройки
-            Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo = formInsertTable.gb_InsertType.Controls.OfType<RadioButton>()
+            #region Запоминаем и сохраняем настройки
+            string gb_InsertTypeName = formInsertTable.gb_InsertType.Controls.OfType<RadioButton>()
                             .FirstOrDefault(n => n.Checked).Name;
-            #endregion
-
-            Directory.CreateDirectory(dirsettings);
-            using (FileStream fs = new FileStream(pathsettings, FileMode.Create))
+            if (Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo != gb_InsertTypeName)
             {
-                xmlSerializer.Serialize(fs, Settings_Prog.TempStatic.InsertTable);
+                Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo = gb_InsertTypeName;
+                //Сохраняем настройки
+                Directory.CreateDirectory(dirsettings);
+                using (FileStream fs = new FileStream(pathsettings, FileMode.Create))
+                {
+                    xmlSerializer.Serialize(fs, Settings_Prog.TempStatic.InsertTable);
+                } 
             }
+            #endregion
 
             IApplication application = Kompas.ksGetApplication7();
             IKompasDocument kompasDocument = application.ActiveDocument;

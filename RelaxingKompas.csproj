@@ -105,6 +105,8 @@
     <Compile Include="FormRegistration.Designer.cs">
       <DependentUpon>FormRegistration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings_Prog\InsertTable.cs" />
+    <Compile Include="Settings_Prog\TempStatic.cs" />
     <Compile Include="Utils\JsonUtils.cs" />
     <Compile Include="Utils\MessageTextBox.cs" />
     <Compile Include="Windows\FormInsertTable.cs">

@@ -21,6 +21,7 @@ using RelaxingKompas.Data.Global;
 using HtmlAgilityPack;
 using System.Text;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Xml.Serialization;
 
 namespace RelaxingKompas
 {
@@ -2826,9 +2827,38 @@ namespace RelaxingKompas
         /// </summary>
         private void InsertTable()
         {
+            ILibraryManager libraryManager = Application.LibraryManager;
+            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папке библиотеки
+            string dirsettings = Path.Combine(pathlibrary, "Settings");
+            string pathsettings = Path.Combine(pathlibrary, "Settings", $"{nameof(Settings_Prog.InsertTable)}.xml");
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Settings_Prog.InsertTable));
             int rowHeadTable = 3; //Количество строк шапки заготовки таблицы
             FormInsertTable formInsertTable = new FormInsertTable();
+            #region Загружаем настройки
+            if (File.Exists(pathsettings))
+            {
+                using (FileStream fs = new FileStream(pathsettings, FileMode.Open))
+                {
+                    Settings_Prog.InsertTable insertTable = xmlSerializer.Deserialize(fs) as Settings_Prog.InsertTable;
+                    Settings_Prog.TempStatic.InsertTable = insertTable;
+                }
+            }
+
+            formInsertTable.gb_InsertType.Controls.OfType<RadioButton>()
+                            .FirstOrDefault(n => n.Name == Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo).Checked = true;
+            #endregion
             if (formInsertTable.ShowDialog() == DialogResult.Cancel) return;
+            #region Запоминаем временные настройки
+            Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo = formInsertTable.gb_InsertType.Controls.OfType<RadioButton>()
+                            .FirstOrDefault(n => n.Checked).Name;
+            #endregion
+
+            Directory.CreateDirectory(dirsettings);
+            using (FileStream fs = new FileStream(pathsettings, FileMode.Create))
+            {
+                xmlSerializer.Serialize(fs, Settings_Prog.TempStatic.InsertTable);
+            }
+
             IApplication application = Kompas.ksGetApplication7();
             IKompasDocument kompasDocument = application.ActiveDocument;
             ksDocument2D document2DAPI5 = Kompas.ActiveDocument2D();
@@ -2837,8 +2867,6 @@ namespace RelaxingKompas
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView activView = views.ActiveView;
-            ILibraryManager libraryManager = Application.LibraryManager;
-            string pathlibrary = $"{Path.GetDirectoryName(libraryManager.CurrentLibrary.PathName)}"; //Получить путь к папке библиотеки
             //TODO Будет выбор типа таблицы пользователем. От этого изменится путь.
             var typeTable = formInsertTable.gb_TypeTable.Controls.OfType<System.Windows.Forms.RadioButton>()
                                 .FirstOrDefault(n => n.Checked);

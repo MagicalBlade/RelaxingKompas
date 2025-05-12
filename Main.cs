@@ -2840,14 +2840,6 @@ namespace RelaxingKompas
             {
                 Settings_Prog.TempStatic.InsertTable = insertTable;
             }
-            //if (File.Exists(pathsettings))
-            //{
-            //    using (FileStream fs = new FileStream(pathsettings, FileMode.Open))
-            //    {
-            //        Settings_Prog.InsertTable insertTable = xmlSerializer.Deserialize(fs) as Settings_Prog.InsertTable;
-            //        Settings_Prog.TempStatic.InsertTable = insertTable;
-            //    }
-            //}
             formInsertTable.gb_InsertType.Controls.OfType<RadioButton>()
                             .FirstOrDefault(n => n.Name == Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo).Checked = true;
             #endregion
@@ -2859,11 +2851,7 @@ namespace RelaxingKompas
             {
                 Settings_Prog.TempStatic.InsertTable.Gb_InsertTypeNameIsBoo = gb_InsertTypeName;
                 //Сохраняем настройки
-                Directory.CreateDirectory(dirsettings);
-                using (FileStream fs = new FileStream(pathsettings, FileMode.Create))
-                {
-                    xmlSerializer.Serialize(fs, Settings_Prog.TempStatic.InsertTable);
-                } 
+                Settings_Prog.TempStatic.SaveSettings(nameof(Settings_Prog.InsertTable), Settings_Prog.TempStatic.InsertTable);
             }
             #endregion
 

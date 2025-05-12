@@ -21,8 +21,7 @@ namespace RelaxingKompas.Settings_Prog
 
         public static object LoadSettings<T>(string nameFile)
         {
-            string dirsettings = Path.Combine(pathAppData, "KOMPAS_Libs", nameof(RelaxingKompas), "Settings");
-            string pathsettings = Path.Combine(dirsettings, $"{nameFile}.xml");
+            string pathsettings = Path.Combine(pathAppData, "KOMPAS_Libs", nameof(RelaxingKompas), "Settings", $"{nameFile}.xml");
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             if (File.Exists(pathsettings))
             {
@@ -34,6 +33,17 @@ namespace RelaxingKompas.Settings_Prog
             else
             {
                 return null;
+            }
+        }
+        public static void SaveSettings(string nameFile, object obj)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(obj.GetType());
+            string dirsettings = Path.Combine(pathAppData, "KOMPAS_Libs", nameof(RelaxingKompas), "Settings");
+            string pathsettings = Path.Combine(dirsettings, $"{nameFile}.xml");
+            Directory.CreateDirectory(dirsettings);
+            using (FileStream fs = new FileStream(pathsettings, FileMode.Create))
+            {
+                xmlSerializer.Serialize(fs, obj);
             }
         }
     }

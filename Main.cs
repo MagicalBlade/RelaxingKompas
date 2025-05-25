@@ -313,6 +313,57 @@ namespace RelaxingKompas
             #endregion
 
             Excel.CopyToExcel(plainText, copytable);
+
+            ///Приверка наличия точки в массах деталей
+            string[,] tabletemp = new string[table.RowsCount,table.ColumnsCount];
+            List<int> columnWeight = new List<int>();
+            int rowWeight = -1;
+            for (int row = 0; row < table.RowsCount; row++)
+            {
+                for (int column = 0; column < table.ColumnsCount; column++)
+                {
+                    string str = ((IText)table.Cell[row, column].Text).Str;
+                    tabletemp[row, column] = str;
+                    if (Regex.IsMatch(str, $@"\bед\b", RegexOptions.IgnoreCase)) 
+                    {
+                        columnWeight.Add(column);
+                        rowWeight = row;
+                    }
+                    if (Regex.IsMatch(str, $@"\bобщ\b", RegexOptions.IgnoreCase)) 
+                    {
+                        columnWeight.Add(column);
+                        rowWeight = rowWeight < row ? row : rowWeight;
+                    }
+                }
+            }
+            if (columnWeight.Count == 0 || rowWeight == -1) return;
+            List<int> errorRow = new List<int>();
+            for (int row = rowWeight + 1; row < tabletemp.GetUpperBound(0) + 1; row++)
+            {
+                foreach (var column in columnWeight)
+                {
+                    if (tabletemp[row, column].IndexOf('.') != -1)
+                    {
+                        errorRow.Add(row);
+                    }
+                }
+            }
+            string errorPart = "";
+            foreach (var item in errorRow)
+            {
+                errorPart += $"{tabletemp[item, 0]}";
+                if (errorRow.LastOrDefault() != item)
+                {
+                    errorPart += ", ";
+                }
+            }
+            if (errorRow.Count > 0)
+            {
+                MessageBox.Show("ОШИБКА. Проверьте массы детелей на наличие точек вместо запятых." +
+                    "\nПри попытке сложить в Excle массы с точками не будут учитываться!!!" +
+                    $"\nВ следующих позициях есть точки: {errorPart}.");
+
+            }
         }
 
         /// <summary>

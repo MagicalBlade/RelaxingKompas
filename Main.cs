@@ -589,7 +589,20 @@ namespace RelaxingKompas
             document2DAPI5.ksUndoContainer(false);
             if (copytext.Count != 0)
             {
-
+                //Преобразование символов римских цифр в аналогичные написанные английскими буквами
+                for (int i = 0; i < copytext.Count; i++)
+                {
+                    copytext[i] = copytext[i].Replace("@41~", "I");
+                    copytext[i] = copytext[i].Replace("@42~", "II");
+                    copytext[i] = copytext[i].Replace("@43~", "III");
+                    copytext[i] = copytext[i].Replace("@44~", "IV");
+                    copytext[i] = copytext[i].Replace("@45~", "V");
+                    copytext[i] = copytext[i].Replace("@46~", "VI");
+                    copytext[i] = copytext[i].Replace("@47~", "VII");
+                    copytext[i] = copytext[i].Replace("@48~", "VIII");
+                    copytext[i] = copytext[i].Replace("@49~", "IX");
+                    copytext[i] = copytext[i].Replace("@50~", "X");
+                }
                 Excel.CopyToExcel(string.Join("\r\n", copytext), $"<table><tr><td>{string.Join("</td></tr><tr><td>", copytext)}</td></tr></table>");
                 Application.MessageBoxEx("Скопировано.", "Готово.", 64);
             }

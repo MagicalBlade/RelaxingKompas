@@ -463,10 +463,29 @@ namespace RelaxingKompas
 
             ksDocument2D ksdocument2D = Kompas.ActiveDocument2D();
 
-            //Kompas.ksSetCriticalProcess();
-
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView view = views.ActiveView;
+            IBreakViewParam breakViewParam = (IBreakViewParam)view;
+            //Если есть раз вида и он включен, то отключаем его, чтобы не мешал расчету площади и габаритов
+            bool isBreakView = false;
+            if (breakViewParam.BreaksCount != 0)
+            {
+                if (breakViewParam.BreaksVisible)
+                {
+                    breakViewParam.BreaksVisible = false;
+                    isBreakView = true; //Если разрыв вида, то отключаем его
+                    view.Update();
+                }
+            }
             ksInertiaParam ksinertiaParam = Kompas.GetParamStruct(83); //Параметры МЦХ
             int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади
+            //Если был разрыв вида, то включаем его обратно после получения площади
+            if (isBreakView)
+            {
+                breakViewParam.BreaksVisible = true; //Если разрыв вида, то включаем его обратно
+                view.Update();
+            }
             if (group == 0)
             {
                 return;

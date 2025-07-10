@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using RelaxingKompas.Windows;
 using System;
 using System.Globalization;
@@ -73,16 +74,32 @@ namespace RelaxingKompas.Data
             {
                 if (Directory.Exists(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text))
                 {
-                    PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Excel\\";
-                    try
+                    if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
                     {
-                        Directory.CreateDirectory(PathExcelFile);
+                        PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                            $"\\Документы из библиотеки\\Инв.№{DataWeightAndSize.inventoryNumber}. З.з.№{DataWeightAndSize.order}. {DataWeightAndSize.nameOrder}\\Excel\\";
+                        try
+                        {
+                            Directory.CreateDirectory(PathExcelFile);
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"Не удалось сохранить Excel файл. Проверьте возможность сохранения по выбранному пути. Действие было отменено.");
+                            return -1;
+                        }
                     }
-                    catch (Exception)
+                    else
                     {
-                        MessageBox.Show($"Не удалось сохранить Excel файл. Проверьте возможность сохранения по выбранному пути. Действие было отменено.");
-                        return -1;
-
+                        PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Excel\\";
+                        try
+                        {
+                            Directory.CreateDirectory(PathExcelFile);
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"Не удалось сохранить Excel файл. Проверьте возможность сохранения по выбранному пути. Действие было отменено.");
+                            return -1;
+                        }
                     }
                 }
                 else

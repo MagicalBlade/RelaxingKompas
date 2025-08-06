@@ -2978,8 +2978,11 @@ namespace RelaxingKompas
             ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
             ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1] ?? layoutSheets[0];
             layoutSheet.GetPlaceInsideFrames(out double left, out double ypaste, out double xpaste, out double bottom);
-            xpaste /= activView.Scale;
-            ypaste /= activView.Scale;
+
+            ksDocument2D document2D = Kompas.ActiveDocument2D();
+            document2D.ksSheetToView(xpaste, ypaste, out double xv, out double yv);
+            xpaste = xv;
+            ypaste = yv;
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "");
             drawingGroup.ReadFragment(pathTable, true, 0, 0, 1, 0, false);
@@ -3008,7 +3011,7 @@ namespace RelaxingKompas
                 document2DAPI5.ksUndoContainer(false);
                 return;
             }
-            //Добвляем строки в таблицу
+            //Добавляем строки в таблицу
             for (int i = 0; i < rowCount -1; i++)
             {
                 table.AddRow(i + rowHeadTable, true);

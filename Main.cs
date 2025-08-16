@@ -3074,6 +3074,11 @@ namespace RelaxingKompas
                 case nameof(formInsertTable.rb_SpecMain):
                     endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
                     endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBTopBorder] = ksCurveStyleEnum.ksCSNormal;
+                    //Выравнивание по правой стороне текста последней строки. Обычно это "на сварные швы:"
+                    ITableCell tableCell = endrow.Cells[0] as ITableCell;
+                    IText text = tableCell.Text as IText;
+                    ITextLine textLine = text.TextLines[0];
+                    textLine.Align = ksAlignEnum.ksAlignRight;                    
                     break;
                 case nameof(formInsertTable.rb_SpecManyMarks):
                     endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;

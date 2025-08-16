@@ -272,6 +272,9 @@
     <None Include="Resources\InsertTable\Спецификация металла. Несколько сварных марок.frw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\InsertTable\Спецификация металла. Основная промежуточная.frw">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\InsertTable\Спецификация металла. Основная.frw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

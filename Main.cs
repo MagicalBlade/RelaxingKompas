@@ -2920,6 +2920,7 @@ namespace RelaxingKompas
             string pathsettings = Path.Combine(dirsettings, $"{nameof(Settings_Prog.InsertTable)}.xml");
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Settings_Prog.InsertTable));
             FormInsertTable formInsertTable = new FormInsertTable();
+            formInsertTable.PathExamples = Path.Combine(pathlibrary, "Resources\\InsertTable");
             #region Загружаем настройки
             if (Settings_Prog.TempStatic.LoadSettings<Settings_Prog.InsertTable>(nameof(Settings_Prog.InsertTable)) is Settings_Prog.InsertTable insertTable)
             {
@@ -2956,6 +2957,9 @@ namespace RelaxingKompas
             {
                 case nameof(formInsertTable.rb_SpecMain):
                     pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Основная.frw");
+                    break;
+                case nameof(formInsertTable.rb_SpecMainIntermediate):
+                    pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Основная промежуточная.frw");
                     break;
                 case nameof(formInsertTable.rb_SpecManyMarks):
                     pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Несколько сварных марок.frw");
@@ -3079,6 +3083,9 @@ namespace RelaxingKompas
                     IText text = tableCell.Text as IText;
                     ITextLine textLine = text.TextLines[0];
                     textLine.Align = ksAlignEnum.ksAlignRight;                    
+                    break;
+                case nameof(formInsertTable.rb_SpecMainIntermediate):
+                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
                     break;
                 case nameof(formInsertTable.rb_SpecManyMarks):
                     endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;

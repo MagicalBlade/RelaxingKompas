@@ -2967,6 +2967,12 @@ namespace RelaxingKompas
                 case nameof(formInsertTable.rb_SpecNotWeldMark):
                     pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\Спецификация металла. Без сварных марок.frw");
                     break;
+                case nameof(formInsertTable.rb_MMS):
+                    pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\ММС.frw");
+                    break;
+                case nameof(formInsertTable.rb_MMSIntermediate):
+                    pathTable = Path.Combine(pathlibrary, "Resources\\InsertTable\\ММС промежуточная.frw");
+                    break;
                 default:
                     break;
             }
@@ -3076,13 +3082,15 @@ namespace RelaxingKompas
             switch (typeTable.Name)
             {
                 case nameof(formInsertTable.rb_SpecMain):
-                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
-                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBTopBorder] = ksCurveStyleEnum.ksCSNormal;
-                    //Выравнивание по правой стороне текста последней строки. Обычно это "на сварные швы:"
-                    ITableCell tableCell = endrow.Cells[0] as ITableCell;
-                    IText text = tableCell.Text as IText;
-                    ITextLine textLine = text.TextLines[0];
-                    textLine.Align = ksAlignEnum.ksAlignRight;                    
+                    {
+                        endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
+                        endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBTopBorder] = ksCurveStyleEnum.ksCSNormal;
+                        //Выравнивание по правой стороне текста последней строки. Обычно это "на сварные швы:"
+                        ITableCell tableCell = endrow.Cells[0] as ITableCell;
+                        IText text = tableCell.Text as IText;
+                        ITextLine textLine = text.TextLines[0];
+                        textLine.Align = ksAlignEnum.ksAlignRight;
+                    }
                     break;
                 case nameof(formInsertTable.rb_SpecMainIntermediate):
                     endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
@@ -3091,6 +3099,20 @@ namespace RelaxingKompas
                     endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
                     break;
                 case nameof(formInsertTable.rb_SpecNotWeldMark):
+                    endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
+                    break;
+                case nameof(formInsertTable.rb_MMS):
+                    {
+                        endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
+                        endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBTopBorder] = ksCurveStyleEnum.ksCSNormal;
+                        //Выравнивание по правой стороне текста последней строки. Обычно это "Итого:"
+                        ITableCell tableCell = endrow.Cells[0] as ITableCell;
+                        IText text = tableCell.Text as IText;
+                        ITextLine textLine = text.TextLines[0];
+                        textLine.Align = ksAlignEnum.ksAlignRight;
+                    }
+                    break;
+                case nameof(formInsertTable.rb_MMSIntermediate):
                     endrow.CellsBoundaries.LineStyle[ksCellBoundariesEnum.ksCBBottomBorder] = ksCurveStyleEnum.ksCSNormal;
                     break;
                 default:

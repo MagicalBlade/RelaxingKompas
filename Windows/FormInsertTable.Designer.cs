@@ -40,6 +40,8 @@
             this.rb_SpecMain = new System.Windows.Forms.RadioButton();
             this.b_examples = new System.Windows.Forms.Button();
             this.rb_SpecMainIntermediate = new System.Windows.Forms.RadioButton();
+            this.rb_MMS = new System.Windows.Forms.RadioButton();
+            this.rb_MMSIntermediate = new System.Windows.Forms.RadioButton();
             this.gb_InsertType.SuspendLayout();
             this.gb_TypeTable.SuspendLayout();
             this.SuspendLayout();
@@ -94,6 +96,8 @@
             this.gb_TypeTable.Controls.Add(this.rb_SpecNotWeldMark);
             this.gb_TypeTable.Controls.Add(this.rb_SpecManyMarks);
             this.gb_TypeTable.Controls.Add(this.rb_SpecMainIntermediate);
+            this.gb_TypeTable.Controls.Add(this.rb_MMSIntermediate);
+            this.gb_TypeTable.Controls.Add(this.rb_MMS);
             this.gb_TypeTable.Controls.Add(this.rb_SpecMain);
             this.gb_TypeTable.Location = new System.Drawing.Point(12, 93);
             this.gb_TypeTable.Name = "gb_TypeTable";
@@ -184,6 +188,32 @@
             this.rb_SpecMainIntermediate.UseVisualStyleBackColor = true;
             this.rb_SpecMainIntermediate.CheckedChanged += new System.EventHandler(this.RadioButton_Result_OK);
             // 
+            // rb_MMS
+            // 
+            this.rb_MMS.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rb_MMS.AutoSize = true;
+            this.rb_MMS.Location = new System.Drawing.Point(6, 96);
+            this.rb_MMS.Name = "rb_MMS";
+            this.rb_MMS.Size = new System.Drawing.Size(42, 23);
+            this.rb_MMS.TabIndex = 0;
+            this.rb_MMS.TabStop = true;
+            this.rb_MMS.Text = "ММС";
+            this.rb_MMS.UseVisualStyleBackColor = true;
+            this.rb_MMS.CheckedChanged += new System.EventHandler(this.RadioButton_Result_OK);
+            // 
+            // rb_MMSIntermediate
+            // 
+            this.rb_MMSIntermediate.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rb_MMSIntermediate.AutoSize = true;
+            this.rb_MMSIntermediate.Location = new System.Drawing.Point(54, 96);
+            this.rb_MMSIntermediate.Name = "rb_MMSIntermediate";
+            this.rb_MMSIntermediate.Size = new System.Drawing.Size(124, 23);
+            this.rb_MMSIntermediate.TabIndex = 0;
+            this.rb_MMSIntermediate.TabStop = true;
+            this.rb_MMSIntermediate.Text = "ММС промежуточная";
+            this.rb_MMSIntermediate.UseVisualStyleBackColor = true;
+            this.rb_MMSIntermediate.CheckedChanged += new System.EventHandler(this.RadioButton_Result_OK);
+            // 
             // FormInsertTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -218,5 +248,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button b_examples;
         internal System.Windows.Forms.RadioButton rb_SpecMainIntermediate;
+        internal System.Windows.Forms.RadioButton rb_MMS;
+        internal System.Windows.Forms.RadioButton rb_MMSIntermediate;
     }
 }

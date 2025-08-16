@@ -3000,9 +3000,18 @@ namespace RelaxingKompas
             var doc = new HtmlAgilityPack.HtmlDocument();            
             doc.LoadHtml(clipboardString);
             var rows = doc.DocumentNode.SelectNodes("//table/tr");
+            if (rows == null)
+            {
+                MessageBox.Show($"Не верные данные. Скопируйте таблицу из Excel");
+                return;
+            }
             int rowCount = rows.Count;
-            int columnCount = rows[0].SelectNodes("th|td").Count;
-
+            int columnCount = 0;
+            //Находим максимальное количество столбцов таблице excel
+            for (int i = 0; i < rowCount; i++)
+            {
+                columnCount = rows[i].SelectNodes("th|td").Count > columnCount ? rows[i].SelectNodes("th|td").Count : columnCount;
+            }
             //Проверка на совпадение количества столбцов.
             if (columnCount != table.ColumnsCount)
             {

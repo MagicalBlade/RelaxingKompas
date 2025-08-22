@@ -52,9 +52,15 @@ namespace RelaxingKompas.Data
 
         private static IApplication _application;
 
-        public static IKompasDocument KompasDocument { get => _kompasDocument; set => _kompasDocument = value; }
-
         static private IKompasDocument _kompasDocument;
+        public static IKompasDocument KompasDocument { get => _kompasDocument; set => _kompasDocument = value; }
+        
+        static private string orderFolderName;
+        /// <summary>
+        /// Название папки с заказом
+        /// </summary>
+        public static string OrderFolderName { get => orderFolderName; set => orderFolderName = value; }
+
         /// <summary>
         /// Запись массы в штамп
         /// </summary>
@@ -180,8 +186,16 @@ namespace RelaxingKompas.Data
                     string pathfolder;
                     if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
                     {
-                        pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
-                        $"\\Документы из библиотеки\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}\\Фрагменты";
+                        if (DataWeightAndSize.OrderFolderName.IndexOf("З.з.") != -1)
+                        {
+                            pathfolder = Path.Combine(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\'),
+                                "Документы из библиотеки", DataWeightAndSize.OrderFolderName, "Фрагменты");
+                        }
+                        else
+                        {
+                            pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                            $"\\Документы из библиотеки\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}\\Фрагменты";
+                        }
                     }
                     else
                     {
@@ -213,8 +227,16 @@ namespace RelaxingKompas.Data
                     string pathfolder;
                     if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
                     {
-                        pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
-                        $"\\Документы из библиотеки\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}\\Контуры";
+                        if (DataWeightAndSize.OrderFolderName.IndexOf("З.з.") != -1)
+                        {
+                            pathfolder = Path.Combine(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\'),
+                                "Документы из библиотеки", DataWeightAndSize.OrderFolderName, "Контуры");
+                        }
+                        else
+                        {
+                            pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                            $"\\Документы из библиотеки\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}\\Контуры";
+                        }
                     }
                     else
                     {

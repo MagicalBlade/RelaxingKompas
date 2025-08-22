@@ -433,7 +433,8 @@ namespace RelaxingKompas
             DataWeightAndSize.Thickness = 0;
             WindowWeightAndSize.tb_steel.Text = "";
             WindowWeightAndSize.tb_weight.Text = "";
-
+            string[] orderFolder = kompasDocument.Path.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            DataWeightAndSize.OrderFolderName = orderFolder[orderFolder.Length - 2];
             WindowWeightAndSize.cb_savefragment.Checked = WindowLibrarySettings.cb_SaveFragment.Checked;
             WindowWeightAndSize.cb_savedxf.Checked = WindowLibrarySettings.cb_SaveDxf.Checked;
 

@@ -76,8 +76,16 @@ namespace RelaxingKompas.Data
                 {
                     if (DataWeightAndSize.WindowLibrarySettings.cb_isUseOrder.Checked)
                     {
-                        PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
-                            $"\\Документы из библиотеки\\Инв.№{DataWeightAndSize.inventoryNumber}. З.з.№{DataWeightAndSize.order}. {DataWeightAndSize.nameOrder}\\Excel\\";
+                        if (DataWeightAndSize.OrderFolderName.IndexOf("З.з.") != -1)
+                        {
+                            PathExcelFile = Path.Combine(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\'),
+                                "Документы из библиотеки", DataWeightAndSize.OrderFolderName, "Excel");
+                        }
+                        else
+                        {
+                            PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
+                                $"\\Документы из библиотеки\\Инв.№{DataWeightAndSize.inventoryNumber}. З.з.№{DataWeightAndSize.order}. {DataWeightAndSize.nameOrder}\\Excel\\";
+                        }
                         try
                         {
                             Directory.CreateDirectory(PathExcelFile);
@@ -295,7 +303,7 @@ namespace RelaxingKompas.Data
                 rowcount = 2;
                 InsertInformation(worksheet, dataexport);
 
-                workbook.SaveAs($"{PathExcelFile}{NameExcelFile}.xlsx");
+                workbook.SaveAs($"{PathExcelFile}\\{NameExcelFile}.xlsx");
             }
 
             void InsertInformation(IXLWorksheet worksheet, string[] export)

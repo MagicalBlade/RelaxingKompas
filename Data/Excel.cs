@@ -84,7 +84,7 @@ namespace RelaxingKompas.Data
                         else
                         {
                             PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
-                                $"\\Документы из библиотеки\\Инв.№{DataWeightAndSize.inventoryNumber}. З.з.№{DataWeightAndSize.order}. {DataWeightAndSize.nameOrder}\\Excel\\";
+                                $"\\Документы из библиотеки\\Инв.№{DataWeightAndSize.inventoryNumber}. З.з.№{DataWeightAndSize.order}. {DataWeightAndSize.nameOrder}\\Excel";
                         }
                         try
                         {
@@ -98,7 +98,7 @@ namespace RelaxingKompas.Data
                     }
                     else
                     {
-                        PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Excel\\";
+                        PathExcelFile = $"{DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}\\Документы из библиотеки\\Excel";
                         try
                         {
                             Directory.CreateDirectory(PathExcelFile);
@@ -235,7 +235,7 @@ namespace RelaxingKompas.Data
             }
             
             
-            if (File.Exists($"{PathExcelFile}{NameExcelFile}.xlsx"))
+            if (File.Exists($"{PathExcelFile}\\{NameExcelFile}.xlsx"))
             {
                 RepeatSkipCancel repeatSkipCancel = new RepeatSkipCancel
                 {
@@ -246,7 +246,7 @@ namespace RelaxingKompas.Data
                 {
                     try
                     {
-                        workbook = new XLWorkbook($"{PathExcelFile}{NameExcelFile}.xlsx");
+                        workbook = new XLWorkbook($"{PathExcelFile}\\{NameExcelFile}.xlsx");
 
                     }
                     catch (Exception)

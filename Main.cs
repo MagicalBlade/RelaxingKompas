@@ -1684,6 +1684,11 @@ namespace RelaxingKompas
             #endregion
 
             string nameorder = Array.Find(kompasDocument.PathName.Split('\\'), x => x.IndexOf("З.з.№", StringComparison.CurrentCultureIgnoreCase) != -1);
+            if (nameorder == null || nameorder == "")
+            {
+                MessageBox.Show("Не найден заказ. PDF не сохранён.\nВозможно сохраняете не из нулевой папки.");
+                return;
+            }
             string pathFolderSavePDF = "";
             if (Directory.Exists($"{adresess["Завершенные чертежи"]}\\{nameorder}"))
             {

@@ -490,19 +490,6 @@ namespace RelaxingKompas
             }
             ksInertiaParam ksinertiaParam = Kompas.GetParamStruct(83); //Параметры МЦХ
             int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади
-            //Если был разрыв вида, то включаем его обратно после получения площади
-            if (isBreakView)
-            {
-                breakViewParam.BreaksVisible = true; //Если разрыв вида, то включаем его обратно
-                view.Update();
-            }
-            if (group == 0)
-            {
-                return;
-            }
-            ksMathematic2D mathematic2D = Kompas.GetMathematic2D();
-            mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
-
             #region Получение габаритного прямоугольника
             ksRectParam rectParam = Kompas.GetParamStruct(15); //Параметры прямоугольника
             ksdocument2D.ksGetObjGabaritRect(group, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
@@ -578,6 +565,18 @@ namespace RelaxingKompas
             Win32 = NativeWindow.FromHandle((IntPtr)Kompas.ksGetHWindow()); //Получаю окно компаса по дескриптору
             WindowWeightAndSize.Hide();
             WindowWeightAndSize.Show(Win32); //Показываю окно дочерним к компасу
+            //Если был разрыв вида, то включаем его обратно после получения площади
+            if (isBreakView)
+            {
+                breakViewParam.BreaksVisible = true; //Если разрыв вида, то включаем его обратно
+                view.Update();
+            }
+            if (group == 0)
+            {
+                return;
+            }
+            ksMathematic2D mathematic2D = Kompas.GetMathematic2D();
+            mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
         }
 
         /// <summary>

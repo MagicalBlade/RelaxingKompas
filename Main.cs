@@ -490,6 +490,12 @@ namespace RelaxingKompas
             }
             ksInertiaParam ksinertiaParam = Kompas.GetParamStruct(83); //Параметры МЦХ
             int group = ksdocument2D.ksViewGetObjectArea(); //Контур площади
+            if (group == 0)
+            {
+                return;
+            }
+            ksMathematic2D mathematic2D = Kompas.GetMathematic2D();
+            mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
             #region Получение габаритного прямоугольника
             ksRectParam rectParam = Kompas.GetParamStruct(15); //Параметры прямоугольника
             ksdocument2D.ksGetObjGabaritRect(group, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
@@ -570,13 +576,7 @@ namespace RelaxingKompas
             {
                 breakViewParam.BreaksVisible = true; //Если разрыв вида, то включаем его обратно
                 view.Update();
-            }
-            if (group == 0)
-            {
-                return;
-            }
-            ksMathematic2D mathematic2D = Kompas.GetMathematic2D();
-            mathematic2D.ksCalcInertiaProperties(group, ksinertiaParam, 0x1);
+            }  
         }
 
         /// <summary>

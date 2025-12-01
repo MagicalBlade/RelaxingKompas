@@ -1131,11 +1131,26 @@ namespace RelaxingKompas
         /// Копирование данных из штампа: нименование, масса, номер листа
         /// </summary>
         private void CopyDataFromStamp()
-        {
+        {            
             DataWeightAndSize.KompasDocument = Application.ActiveDocument;
-            string plainText = $"{DataWeightAndSize.GetCellStamp(2)}\t{DataWeightAndSize.GetCellStamp(5)}\t{DataWeightAndSize.GetCellStamp(16001)}";
-            string htmlText = $"<table><tr><td>{DataWeightAndSize.GetCellStamp(2)}</td><td>{DataWeightAndSize.GetCellStamp(5)}<td>{DataWeightAndSize.GetCellStamp(16001)}</td>" +
-                $"</tr></table>";
+            string plainText = "";
+            string htmlText = "";
+            
+            if (WindowLibrarySettings.rb_CopyDataFromStamp_MarkMass.Checked)
+            {
+                plainText = $"{DataWeightAndSize.GetCellStamp(2)}\t{DataWeightAndSize.GetCellStamp(5)}кг";
+
+                htmlText = $"<table><tr><td>{DataWeightAndSize.GetCellStamp(2)}</td><td>{DataWeightAndSize.GetCellStamp(5)}кг</td>" +
+                    $"</tr></table>";
+            }
+            else
+            {
+                plainText = $"{DataWeightAndSize.GetCellStamp(2)}\t{DataWeightAndSize.GetCellStamp(5)}\t{DataWeightAndSize.GetCellStamp(16001)}";
+            
+                htmlText = $"<table><tr><td>{DataWeightAndSize.GetCellStamp(2)}</td><td>{DataWeightAndSize.GetCellStamp(5)}</td><td>{DataWeightAndSize.GetCellStamp(16001)}</td>" +
+                    $"</tr></table>";
+            }
+
             Excel.CopyToExcel(plainText, htmlText);
         }
 
@@ -1775,7 +1790,7 @@ namespace RelaxingKompas
         }
 
         /// <summary>
-        /// Добавить рекдацию в штам чертежа
+        /// Добавить редакцию в штам чертежа
         /// </summary>
         private void AddRedaction()
         {

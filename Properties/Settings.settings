@@ -101,5 +101,11 @@
     <Setting Name="FormLibrarySettings_cb_CountCircle_Macro" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="FormLibrarySettings_rb_CopyDataFromStamp_MarkMass" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="FormLibrarySettings_rb_CopyDataFromStamp_MarkMassList" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

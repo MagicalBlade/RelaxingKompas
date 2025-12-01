@@ -66,13 +66,17 @@
             this.label6 = new System.Windows.Forms.Label();
             this.nud_CountHoles_tolerance = new System.Windows.Forms.NumericUpDown();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.cb_CountCircle_Macro = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.nud_CountCircle_tolerance_Diametr = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.nud_CountCircle_tolerance = new System.Windows.Forms.NumericUpDown();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.cb_typeModeling = new System.Windows.Forms.ComboBox();
-            this.cb_CountCircle_Macro = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.rb_CopyDataFromStamp_MarkMass = new System.Windows.Forms.RadioButton();
+            this.rb_CopyDataFromStamp_MarkMassList = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -86,6 +90,8 @@
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance_Diametr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance)).BeginInit();
+            this.tabPage5.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -341,6 +347,7 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
@@ -519,6 +526,18 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Посчитать количество окружностей";
             // 
+            // cb_CountCircle_Macro
+            // 
+            this.cb_CountCircle_Macro.AutoSize = true;
+            this.cb_CountCircle_Macro.Checked = true;
+            this.cb_CountCircle_Macro.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_CountCircle_Macro.Location = new System.Drawing.Point(194, 70);
+            this.cb_CountCircle_Macro.Name = "cb_CountCircle_Macro";
+            this.cb_CountCircle_Macro.Size = new System.Drawing.Size(161, 17);
+            this.cb_CountCircle_Macro.TabIndex = 4;
+            this.cb_CountCircle_Macro.Text = "Искать в макроэлементах";
+            this.cb_CountCircle_Macro.UseVisualStyleBackColor = true;
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -563,6 +582,17 @@
             0,
             0});
             // 
+            // tabPage5
+            // 
+            this.tabPage5.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage5.Controls.Add(this.groupBox3);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(547, 200);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Скопировать штамп";
+            // 
             // cb_typeModeling
             // 
             this.cb_typeModeling.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -575,17 +605,37 @@
             this.cb_typeModeling.Size = new System.Drawing.Size(121, 21);
             this.cb_typeModeling.TabIndex = 3;
             // 
-            // cb_CountCircle_Macro
+            // groupBox3
             // 
-            this.cb_CountCircle_Macro.AutoSize = true;
-            this.cb_CountCircle_Macro.Checked = true;
-            this.cb_CountCircle_Macro.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_CountCircle_Macro.Location = new System.Drawing.Point(194, 70);
-            this.cb_CountCircle_Macro.Name = "cb_CountCircle_Macro";
-            this.cb_CountCircle_Macro.Size = new System.Drawing.Size(161, 17);
-            this.cb_CountCircle_Macro.TabIndex = 4;
-            this.cb_CountCircle_Macro.Text = "Искать в макроэлементах";
-            this.cb_CountCircle_Macro.UseVisualStyleBackColor = true;
+            this.groupBox3.Controls.Add(this.rb_CopyDataFromStamp_MarkMassList);
+            this.groupBox3.Controls.Add(this.rb_CopyDataFromStamp_MarkMass);
+            this.groupBox3.Location = new System.Drawing.Point(6, 6);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(307, 151);
+            this.groupBox3.TabIndex = 0;
+            this.groupBox3.TabStop = false;
+            // 
+            // rb_CopyDataFromStamp_MarkMass
+            // 
+            this.rb_CopyDataFromStamp_MarkMass.AutoSize = true;
+            this.rb_CopyDataFromStamp_MarkMass.Checked = true;
+            this.rb_CopyDataFromStamp_MarkMass.Location = new System.Drawing.Point(6, 19);
+            this.rb_CopyDataFromStamp_MarkMass.Name = "rb_CopyDataFromStamp_MarkMass";
+            this.rb_CopyDataFromStamp_MarkMass.Size = new System.Drawing.Size(160, 17);
+            this.rb_CopyDataFromStamp_MarkMass.TabIndex = 0;
+            this.rb_CopyDataFromStamp_MarkMass.TabStop = true;
+            this.rb_CopyDataFromStamp_MarkMass.Text = "Название марки Масса кг";
+            this.rb_CopyDataFromStamp_MarkMass.UseVisualStyleBackColor = true;
+            // 
+            // rb_CopyDataFromStamp_MarkMassList
+            // 
+            this.rb_CopyDataFromStamp_MarkMassList.AutoSize = true;
+            this.rb_CopyDataFromStamp_MarkMassList.Location = new System.Drawing.Point(6, 43);
+            this.rb_CopyDataFromStamp_MarkMassList.Name = "rb_CopyDataFromStamp_MarkMassList";
+            this.rb_CopyDataFromStamp_MarkMassList.Size = new System.Drawing.Size(215, 17);
+            this.rb_CopyDataFromStamp_MarkMassList.TabIndex = 1;
+            this.rb_CopyDataFromStamp_MarkMassList.Text = "Название марки Масса Номер листа";
+            this.rb_CopyDataFromStamp_MarkMassList.UseVisualStyleBackColor = true;
             // 
             // FormLibrarySettings
             // 
@@ -621,6 +671,9 @@
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance_Diametr)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_CountCircle_tolerance)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -671,5 +724,9 @@
         private System.Windows.Forms.Label label8;
         internal System.Windows.Forms.NumericUpDown nud_CountCircle_tolerance_Diametr;
         internal System.Windows.Forms.CheckBox cb_CountCircle_Macro;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.GroupBox groupBox3;
+        internal System.Windows.Forms.RadioButton rb_CopyDataFromStamp_MarkMass;
+        internal System.Windows.Forms.RadioButton rb_CopyDataFromStamp_MarkMassList;
     }
 }

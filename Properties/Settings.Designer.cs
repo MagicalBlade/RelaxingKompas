@@ -418,5 +418,29 @@ namespace RelaxingKompas.Properties {
                 this["FormLibrarySettings_cb_CountCircle_Macro"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FormLibrarySettings_rb_CopyDataFromStamp_MarkMass {
+            get {
+                return ((bool)(this["FormLibrarySettings_rb_CopyDataFromStamp_MarkMass"]));
+            }
+            set {
+                this["FormLibrarySettings_rb_CopyDataFromStamp_MarkMass"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FormLibrarySettings_rb_CopyDataFromStamp_MarkMassList {
+            get {
+                return ((bool)(this["FormLibrarySettings_rb_CopyDataFromStamp_MarkMassList"]));
+            }
+            set {
+                this["FormLibrarySettings_rb_CopyDataFromStamp_MarkMassList"] = value;
+            }
+        }
     }
 }

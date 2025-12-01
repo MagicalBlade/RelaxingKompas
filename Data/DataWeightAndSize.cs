@@ -40,7 +40,7 @@ namespace RelaxingKompas.Data
         /// <summary>
         /// Название заказа
         /// </summary>
-        static public string nameOrder = "Назвение заказа";
+        static public string nameOrder = "Название заказа";
         #endregion
 
 
@@ -230,12 +230,12 @@ namespace RelaxingKompas.Data
                         if (DataWeightAndSize.OrderFolderName.IndexOf("З.з.") != -1)
                         {
                             pathfolder = Path.Combine(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\'),
-                                "Документы из библиотеки", DataWeightAndSize.OrderFolderName, "Контуры");
+                                "Документы из    библиотеки", DataWeightAndSize.OrderFolderName, "Контуры");
                         }
                         else
                         {
-                            pathfolder = $"{WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\')}" +
-                            $"\\Документы из библиотеки\\Инв.№{inventoryNumber}. З.з.№{order}. {nameOrder}\\Контуры";
+                            pathfolder = Path.Combine(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\'),
+                                "Документы из библиотеки", $"Инв.№{ inventoryNumber}. З.з.№{ order}. { nameOrder}", "Контуры");
                         }
                     }
                     else

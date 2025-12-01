@@ -463,9 +463,9 @@ namespace RelaxingKompas
                     WindowWeightAndSize.tb_steel.Text = profile[4];
                 }
             }
-            DataWeightAndSize.order = DataWeightAndSize.GetCellStamp(16003);
-            DataWeightAndSize.inventoryNumber = DataWeightAndSize.GetCellStamp(16002);
-            DataWeightAndSize.nameOrder = DataWeightAndSize.GetCellStamp(1).Replace('\n', ' ').Replace("  ", " ");
+            DataWeightAndSize.order = DataWeightAndSize.GetCellStamp(16003).Trim(' ');
+            DataWeightAndSize.inventoryNumber = DataWeightAndSize.GetCellStamp(16002).Trim(' ');
+            DataWeightAndSize.nameOrder = DataWeightAndSize.GetCellStamp(1).Replace('\n', ' ').Replace("  ", " ").Trim(' ');
             if (DataWeightAndSize.order == "") DataWeightAndSize.order = "0000";
             if (DataWeightAndSize.inventoryNumber == "") DataWeightAndSize.inventoryNumber = "0000";
             if (DataWeightAndSize.nameOrder == "") DataWeightAndSize.nameOrder = "Без названия";

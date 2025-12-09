@@ -230,7 +230,7 @@ namespace RelaxingKompas.Data
                         if (DataWeightAndSize.OrderFolderName.IndexOf("З.з.") != -1)
                         {
                             pathfolder = Path.Combine(DataWeightAndSize.WindowLibrarySettings.tb_PathExcelFile.Text.TrimEnd('\\'),
-                                "Документы из    библиотеки", DataWeightAndSize.OrderFolderName, "Контуры");
+                                "Документы из библиотеки", DataWeightAndSize.OrderFolderName, "Контуры");
                         }
                         else
                         {

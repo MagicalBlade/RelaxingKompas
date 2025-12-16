@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Classes\Sto_012.cs" />
     <Compile Include="Classes\TablePosDet.cs" />
+    <Compile Include="Classes\WriteWeight\TableInfo.cs" />
     <Compile Include="Data\DataWeightAndSize.cs" />
     <Compile Include="Data\Excel.cs" />
     <Compile Include="Data\Global\Global_ArcDimension.cs" />

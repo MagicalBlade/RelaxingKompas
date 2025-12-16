@@ -24,6 +24,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.Xml.Serialization;
 using System.Runtime.ExceptionServices;
 using System.Security;
+using RelaxingKompas.Classes.WriteWeight;
 
 namespace RelaxingKompas
 {
@@ -3185,6 +3186,81 @@ namespace RelaxingKompas
             Application.MessageBoxEx("Таблица вставлена", "", 64);
         }
 
+        private void WriteWeight()
+        {
+            //Важен порядок! сначала "общ." затем "масса"
+            //Иначе в часит таблиц будет находить не правильный столбец с массой
+            string[] textSearch = new string[] { "общ.", "масса"};
+            List<TableInfo> tables = new List<TableInfo>();
+            IKompasDocument kompasDocument = Application.ActiveDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            foreach (IView view in views)
+            {
+                ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+                IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
+                foreach (IDrawingTable drawingTable in drawingTables)
+                {
+                    ITable table = (ITable)drawingTable;
+                    bool isFound = false;
+                    foreach (var item in textSearch)
+                    {
+                        for (int i = 0; i < table.RowsCount; i++)
+                        {
+                            for (int j = 0; j < table.ColumnsCount; j++)
+                            {
+                                IText text = (IText)table.Cell[i, j].Text;
+                                if (text.Str.IndexOf(item, StringComparison.CurrentCultureIgnoreCase) != -1)
+                                {
+                                    tables.Add(new TableInfo(table, j));
+                                    isFound = true;
+                                    break;
+                                }
+                            }
+                            if (isFound) break;
+                        }
+                        if (isFound) break;
+                    }
+                }
+            }
+            double sum = 0;
+            foreach (TableInfo item in tables)
+            {
+                for (int i = 0; i < item.Table.RowsCount; i++)
+                {
+                    IText text = (IText)item.Table.Cell[i, item.ColumnWeight].Text;
+                    double.TryParse(text.Str, out double resul);
+                    sum += resul;
+                }
+            }
+            if (sum == 0)
+            {
+                MessageBox.Show("Общая масса равно нулю! В штамп масса не записана. Проверьте наличие таблицы и её правильность.");
+                return;
+            }
+            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
+            if (layoutSheets == null) return;
+            if (layoutSheets.Count == 0) return;
+            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
+            if (layoutSheet == null)
+            {
+                foreach (ILayoutSheet item in layoutSheets)
+                {
+                    layoutSheet = item;
+                    break;
+                }
+            }
+            //Запись в свойства
+            IPropertyMng propertyMng = (IPropertyMng)Application;
+            _Property propertyWeight = propertyMng.GetProperty(kompasDocument, "Масса");
+            IPropertyKeeper propertyKeeper = (IPropertyKeeper)kompasDocument;
+            //Запись массы
+            propertyKeeper.SetPropertyValue(propertyWeight, sum, false);
+            propertyWeight.Update();
+            Application.MessageBoxEx("Масса записана", "", 64);
+        }
 
         /// <summary>
         /// Открытие файла помощи
@@ -3282,6 +3358,7 @@ namespace RelaxingKompas
                     case 22: ArcDimension(); break;
                     case 23: CountCircle(); break;
                     case 24: InsertTable(); break;
+                    case 25: WriteWeight(); break;
 
 
 

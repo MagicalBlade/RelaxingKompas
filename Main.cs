@@ -3190,7 +3190,7 @@ namespace RelaxingKompas
         {
             //Важен порядок! сначала "общ." затем "масса"
             //Иначе в часит таблиц будет находить не правильный столбец с массой
-            string[] textSearch = new string[] { "общ.", "масса"};
+            string[] textSearch = new string[] { "общ", "масса"};
             List<TableInfo> tables = new List<TableInfo>();
             IKompasDocument kompasDocument = Application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;

@@ -1053,6 +1053,15 @@ namespace RelaxingKompas
             IDrawingDocument kompasDocument = (IDrawingDocument)Application.ActiveDocument;
             ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
             ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
+            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
+            if (layoutSheet == null)
+            {
+                foreach (ILayoutSheet item in layoutSheets)
+                {
+                    layoutSheet = item;
+                    break;
+                }
+            }
             IStamp stamp = layoutSheet.Stamp;
             IText text3 = stamp.Text[3];
             string text3Str = text3.Str;

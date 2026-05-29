@@ -20,6 +20,7 @@ namespace RelaxingKompas
             #region Загрузка настроек
             tb_density.Text = Properties.Settings.Default.Density;
             cb_clipboard.Checked = Properties.Settings.Default.IsClipboard;
+            cb_clipboardWeight.Checked = Properties.Settings.Default.cb_clipboardWeight;
             cb_weight.Checked = Properties.Settings.Default.Isweight;
             comb_round.SelectedIndex = Properties.Settings.Default.Round;
             this.Location = Properties.Settings.Default.Point;
@@ -79,6 +80,7 @@ namespace RelaxingKompas
             #region Сохранение настроек
             Properties.Settings.Default.Density = tb_density.Text;
             Properties.Settings.Default.IsClipboard = cb_clipboard.Checked;
+            Properties.Settings.Default.cb_clipboardWeight = cb_clipboardWeight.Checked;
             Properties.Settings.Default.Isweight = cb_weight.Checked;
             Properties.Settings.Default.Round = comb_round.SelectedIndex;
             Properties.Settings.Default.Point = this.Location;
@@ -106,7 +108,11 @@ namespace RelaxingKompas
             {
                 FormattingText();
             }
-
+            else if(!cb_clipboard.Checked && cb_clipboardWeight.Checked)
+            {
+                Clipboard.SetText(DataWeightAndSize.Weight);
+            }
+            //Записываем массу в штамп
             if (cb_weight.Checked)
             {
                 DataWeightAndSize.WriteWeightStamp();
@@ -283,6 +289,22 @@ namespace RelaxingKompas
             Properties.Settings.Default.IsCreatFragment = cb_savedxf.Checked;
             Properties.Settings.Default.SaveDxf = cb_savedxf.Checked;
             Properties.Settings.Default.Save();
+        }
+
+        private void cb_clipboard_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_clipboard.Checked)
+            {
+                cb_clipboardWeight.Checked = false;
+            }
+        }
+
+        private void cb_clipboardWeight_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cb_clipboardWeight.Checked)
+            {
+                cb_clipboard.Checked = false;
+            }
         }
     }
 }

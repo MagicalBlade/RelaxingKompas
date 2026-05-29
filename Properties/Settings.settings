@@ -107,5 +107,8 @@
     <Setting Name="FormLibrarySettings_rb_CopyDataFromStamp_MarkMassList" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="cb_clipboardWeight" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

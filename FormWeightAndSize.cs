@@ -1,7 +1,9 @@
 ﻿using Kompas6API5;
 using KompasAPI7;
+using RelaxingKompas.Classes.WriteWeight;
 using RelaxingKompas.Data;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -113,6 +115,72 @@ namespace RelaxingKompas
                 Clipboard.SetText(DataWeightAndSize.Weight);
             }
             //Записываем массу в штамп
+            if (true)
+            {
+                //Важен порядок! сначала "общ." затем "масса"
+                //Иначе в часит таблиц будет находить не правильный столбец с массой
+                string[] textSearch = new string[] { "ед", "масса" };
+                List<TableInfo> tables = new List<TableInfo>();
+
+                IKompasDocument2D kompasDocument2D = (IKompasDocument2D)DataWeightAndSize.KompasDocument;
+                IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+                IViews views = viewsAndLayersManager.Views;
+                foreach (IView view in views)
+                {
+                    ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+                    IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
+                    foreach (IDrawingTable drawingTable in drawingTables)
+                    {
+                        ITable table = (ITable)drawingTable;
+                        bool isFound = false;
+                        foreach (var item in textSearch)
+                        {
+                            for (int i = 0; i < table.RowsCount; i++)
+                            {
+                                for (int j = 0; j < table.ColumnsCount; j++)
+                                {
+                                    IText text = (IText)table.Cell[i, j].Text;
+                                    if (text.Str.IndexOf(item, StringComparison.CurrentCultureIgnoreCase) != -1)
+                                    {
+                                        tables.Add(new TableInfo(table, j));
+                                        isFound = true;
+                                        break;
+                                    }
+                                }
+                                if (isFound) break;
+                            }
+                            if (isFound) break;
+                        }
+                    }
+                }
+                if (tables.Count == 0)
+                {
+                    MessageBox.Show("Таблица не найдена. Масса не записана");                    
+                }
+                else
+                {
+                    bool isFoundPos = false;
+                    foreach (TableInfo item in tables)
+                    {
+                        for (int i = 0; i < item.Table.RowsCount; i++)
+                        {
+                            IText text = (IText)item.Table.Cell[i, 0].Text;
+                            if (text.Str == tb_pos.Text)
+                            {
+                                IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight].Text;
+                                textWeight.Str = DataWeightAndSize.Weight;
+                                isFoundPos = true;
+                            }
+                        }
+                        ((IDrawingTable)item.Table).Update();
+                    }
+                    if (!isFoundPos)
+                    {
+                        MessageBox.Show("Позиция не найдена в таблице. Масса не записана");
+                    }
+                }
+            }
+
             if (cb_weight.Checked)
             {
                 DataWeightAndSize.WriteWeightStamp();

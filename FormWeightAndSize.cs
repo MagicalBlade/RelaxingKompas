@@ -1,4 +1,5 @@
-﻿using Kompas6API5;
+﻿using DocumentFormat.OpenXml.Presentation;
+using Kompas6API5;
 using KompasAPI7;
 using RelaxingKompas.Classes.WriteWeight;
 using RelaxingKompas.Data;
@@ -115,11 +116,12 @@ namespace RelaxingKompas
                 Clipboard.SetText(DataWeightAndSize.Weight);
             }
             //Записываем массу в штамп
-            if (true)
+            if (cb_weight.Checked)
             {
                 //Важен порядок! сначала "общ." затем "масса"
                 //Иначе в часит таблиц будет находить не правильный столбец с массой
                 string[] textSearch = new string[] { "ед", "масса" };
+                string textSearchQuantity = "кол";
                 List<TableInfo> tables = new List<TableInfo>();
 
                 IKompasDocument2D kompasDocument2D = (IKompasDocument2D)DataWeightAndSize.KompasDocument;
@@ -155,20 +157,42 @@ namespace RelaxingKompas
                 }
                 if (tables.Count == 0)
                 {
-                    MessageBox.Show("Таблица не найдена. Масса не записана");                    
+                    DataWeightAndSize.WriteWeightStamp(); //Записуем массу в штамп
                 }
                 else
                 {
                     bool isFoundPos = false;
                     foreach (TableInfo item in tables)
                     {
+                        int quantityColumn = SearchColumn(item.Table, textSearchQuantity);
                         for (int i = 0; i < item.Table.RowsCount; i++)
                         {
                             IText text = (IText)item.Table.Cell[i, 0].Text;
                             if (text.Str == tb_pos.Text)
                             {
-                                IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight].Text;
-                                textWeight.Str = DataWeightAndSize.Weight;
+                                if(quantityColumn == -1)
+                                {
+                                    IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight].Text;
+                                    textWeight.Str = DataWeightAndSize.Weight;
+                                }
+                                else //Если есть колонка с количеством
+                                {
+                                    if (((IText)item.Table.Cell[i, quantityColumn].Text).Str == "1")
+                                    {
+                                        IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight + 1].Text;
+                                        textWeight.Str = DataWeightAndSize.Weight;
+                                    }
+                                    else
+                                    {
+                                        IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight].Text;
+                                        textWeight.Str = DataWeightAndSize.Weight;
+                                        if (double.TryParse(((IText)item.Table.Cell[i, quantityColumn].Text).Str, out double quantity)
+                                                && double.TryParse(DataWeightAndSize.Weight, out double weight))
+                                        {
+                                            ((IText)item.Table.Cell[i, item.ColumnWeight + 1].Text).Str = (quantity * weight).ToString();
+                                        }
+                                    }
+                                }
                                 isFoundPos = true;
                             }
                         }
@@ -180,11 +204,26 @@ namespace RelaxingKompas
                     }
                 }
             }
-
-            if (cb_weight.Checked)
+            int SearchColumn(ITable table, string searchText)
             {
-                DataWeightAndSize.WriteWeightStamp();
+                for (int i = 0; i < table.RowsCount; i++)
+                {
+                    for (int j = 0; j < table.ColumnsCount; j++)
+                    {
+                        IText text = (IText)table.Cell[i, j].Text;
+                        if (text.Str.IndexOf(searchText, StringComparison.CurrentCultureIgnoreCase) != -1)
+                        {
+                            return j;                            
+                        }
+                    }
+                }
+                return -1;
             }
+
+            //if (cb_weight.Checked)
+            //{
+            //    DataWeightAndSize.WriteWeightStamp();
+            //}
 
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "H", tb_width.Text, "Ширина");

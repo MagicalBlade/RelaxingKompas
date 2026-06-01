@@ -61,8 +61,9 @@ namespace RelaxingKompas
             this.lb_steel = new System.Windows.Forms.ListBox();
             this.cb_savefragment = new System.Windows.Forms.CheckBox();
             this.cb_savedxf = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.cb_clipboardWeight = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // b_ok
@@ -161,7 +162,7 @@ namespace RelaxingKompas
             this.cb_clipboard.AutoSize = true;
             this.cb_clipboard.Checked = true;
             this.cb_clipboard.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_clipboard.Location = new System.Drawing.Point(302, 25);
+            this.cb_clipboard.Location = new System.Drawing.Point(6, 19);
             this.cb_clipboard.Name = "cb_clipboard";
             this.cb_clipboard.Size = new System.Drawing.Size(86, 17);
             this.cb_clipboard.TabIndex = 9;
@@ -172,7 +173,7 @@ namespace RelaxingKompas
             // cb_weight
             // 
             this.cb_weight.AutoSize = true;
-            this.cb_weight.Location = new System.Drawing.Point(125, 35);
+            this.cb_weight.Location = new System.Drawing.Point(123, 12);
             this.cb_weight.Name = "cb_weight";
             this.cb_weight.Size = new System.Drawing.Size(153, 17);
             this.cb_weight.TabIndex = 10;
@@ -355,7 +356,7 @@ namespace RelaxingKompas
             // cb_savefragment
             // 
             this.cb_savefragment.AutoSize = true;
-            this.cb_savefragment.Location = new System.Drawing.Point(125, 58);
+            this.cb_savefragment.Location = new System.Drawing.Point(123, 35);
             this.cb_savefragment.Name = "cb_savefragment";
             this.cb_savefragment.Size = new System.Drawing.Size(132, 17);
             this.cb_savefragment.TabIndex = 21;
@@ -366,7 +367,7 @@ namespace RelaxingKompas
             // cb_savedxf
             // 
             this.cb_savedxf.AutoSize = true;
-            this.cb_savedxf.Location = new System.Drawing.Point(125, 84);
+            this.cb_savedxf.Location = new System.Drawing.Point(123, 61);
             this.cb_savedxf.Name = "cb_savedxf";
             this.cb_savedxf.Size = new System.Drawing.Size(96, 17);
             this.cb_savedxf.TabIndex = 21;
@@ -374,25 +375,27 @@ namespace RelaxingKompas
             this.cb_savedxf.UseVisualStyleBackColor = true;
             this.cb_savedxf.CheckedChanged += new System.EventHandler(this.cb_savedxf_CheckedChanged);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(302, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 13);
-            this.label1.TabIndex = 22;
-            this.label1.Text = "Скопировать:";
-            // 
             // cb_clipboardWeight
             // 
             this.cb_clipboardWeight.AutoSize = true;
-            this.cb_clipboardWeight.Location = new System.Drawing.Point(302, 47);
+            this.cb_clipboardWeight.Location = new System.Drawing.Point(6, 42);
             this.cb_clipboardWeight.Name = "cb_clipboardWeight";
             this.cb_clipboardWeight.Size = new System.Drawing.Size(58, 17);
             this.cb_clipboardWeight.TabIndex = 9;
             this.cb_clipboardWeight.Text = "Массу";
             this.cb_clipboardWeight.UseVisualStyleBackColor = true;
             this.cb_clipboardWeight.CheckedChanged += new System.EventHandler(this.cb_clipboardWeight_CheckedChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.cb_clipboard);
+            this.groupBox1.Controls.Add(this.cb_clipboardWeight);
+            this.groupBox1.Location = new System.Drawing.Point(229, 61);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(99, 69);
+            this.groupBox1.TabIndex = 23;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Скопировать";
             // 
             // FormWeightAndSize
             // 
@@ -401,7 +404,7 @@ namespace RelaxingKompas
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_Cancel;
             this.ClientSize = new System.Drawing.Size(542, 213);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cb_savedxf);
             this.Controls.Add(this.cb_savefragment);
             this.Controls.Add(this.lb_steel);
@@ -417,8 +420,6 @@ namespace RelaxingKompas
             this.Controls.Add(this.l_round);
             this.Controls.Add(this.comb_round);
             this.Controls.Add(this.cb_weight);
-            this.Controls.Add(this.cb_clipboardWeight);
-            this.Controls.Add(this.cb_clipboard);
             this.Controls.Add(this.tb_yardage);
             this.Controls.Add(this.l_yardage);
             this.Controls.Add(this.l_sheet);
@@ -439,6 +440,8 @@ namespace RelaxingKompas
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Подсчет массы по площади";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormWeightAndSize_FormClosing);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -475,7 +478,7 @@ namespace RelaxingKompas
         internal ListBox lb_steel;
         internal CheckBox cb_savefragment;
         internal CheckBox cb_savedxf;
-        private Label label1;
         internal CheckBox cb_clipboardWeight;
+        private GroupBox groupBox1;
     }
 }

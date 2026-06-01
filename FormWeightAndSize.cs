@@ -121,6 +121,7 @@ namespace RelaxingKompas
                 //Важен порядок! сначала "общ." затем "масса"
                 //Иначе в часит таблиц будет находить не правильный столбец с массой
                 string[] textSearch = new string[] { "ед", "масса" };
+                //Поиск столбца с количеством позиций
                 string textSearchQuantity = "кол";
                 List<TableInfo> tables = new List<TableInfo>();
 
@@ -162,41 +163,46 @@ namespace RelaxingKompas
                 else
                 {
                     bool isFoundPos = false;
-                    foreach (TableInfo item in tables)
+                    foreach (TableInfo tableInfo in tables)
                     {
-                        int quantityColumn = SearchColumn(item.Table, textSearchQuantity);
-                        for (int i = 0; i < item.Table.RowsCount; i++)
+                        int quantityColumn = SearchColumn(tableInfo.Table, textSearchQuantity);
+                        for (int i = 0; i < tableInfo.Table.RowsCount; i++)
                         {
-                            IText text = (IText)item.Table.Cell[i, 0].Text;
-                            if (text.Str == tb_pos.Text)
+                            IText text = (IText)tableInfo.Table.Cell[i, 0].Text;
+                            if (text.Str.Trim(' ') == tb_pos.Text.Trim(' '))
                             {
                                 if(quantityColumn == -1)
                                 {
-                                    IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight].Text;
+                                    IText textWeight = (IText)tableInfo.Table.Cell[i, tableInfo.ColumnWeight].Text;
                                     textWeight.Str = DataWeightAndSize.Weight;
                                 }
                                 else //Если есть колонка с количеством
                                 {
-                                    if (((IText)item.Table.Cell[i, quantityColumn].Text).Str == "1")
+                                    //Если количество равно 1, то записываем в общую массу
+                                    if (((IText)tableInfo.Table.Cell[i, quantityColumn].Text).Str.Trim(' ') == "1")
                                     {
-                                        IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight + 1].Text;
+                                        IText textWeight = (IText)tableInfo.Table.Cell[i, tableInfo.ColumnWeight + 1].Text;
                                         textWeight.Str = DataWeightAndSize.Weight;
                                     }
                                     else
                                     {
-                                        IText textWeight = (IText)item.Table.Cell[i, item.ColumnWeight].Text;
+                                        IText textWeight = (IText)tableInfo.Table.Cell[i, tableInfo.ColumnWeight].Text;
                                         textWeight.Str = DataWeightAndSize.Weight;
-                                        if (double.TryParse(((IText)item.Table.Cell[i, quantityColumn].Text).Str, out double quantity)
+                                        if (double.TryParse(((IText)tableInfo.Table.Cell[i, quantityColumn].Text).Str, out double quantity)
                                                 && double.TryParse(DataWeightAndSize.Weight, out double weight))
                                         {
-                                            ((IText)item.Table.Cell[i, item.ColumnWeight + 1].Text).Str = (quantity * weight).ToString();
+                                            ((IText)tableInfo.Table.Cell[i, tableInfo.ColumnWeight + 1].Text).Str = (quantity * weight).ToString();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show($"Не удалось перемножить количество и массу позиции: {tb_pos.Text}");
                                         }
                                     }
                                 }
                                 isFoundPos = true;
                             }
                         }
-                        ((IDrawingTable)item.Table).Update();
+                        if(isFoundPos) ((IDrawingTable)tableInfo.Table).Update();
                     }
                     if (!isFoundPos)
                     {
@@ -219,12 +225,6 @@ namespace RelaxingKompas
                 }
                 return -1;
             }
-
-            //if (cb_weight.Checked)
-            //{
-            //    DataWeightAndSize.WriteWeightStamp();
-            //}
-
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "t", DataWeightAndSize.Thickness.ToString(), "Толщина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "H", tb_width.Text, "Ширина");
             DataWeightAndSize.WriteVariable(DataWeightAndSize.KompasDocument, "L", tb_length.Text, "Длинна");

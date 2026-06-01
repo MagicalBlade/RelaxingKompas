@@ -175,9 +175,9 @@ namespace RelaxingKompas
             this.cb_weight.AutoSize = true;
             this.cb_weight.Location = new System.Drawing.Point(123, 12);
             this.cb_weight.Name = "cb_weight";
-            this.cb_weight.Size = new System.Drawing.Size(153, 17);
+            this.cb_weight.Size = new System.Drawing.Size(198, 17);
             this.cb_weight.TabIndex = 10;
-            this.cb_weight.Text = "Записать массу в штамп";
+            this.cb_weight.Text = "Записать массу в таблицу/штамп";
             this.cb_weight.UseVisualStyleBackColor = true;
             // 
             // comb_round

@@ -169,7 +169,7 @@ namespace RelaxingKompas
                         for (int i = 0; i < tableInfo.Table.RowsCount; i++)
                         {
                             IText text = (IText)tableInfo.Table.Cell[i, 0].Text;
-                            if (text.Str.Trim(' ') == tb_pos.Text.Trim(' '))
+                            if (text.Str.Trim(' ', '\r', '\n') == tb_pos.Text.Trim(' ', '\r', '\n')) //Нашли позицию
                             {
                                 if(quantityColumn == -1)
                                 {
@@ -179,7 +179,7 @@ namespace RelaxingKompas
                                 else //Если есть колонка с количеством
                                 {
                                     //Если количество равно 1, то записываем в общую массу
-                                    if (((IText)tableInfo.Table.Cell[i, quantityColumn].Text).Str.Trim(' ') == "1")
+                                    if (((IText)tableInfo.Table.Cell[i, quantityColumn].Text).Str.Trim(' ', '\r', '\n') == "1")
                                     {
                                         IText textWeight = (IText)tableInfo.Table.Cell[i, tableInfo.ColumnWeight + 1].Text;
                                         textWeight.Str = DataWeightAndSize.Weight;

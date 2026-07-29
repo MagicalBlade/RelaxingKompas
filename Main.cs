@@ -3207,10 +3207,13 @@ namespace RelaxingKompas
             IViews views = viewsAndLayersManager.Views;
             foreach (IView view in views)
             {
+                if(!view.Visible) continue;
                 ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
                 IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
+                ILayers layers = view.Layers;
                 foreach (IDrawingTable drawingTable in drawingTables)
                 {
+                    if (!layers.Layer[drawingTable.LayerNumber].Visible) continue;
                     ITable table = (ITable)drawingTable;
                     bool isFound = false;
                     foreach (var item in textSearch)

@@ -38,8 +38,10 @@
             this.rb_Sto_2018 = new System.Windows.Forms.RadioButton();
             this.gb_Sto = new System.Windows.Forms.GroupBox();
             this.gb_kat = new System.Windows.Forms.GroupBox();
+            this.dgv_Pos = new System.Windows.Forms.DataGridView();
             this.gb_Sto.SuspendLayout();
             this.gb_kat.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_Pos)).BeginInit();
             this.SuspendLayout();
             // 
             // b_kat1
@@ -146,12 +148,23 @@
             this.gb_kat.TabStop = false;
             this.gb_kat.Text = "Выберите категорию кромки";
             // 
+            // dgv_Pos
+            // 
+            this.dgv_Pos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_Pos.Location = new System.Drawing.Point(214, 12);
+            this.dgv_Pos.Name = "dgv_Pos";
+            this.dgv_Pos.ReadOnly = true;
+            this.dgv_Pos.Size = new System.Drawing.Size(240, 150);
+            this.dgv_Pos.TabIndex = 8;
+            this.dgv_Pos.Click += new System.EventHandler(this.dgv_Pos_Click);
+            // 
             // RougForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.b_cancel;
-            this.ClientSize = new System.Drawing.Size(221, 244);
+            this.ClientSize = new System.Drawing.Size(465, 244);
+            this.Controls.Add(this.dgv_Pos);
             this.Controls.Add(this.gb_kat);
             this.Controls.Add(this.gb_Sto);
             this.Controls.Add(this.b_cancel);
@@ -166,6 +179,7 @@
             this.gb_Sto.ResumeLayout(false);
             this.gb_Sto.PerformLayout();
             this.gb_kat.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_Pos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,5 +197,6 @@
         internal System.Windows.Forms.RadioButton rb_Sto_2018;
         internal System.Windows.Forms.GroupBox gb_Sto;
         private System.Windows.Forms.GroupBox gb_kat;
+        internal System.Windows.Forms.DataGridView dgv_Pos;
     }
 }

@@ -1051,32 +1051,21 @@ namespace RelaxingKompas
 
 
             IDrawingDocument kompasDocument = (IDrawingDocument)Application.ActiveDocument;
-            ILayoutSheets layoutSheets = kompasDocument.LayoutSheets;
-            ILayoutSheet layoutSheet = layoutSheets.ItemByNumber[1];
-            // Получение листа в старых версиях чертежа. В них видимо нет возможности получить лист по номеру листа.
-            if (layoutSheet == null)
-            {
-                foreach (ILayoutSheet item in layoutSheets)
-                {
-                    layoutSheet = item;
-                    break;
-                }
-            }
-            IStamp stamp = layoutSheet.Stamp;
-            IText text3 = stamp.Text[3];
-            string text3Str = text3.Str;
-            string thickness = "";
-            if (text3Str != "")
-            {
-                string[] profile = text3Str.Split("$dsm; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (profile.Length > 4)
-                {
-                    thickness = profile[1];
-                }
-            }
-
+            List<Pos.PosData> posData = Pos.GetPosData(kompasDocument);
             RougForm roughWindow = new RougForm();
-            roughWindow.tb_thickness.Text = thickness;
+            roughWindow.tb_thickness.Text = Utils.Pos.GetThickness(kompasDocument);
+            if (posData != null && posData.Count != 0)
+            {
+                if (posData.Average(p => p.Thickness) > 0)
+                {
+                    roughWindow.dgv_Pos.DataSource = posData;
+                    double thicknessMin = posData.Min(p => p.Thickness);
+                    if (thicknessMin > 0)
+                    {
+                        roughWindow.tb_thickness.Text = thicknessMin.ToString();
+                    }
+                }
+            }
             roughWindow.rb_Sto_2018.Checked = Settings.Default.rb_Sto_2018;
             roughWindow.rb_Sto_2007.Checked = Settings.Default.rb_Sto_2007;
             roughWindow.ShowDialog();

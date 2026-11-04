@@ -68,5 +68,15 @@ namespace RelaxingKompas.Windows
             }
             
         }
+
+        private void dgv_Pos_Click(object sender, EventArgs e)
+        {
+            DataGridView dataGridView = (DataGridView)sender;
+            string thickness = ((RelaxingKompas.Utils.Pos.PosData)dataGridView.SelectedCells[0].OwningRow.DataBoundItem).Thickness.ToString();
+            if (thickness != null && thickness.Trim() != "")
+            {
+                tb_thickness.Text = thickness;
+            }
+        }
     }
 }

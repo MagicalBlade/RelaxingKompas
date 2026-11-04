@@ -110,6 +110,7 @@
     <Compile Include="Settings_Prog\TempStatic.cs" />
     <Compile Include="Utils\JsonUtils.cs" />
     <Compile Include="Utils\MessageTextBox.cs" />
+    <Compile Include="Utils\Pos.cs" />
     <Compile Include="Windows\FormInsertTable.cs">
       <SubType>Form</SubType>
     </Compile>

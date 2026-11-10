@@ -24,7 +24,7 @@ namespace RelaxingKompas.Utils
                 {
                     ITable table = (ITable)drawingTable;
                     PosTable posTable = null;
-                    for (int i = 0; i < table.ColumnsCount; i++)
+                    for (int i = 0; i < table.RowsCount; i++)
                     {
                         for (int j = 0; j < table.ColumnsCount; j++)
                         {

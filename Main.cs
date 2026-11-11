@@ -1061,7 +1061,7 @@ namespace RelaxingKompas
                 IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
                 foreach (ITable table in drawingTables)
                 {
-                    if (table.FindCell("Rz") != null) tableRoug.Add(table);
+                    if (table.FindCell(new string[] { "Rz" }) != null) tableRoug.Add(table);
                 }
             }
             List<Pos.PosData> posData = Pos.GetPosData(kompasDocument);
@@ -1094,13 +1094,18 @@ namespace RelaxingKompas
             {
                 foreach (ITable table in tableRoug)
                 {
-                    //ITableCell tableCellPos = table.FindCell("поз");
-                    ITableCell tableCellRz = table.FindCell("Rz");
-                    ITableCell tableCellThicknes = table.FindCell("толщ");
+                    int thickness = 0;
+                    ITableCell tableCellRz = table.FindCell(new string[] { "Rz" });
+                    ITableCell tableCellThicknes = table.FindCell(new string[] { "толщ", "s" });
+                    if (tableCellThicknes == null)
+                    {
+                        Kompas.ksMessage("В таблице не найден столбец толщины");
+                        continue;
+                    }
                     for (int row = tableCellRz.Row + 1; row < table.RowsCount; row++)
                     {
                         int roug = 0;
-                        if (int.TryParse(table.Cell[row, tableCellThicknes.Column].GetStr(), out int thickness))
+                        if (int.TryParse(table.Cell[row, tableCellThicknes.Column].GetStr(), out thickness))
                         {
                             if (roughWindow.rb_Sto_2018.Checked)
                             {

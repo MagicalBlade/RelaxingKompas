@@ -15,15 +15,18 @@ namespace RelaxingKompas.Utils.ExtensionMethods
         /// <param name="table"></param>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static ITableCell FindCell(this ITable table, string str)
+        public static ITableCell FindCell(this ITable table, string[] str)
         {
             for (int row = 0; row < table.RowsCount; row++)
             {
                 for (int column = 0; column < table.ColumnsCount; column++)
                 {
-                    if (table.Cell[row, column].GetStr().IndexOf(str, StringComparison.CurrentCultureIgnoreCase) != -1)
+                    foreach (string item in str)
                     {
-                        return table.Cell[row, column];
+                        if (table.Cell[row, column].GetStr().IndexOf(item, StringComparison.CurrentCultureIgnoreCase) != -1)
+                        {
+                            return table.Cell[row, column];
+                        }
                     }
                 }
             }

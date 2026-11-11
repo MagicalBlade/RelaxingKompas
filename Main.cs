@@ -25,6 +25,8 @@ using System.Xml.Serialization;
 using System.Runtime.ExceptionServices;
 using System.Security;
 using RelaxingKompas.Classes.WriteWeight;
+using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
+using RelaxingKompas.Utils.ExtensionMethods;
 
 namespace RelaxingKompas
 {
@@ -1049,8 +1051,19 @@ namespace RelaxingKompas
                 }
             }
 
-
+            List<ITable> tableRoug = new List<ITable>();
             IDrawingDocument kompasDocument = (IDrawingDocument)Application.ActiveDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            foreach (IView view in views)
+            {
+                ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+                IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
+                foreach (ITable table in drawingTables)
+                {
+                    if (table.FindCell("Rz") != null) tableRoug.Add(table);
+                }
+            }
             List<Pos.PosData> posData = Pos.GetPosData(kompasDocument);
             RougForm roughWindow = new RougForm();
             roughWindow.tb_thickness.Text = Utils.Pos.GetThickness(kompasDocument);
@@ -1075,43 +1088,79 @@ namespace RelaxingKompas
             }
             Settings.Default.rb_Sto_2018 = roughWindow.rb_Sto_2018.Checked;
             Settings.Default.rb_Sto_2007 = roughWindow.rb_Sto_2007.Checked;
-            Settings.Default.Save();
-            int thicknessInt;
-            try
-            {
-                thicknessInt = int.Parse(roughWindow.tb_thickness.Text);
-            }
-            catch (Exception)
-            {
-                Kompas.ksMessage("Ошибка в написании толщины");
-                return;
-            }
+            Settings.Default.Save();            
 
-            int roug = 0;
-            if (roughWindow.rb_Sto_2018.Checked)
+            if (tableRoug.Count > 0)
             {
-                roug = sto_012_2018.GetRough(roughWindow.RoughKat, thicknessInt);
-                if (roug == 0)
+                foreach (ITable table in tableRoug)
                 {
-                    Kompas.ksMessage("Не найдена указанная толщина");
+                    //ITableCell tableCellPos = table.FindCell("поз");
+                    ITableCell tableCellRz = table.FindCell("Rz");
+                    ITableCell tableCellThicknes = table.FindCell("толщ");
+                    for (int row = tableCellRz.Row + 1; row < table.RowsCount; row++)
+                    {
+                        int roug = 0;
+                        if (int.TryParse(table.Cell[row, tableCellThicknes.Column].GetStr(), out int thickness))
+                        {
+                            if (roughWindow.rb_Sto_2018.Checked)
+                            {
+                                roug = sto_012_2018.GetRough(roughWindow.RoughKat, thickness);
+                            }
+                            else
+                            {
+                                roug = sto_012_2007.GetRough(roughWindow.RoughKat, thickness);
+                            }
+                        }
+                        if (roug != 0)
+                        {
+                            ((IText)table.Cell[row, tableCellRz.Column].Text).Str = roug.ToString();
+                        }
+                        else
+                        {
+                            ((IText)table.Cell[row, tableCellRz.Column].Text).Str = "";
+                        }
+                    }
+                    ((IDrawingTable)table).Update();
                 }
             }
             else
             {
-                roug = sto_012_2007.GetRough(roughWindow.RoughKat, thicknessInt);
-                if (roug == 0)
+                int thicknessInt;
+                int roug = 0;
+                try
                 {
-                    Kompas.ksMessage("Не найдена указанная толщина");
+                    thicknessInt = int.Parse(roughWindow.tb_thickness.Text);
                 }
-            }
-            ISpecRough specRough = kompasDocument.SpecRough;
-            if (specRough != null)
-            {
-                specRough.Text = $"Rz {roug}";
-                specRough.AddSign = false;
-                specRough.SignType = ksRoughSignEnum.ksNoProcessingType;
-                specRough.Distance = 2;
-                specRough.Update();
+                catch (Exception)
+                {
+                    Kompas.ksMessage("Ошибка в написании толщины");
+                    return;
+                }
+                if (roughWindow.rb_Sto_2018.Checked)
+                {
+                    roug = sto_012_2018.GetRough(roughWindow.RoughKat, thicknessInt);
+                    if (roug == 0)
+                    {
+                        Kompas.ksMessage("Не найдена указанная толщина");
+                    }
+                }
+                else
+                {
+                    roug = sto_012_2007.GetRough(roughWindow.RoughKat, thicknessInt);
+                    if (roug == 0)
+                    {
+                        Kompas.ksMessage("Не найдена указанная толщина");
+                    }
+                }
+                ISpecRough specRough = kompasDocument.SpecRough;
+                if (specRough != null)
+                {
+                    specRough.Text = $"Rz {roug}";
+                    specRough.AddSign = false;
+                    specRough.SignType = ksRoughSignEnum.ksNoProcessingType;
+                    specRough.Distance = 2;
+                    specRough.Update();
+                }
             }
 
 
@@ -3416,7 +3465,7 @@ namespace RelaxingKompas
             return result;
         }
 
-
+        
         #region COM Registration
         // Эта функция выполняется при регистрации класса для COM
         // Она добавляет в ветку реестра компонента раздел Kompas_Library,
@@ -3454,5 +3503,5 @@ namespace RelaxingKompas
             subKey.Close();
         }
         #endregion
-    }
+    }    
 }

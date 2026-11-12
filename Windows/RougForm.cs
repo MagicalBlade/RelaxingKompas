@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
+using RelaxingKompas.Classes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,8 +15,13 @@ namespace RelaxingKompas.Windows
 {
     public partial class RougForm : Form
     {
+        private Sto_012 sto_012_2018;
+        private Sto_012 sto_012_2007;
         private int _roughKat;
         public int RoughKat { get => _roughKat; set => _roughKat = value; }
+        internal Sto_012 Sto_012_2018 { get => sto_012_2018; set => sto_012_2018 = value; }
+        internal Sto_012 Sto_012_2007 { get => sto_012_2007; set => sto_012_2007 = value; }
+
         public RougForm()
         {
             InitializeComponent();
@@ -76,6 +82,45 @@ namespace RelaxingKompas.Windows
             if (thickness != null && thickness.Trim() != "")
             {
                 tb_thickness.Text = thickness;
+            }
+        }
+
+        private void rb_Sto_2018_CheckedChanged(object sender, EventArgs e)
+        {
+            ChangeSTO();
+        }
+        public void ChangeSTO()
+        {
+            dgv_rz.Rows.Clear();
+            if (rb_Sto_2018.Checked)
+            {
+                foreach (var item in Sto_012_2018.RoughKat1)
+                {
+                    dgv_rz.Rows.Add("1", $"{item[0]}-{item[1]}", item[2]);
+                }
+                foreach (var item in Sto_012_2018.RoughKat2)
+                {
+                    dgv_rz.Rows.Add("2", $"{item[0]}-{item[1]}", item[2]);
+                }
+                foreach (var item in Sto_012_2018.RoughKat3)
+                {
+                    dgv_rz.Rows.Add("3", $"{item[0]}-{item[1]}", item[2]);
+                }
+            }
+            else
+            {
+                foreach (var item in Sto_012_2007.RoughKat1)
+                {
+                    dgv_rz.Rows.Add("1", $"{item[0]}-{item[1]}", item[2]);
+                }
+                foreach (var item in Sto_012_2007.RoughKat2)
+                {
+                    dgv_rz.Rows.Add("2", $"{item[0]}-{item[1]}", item[2]);
+                }
+                foreach (var item in Sto_012_2007.RoughKat3)
+                {
+                    dgv_rz.Rows.Add("3", $"{item[0]}-{item[1]}", item[2]);
+                }
             }
         }
     }

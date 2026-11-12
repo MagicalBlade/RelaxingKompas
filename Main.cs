@@ -1066,6 +1066,14 @@ namespace RelaxingKompas
             }
             List<Pos.PosData> posData = Pos.GetPosData(kompasDocument);
             RougForm roughWindow = new RougForm();
+            roughWindow.dgv_rz.Columns.Add("Cat", "Категория");
+            roughWindow.dgv_rz.Columns.Add("Th", "Толщины");
+            roughWindow.dgv_rz.Columns.Add("Rz", "Rz");
+            roughWindow.Sto_012_2007 = sto_012_2007;
+            roughWindow.Sto_012_2018 = sto_012_2018;
+            roughWindow.ChangeSTO();
+            roughWindow.rb_Sto_2018.Checked = Settings.Default.rb_Sto_2018;
+            roughWindow.rb_Sto_2007.Checked = Settings.Default.rb_Sto_2007;
             roughWindow.tb_thickness.Text = Utils.Pos.GetThickness(kompasDocument);
             if (posData != null && posData.Count != 0)
             {
@@ -1078,9 +1086,7 @@ namespace RelaxingKompas
                         roughWindow.tb_thickness.Text = thicknessMin.ToString();
                     }
                 }
-            }
-            roughWindow.rb_Sto_2018.Checked = Settings.Default.rb_Sto_2018;
-            roughWindow.rb_Sto_2007.Checked = Settings.Default.rb_Sto_2007;
+            }            
             roughWindow.ShowDialog();
             if (roughWindow.DialogResult == DialogResult.Cancel)
             {

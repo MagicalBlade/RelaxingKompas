@@ -1094,7 +1094,6 @@ namespace RelaxingKompas
             {
                 foreach (ITable table in tableRoug)
                 {
-                    int thickness = 0;
                     ITableCell tableCellRz = table.FindCell(new string[] { "Rz" });
                     ITableCell tableCellThicknes = table.FindCell(new string[] { "толщ", "s" });
                     if (tableCellThicknes == null)
@@ -1105,7 +1104,7 @@ namespace RelaxingKompas
                     for (int row = tableCellRz.Row + 1; row < table.RowsCount; row++)
                     {
                         int roug = 0;
-                        if (int.TryParse(table.Cell[row, tableCellThicknes.Column].GetStr(), out thickness))
+                        if (int.TryParse(table.Cell[row, tableCellThicknes.Column].GetStr(), out int thickness))
                         {
                             if (roughWindow.rb_Sto_2018.Checked)
                             {

@@ -150,6 +150,7 @@
             // 
             // dgv_Pos
             // 
+            this.dgv_Pos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgv_Pos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_Pos.Location = new System.Drawing.Point(214, 12);
             this.dgv_Pos.Name = "dgv_Pos";

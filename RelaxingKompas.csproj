@@ -204,7 +204,7 @@
     <None Include="AsconIconsSDK-Color3.otf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Font Awesome 6 Free-Solid-900.otf">
+    <None Include="Font-Awesome-6-Free-Solid-900.otf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Hole\D14.frw">
